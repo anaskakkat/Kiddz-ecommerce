@@ -62,7 +62,7 @@ route.get("/catShowProducts/:id", userController.catShowProducts);
 route.post("/addToCart/:id", cartController.addToCart);
 //show cart
 route.get('/cart',auth.isLogin, cartController.showCart);
-// delete single cart item
+// delete single cart item 
 route.get('/cart/deleteCartItem/:id',auth.isLogin, cartController.deleteCart);
 //update cart //
 route.post('/updateCartItem', cartController.updateCart);
@@ -71,9 +71,6 @@ route.post('/updateCartItem', cartController.updateCart);
 
 //checkout page 
 route.get('/checkout',auth.isLogin, cartController.checkout);
-
-
-
 
 //user profile
 route.get('/userProfile',auth.isLogin, userAccountController.userProfile);

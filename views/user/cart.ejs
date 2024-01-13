@@ -57,52 +57,111 @@
                                             <div class="entry value"><span>
                                                     <%= product.qty %>
                                                 </span></div>
-                                            <div class="entry value-plus active">&nbsp;</div>
+                                             <div class="entry value-plus " id>&nbsp;</div>
                                         </div>
                                     </div>
                                 </td>
 
                                 <script>
-                                    $('.value-plus').on('click', function () {
-                                        var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
-                                        divUpd.text(newVal);
-                                        updateCartQuantity(newVal);
-                                        // window.location.reload();
+// Function to update the cart quantity on the server
+function updateCartQuantity(newVal) {
+    var apiUrl = '/updateCartItem';
+var productId = '<%= product._id %>';
+console.log(newVal, productId);
 
-                                    });
+// Example of a fetch request
+fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        productId: productId,
+        quantity: newVal, // assuming newVal is the quantity
+    }),
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+})
+.then(data => {
+    console.log('Cart quantity updated on server:', data);
+    // Add any additional client-side logic if needed
+})
+.catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+    // Handle errors appropriately
+});
 
-                                    $('.value-minus').on('click', function () {
-                                        var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) - 1;
-                                        if(newVal>=1) divUpd.text(newVal);
-                                        updateCartQuantity(newVal);
+}
+
+// Rest of your existing code remains the same
+$('.value-plus').on('click', function () {
+    var $parent = $(this).parent();
+    var $value = $parent.find('.value');
+    
+    var newVal = parseInt($value.text(), 10) + 1;
+    $value.text(newVal);
+
+    updateCartQuantity(newVal);
+});
+
+$('.value-minus').on('click', function () {
+    var $parent = $(this).parent();
+    var $value = $parent.find('.value');
+    
+    var newVal = Math.max(parseInt($value.text(), 10) - 1, 1);
+    $value.text(newVal);
+
+    updateCartQuantity(newVal);
+});
+
+
+
+
+
+
+                                    // $('.value-plus').on('click', function () {
+                                    //     var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
+                                    //     divUpd.text(newVal);
+                                    //     updateCartQuantity(newVal);
+                                    //     // window.location.reload();
+
+                                    // });
+
+                                    // $('.value-minus').on('click', function () {
+                                    //     var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) - 1;
+                                    //     if(newVal>=1) divUpd.text(newVal);
+                                    //     updateCartQuantity(newVal);
                                      
-                                    });
+                                    // });
                                   
-                                    function updateCartQuantity(newQuantity) {
-                                        // Assuming you have a product ID
-                                        var productId = "<%= product.productId._id %>";
-                                        console.log('product id:=>',productId);
-                                        // Send an asynchronous request to your server to update the quantity in the database
-                                        $.ajax({
-                                            type: 'POST',
-                                            url: '/updateCartItem', // Adjust the URL to your server
-                                            data: {
-                                                productId:productId,
-                                                quantity: newQuantity,
-                                            },
-                                            success: function (response) {
-                                                window.location.reload();
-                                                // Handle the response from the server if needed
-                                                console.log('Quantity updated successfully');
-                                            },
-                                            error: function (error) {
-                                                // window.location.reload();
-                                                console.error('Error updating quantity:', error);
-                                            }
-                                        });
-                                    }
+                                    // function updateCartQuantity(newQuantity) {
+                                    //     // Assuming you have a product ID
+                                    //     console.log('product id:=>',productId);
+                                    //     // Send an asynchronous request to your server to update the quantity in the database
+                                    //     $.ajax({
+                                    //         type: 'POST',
+                                    //         url: '/updateCartItem', // Adjust the URL to your server
+                                    //         data: {
+                                    //             productId:productId,
+                                    //             quantity: newQuantity,
+                                    //         },
+                                    //         success: function (response) {
+                                    //             window.location.reload();
+                                    //             // Handle the response from the server if needed
+                                    //             console.log('Quantity updated successfully');
+                                    //         },
+                                    //         error: function (error) {
+                                    //             // window.location.reload();
+                                    //             console.error('Error updating quantity:', error);
+                                    //         }
+                                    //     });
+                                    // }
 
-                                    // </script>
+                                     </script>
 
                                 <td class="item_price">₹<%= product.productId.price * product.qty %>
                                 </td>

@@ -101,24 +101,23 @@ const deleteCart = async (req, res) => {
   }
 };
 //update cart------------------------------->
-
+ 
 const updateCart = async (req, res) => {
-  try {
-    const productId = req.body.productId;
-    const quantity = req.body.quantity;
-    const userid = req.session.user_id;
+  try { 
+    const { productId, quantity } = req.body;
+    console.log('productId:', productId, 'quantity:', quantity);
 
-    console.log("pid=>", productId, "qty=>", quantity);
-   const result = await Cart.updateOne(
-  { userId: userid, 'products.productId': productId },
-  { $set: { 'products.$.qty': quantity } });
-    // console.log('update succussfully');
-    // res.redirect('/cart')
+    // Your logic for updating the cart based on productId and quantity
+
+    // Send a response back
+    res.json({ message: 'Cart updated successfully' });
   } catch (err) {
-    // res.render('')
-    console.log("cart-error>>", err.message);
+    console.log('cart-error>>', err.message);
+    // Handle errors appropriately and send a response
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 module.exports = {
   showCart,

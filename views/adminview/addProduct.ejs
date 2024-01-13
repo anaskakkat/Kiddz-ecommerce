@@ -1,0 +1,172 @@
+<%- include('./layouts/adminHeader') %>
+
+
+    <section class="content-main">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Product</h2>
+
+                </div>
+
+            </div>
+            <% if (messages.success) { %>
+                <div class="alert alert-success text-center">
+                    <%= messages.success %>
+                </div>
+                <% } else if (messages.error) { %>
+                    <div class="alert alert-danger text-center">
+                        <%= messages.error %>
+                    </div>
+                    <% } %>
+        </div>
+
+        <form action="/admin/addProducts" method="post" enctype="multipart/form-data" class="row">
+            <div class="col-lg-6 data-table">
+                <!-- Basic Info Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Basic</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="productName" class="form-label">Product title</label>
+                            <input type="text" placeholder="Product name" class="form-control" id="productName"
+                                name="productName" required />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="productDesc">Full description</label>
+                            <textarea placeholder="Type here" class="form-control" rows="4" id="productDesc"
+                                name="productDesc" required></textarea>
+                        </div>
+                        <div class="row ">
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label" for="productPrice">Price</label>
+                                    <div class="row gx-2">
+                                        <input placeholder="₹" type="number" class="form-control" id="productPrice"
+                                            name="productPrice" min="0" required  />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label" for="productQty">Quantity</label>
+                                    <input placeholder="Qty" type="number" class="form-control" id="productQty"
+                                        name="productQty" min="0" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label" for="productCat">Category</label>
+                                    <select class="  form-select" name="productCat" id="productCat" required>
+                                        <% categories.forEach(category=> { %>
+                                            <option value="<%= category.categoryName %>" class="text-dark">
+                                                <%= category.categoryName %>
+                                            </option>
+                                            <% }); %>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label" for="brand">Brand</label>
+                                    <input placeholder="Brand" type="text" class="form-control" id="brand" name="brand"
+                                        required  />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div>
+                                    <label class="form-label">Choose up to 4 pictures</label>
+                                    <input class="form-control" id="image-input" type="file" multiple
+                                        name="productImages" required />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <button type="submit" id="submitForm" class="btn btn-md rounded font-sm hover-up">Save
+                                Product</button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Image Preview Container -->
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h4>Image Preview</h4>
+                                <div id="image-preview-container" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+        </form>
+    </section>
+
+    <!-- Include the admin footer -->
+    <%- include('./layouts/adminFooter') %>
+
+
+<!-- Add this at the end of your EJS file -->
+<!-- Add this at the end of your EJS file -->
+<!-- Add this at the end of your EJS file -->
+<!-- Add this at the end of your EJS file -->
+<script>
+    document.getElementById('image-input').addEventListener('change', handleFileSelect);
+
+    function handleFileSelect(event) {
+        const previewContainer = document.getElementById('image-preview-container');
+        const files = event.target.files;
+
+        if (files.length > 4) {
+            alert('Please select only up to 4 images.');
+            event.target.value = ''; // Clear the selected files
+            return;
+        }
+
+        previewContainer.innerHTML = ''; // Clear previous previews
+
+        let rowContainer = document.createElement('div');
+        rowContainer.className = 'row';
+
+        for (let i = 0; i < files.length; i++) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imageElement = document.createElement('img');
+                imageElement.src = e.target.result;
+                imageElement.className = 'img-thumbnail m-2 col-md-6'; // Display as 2 columns in a row
+
+                // Additional styling for smaller images within the thumbnail
+                imageElement.style.width = '150px';
+                imageElement.style.maxHeight = '200px'; // Set the maximum height as per your preference
+
+                rowContainer.appendChild(imageElement);
+
+                if ((i + 1) % 2 === 0 || i === files.length - 1) {
+                    previewContainer.appendChild(rowContainer.cloneNode(true));
+                    rowContainer.innerHTML = ''; // Clear the row container for the next set of images
+                }
+            };
+
+            reader.readAsDataURL(files[i]);
+        }
+    }
+</script>
+
+
+
+

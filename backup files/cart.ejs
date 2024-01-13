@@ -1,0 +1,102 @@
+
+<%- include('./layouts/header') %>
+
+    <div class="check-out">
+        <div class="container">
+
+            <div class="bs-example4" data-example-id="simple-responsive-table col-md-12">
+                <div class="table-responsive col-md-9">
+                    <table class="table-bordered  table-heading simpleCart_shelfItem">
+                        <tr>
+                            <th class="table-grid">Item</th>
+
+                            <th>Prices</th>
+                            <th>Qty </th>
+                            <th>Total</th>
+                        </tr>
+                    <% cartItems.products.forEach(product => { %>
+                     
+                    
+                        <tr class="cart-header ">
+                            <td class="ring-in table-hover"><a href="" class="at-in"><img src="<%= product.productId.images[0]%>"
+                                        class="img-responsive" alt=""></a>
+                                <div class="sed">
+                                    <h5><a href=""><%= product.productId.productName%></a></h5>
+                                    <p><%= product.productName%> </p>
+
+                                </div>
+                                <div class="clearfix"> </div>
+                                <!-- <div class="close1"></div> -->
+                            </td>
+                            <td><%= product.productId.price%></td>
+                            <td><input type="number" style="width: 45px; color: #b2b2b2;" min="1" value="<%=product.qty %>" > </td>
+                            <td class="item_price">$100.00</td>
+                            <td class="add-check"><a class="item_add hvr-skew-backward" href="/cart/deleteCartItem/<%= product.productId._id%>">Delete</a></td>
+                        </tr>
+                        <% }) %>
+                        <!-- <tr class="cart-header" style="border: cyan;">
+
+                            <td class="ring-in"><a href="" class="at-in"><img src="/images/ch.jpg"
+                                        class="img-responsive" alt=""></a>
+                                <div class="sed">
+                                    <h5><a href="single.html">Sed ut perspiciatis unde</a></h5>
+                                    <p>(At vero eos et accusamus et iusto odio dignissimos ducimus ) </p>
+
+                                </div>
+                                <div class="clearfix"> </div>
+                                <div class="close1"> </div>
+                            </td>
+                            <td>$100.00</td>
+                            <td><input type="number" style="width: 45px; color: #b2b2b2;" min="0" ></td>
+                            <td class="item_price">$100.00</td>
+                             <td class="add-check"><a class="item_add hvr-skew-backward" href="#">Add To Cart</a></td>
+                        </tr> -->
+                       
+                    </table>
+                    <div class="produced">
+                        <a href="single.html" class="hvr-skew-backward">Produced To Buy</a>
+                         </div>
+                </div>
+
+
+                <div class="produced col-md-3" style=" background-color: #e4e4e4; margin-top: 2vh; border:#6c757d solid 1px; border-radius: 10px;">
+                    <table class=" table-responsive">
+                        <th class="text-center" >Summary</th>
+                        <tr>
+                            <th>Number of Products:</th>
+                            <th>5</th>
+                        </tr>
+                        <tr>
+                            <th>Total Quantity:</th>
+                            <th>10</th>
+                        </tr>
+                        <tr>
+                            <th>Total Amount:</th>
+                            <th>8782</th>
+                        </tr>
+                        
+                        
+                    </table>
+                    <a href="/checkout" class="hvr-skew-backward" style="margin-bottom: 10px;" >checkout</a>
+                </div>
+            </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+    
+    <%- include('./layouts/footer') %>
+
+   
+
+  
+    <script src="js/simpleCart.min.js"> </script>
+    <!-- slide -->
+    <script src="js/bootstrap.min.js"></script>

@@ -1,0 +1,50 @@
+<%- include('./layouts/adminHeader') %>
+
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Edit Category</h2>
+            </div>
+            <div>
+                <input type="text" placeholder="Search Categories" class="form-control bg-white" />
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+
+                        <form action="/admin/editCategory/<%= category._id %>" method="post">
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label">Name</label>
+                                <input type="text" placeholder="Type here" class="form-control" id="product_name"
+                                    name="name"  pattern="^[A-Za-z0-9][A-Za-z0-9_ ]*$" required value="<%=category.categoryName %>" />
+                            </div>
+
+
+                            <div class="mb-4">
+                                <label class="form-label">Description</label>
+                                <textarea placeholder="Type here"  class="form-control" name="description" pattern="^[A-Za-z0-9][A-Za-z0-9_ ]*$" required ><%= category.description %></textarea>
+                            </div>
+
+                            <button class="btn btn-primary">UPDATE</button>
+
+
+                        </form>
+                    </div>
+
+
+
+
+
+
+
+                    <!-- .col// -->
+                </div>
+                <!-- .row // -->
+            </div>
+            <!-- card body .// -->
+        </div>
+        <!-- card .// -->
+    </section>
+    <%- include('./layouts/adminFooter') %>

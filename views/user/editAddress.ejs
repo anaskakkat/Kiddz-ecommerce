@@ -1,0 +1,91 @@
+<%- include('./layouts/header') %>
+    <%- include('./layouts/userHeader') %>
+    <style>
+
+        .details_card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 550px;
+
+}
+
+.name_address {
+    margin-bottom: 20px;
+}
+
+.first_lastName {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.address1 input {
+    width: 100%;
+    padding: 12px; /* Increased padding for better visual appeal */
+    margin-bottom: 15px; /* Increased margin for better spacing */
+    box-sizing: border-box;
+    border: 1px solid #ddd; /* Add a subtle border */
+    border-radius: 4px;
+}
+
+.address1 input[type="number"] {
+    width: 48%;
+    margin-right: 4%;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px; /* Increased padding for better visual appeal */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+</style>
+
+        <br><br>
+
+
+        <div class="col-md-8"
+            style="font-family: Arial, sans-serif; margin: 0; display: flex; padding: 0; justify-content: center; align-items: center; border-radius: 10px;">
+
+
+            <% users.address.forEach(address=> { %>
+            <div class="details_card">
+                <form action="/updateAddress/<%= address._id %>" method="post">
+                <div class="name_address col-md-12">
+                    
+                       <h2 class="text-center" style="margin: inherit;" >Edit Address</h2>
+                    
+                    <div class="address1">
+                        <input class="" type="text" placeholder="First Name" name="name" value="<%= address.name %>"required/>
+                        <input class="" type="text" placeholder="mobile" name="mobile" value="<%= address.mobile %>" required/>
+                        <input class="" type="text" onkeyup="change()" id="put" placeholder="Address" name="address" value="<%= address.address %>" required />
+
+                        <input class="" type="number" placeholder="Pincode"  name="pincode" value="<%= address.pincode %>" required />
+                        <input class="" type="text" placeholder="landmark" name="landmark" value="<%= address.landmark %>" required />
+                        <input class="" type="text" placeholder="city" name="city" value="<%= address.city %>" required />
+                        <input class="" type="text" placeholder="state" name="state" value="<%= address.state %>" required />
+                    </div>
+                    <button>update</button>
+
+                </div>
+            </form>
+                
+            </div>
+            <% }) %>
+
+        </div>
+
+
+
+
+
+        <%- include('./layouts/footer') %>

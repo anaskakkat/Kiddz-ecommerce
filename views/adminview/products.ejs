@@ -1,0 +1,206 @@
+<%- include('./layouts/adminHeader') %>
+    <section class="content-main">
+        <div class="content-header">
+            <h2 class="content-title">Products</h2>
+
+            <div>
+                <a href="/admin/addProduct" class="btn btn-primary"><i class="material-icons md-plus"></i> Create Product</a>
+
+            </div>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row gx-3">
+                    <div class="col-lg-4 col-md-6 me-auto">
+
+                        <input type="text" placeholder="Search..." class="form-control" />
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-3 col-6">
+                        <select class="form-select">
+                            <option>Status</option>
+                            <option>Active</option>
+                            <option>Disabled</option>
+                            <option>Show all</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-6">
+                        <select class="form-select">
+                            <option>Show 20</option>
+                            <option>Show 30</option>
+                            <option>Show 40</option>
+                        </select>
+                    </div>
+
+                </div>
+            </header>
+            <!-- card-header end// -->
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <% if (messages.length > 0) { %>
+                        <div style="color: red; text-align: center;">
+                            <%= messages[0] %>
+                        </div>
+                    <% } %>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>images</th>
+                                <th>product name</th>
+                                <th>category</th>
+                                <th>price</th> 
+                                <th>Qty</th>
+
+                                <th>Status</th>
+
+                                <th>List/UnList</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% ProductFind.forEach(product=> { %>
+                            <tr>
+                                
+                              
+                                    <td width="">
+                                        <div class="left">
+                                            <img src="<%= product.images[2] %>"
+                                                class="product-image img-sm img-thumbnail" alt="<%= product.images[0] %>" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="info pl-3">
+                                            <h6 class="mb-0 title">
+                                                <%= product.productName %>
+                                            </h6>
+                                            <small class="text-muted">Id:<%= product.id %></small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <%= product.category %>
+                                    </td>
+                                    <td>
+                                        Rs:<%= product.price %>
+                </div>
+                </td>
+                <td>
+                    <%= product.qty %>
+                </td>
+                <td>
+                    <span class="badge rounded-pill <%= product.isListed ? 'alert-success' : 'alert-danger' %>">
+                        <%= product.isListed ? 'Listed' : 'Unlisted' %>
+                    </span>
+                </td>
+
+                <td class="text-center">
+                    <% if (product.isListed) { %>
+                        <a href="#" class="btn btn-sm btn-danger rounded font-sm fw-5 mr-5"
+                            onclick="showUnlistAlert('<%= product._id %>')">Unlist</a>
+                        <% } else { %>
+                            <a href="#" class="btn btn-sm btn-success rounded text-white font-sm mr-5"
+                                onclick="showListAlert('<%= product._id %>')">List</a>
+                            <% } %>
+                </td>
+
+
+                <td class="text-">
+                    <div class="text float-center display-flex">
+
+                        <a href="/admin/products/editProduct?productId=<%= product._id %>"
+                            class="btn  btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit
+                        </a>
+                        <!-- <a href="" class="btn btn-sm font-sm btn-light rounded"> <i
+                                class="material-icons md-delete_forever"></i> Delete </a> -->
+                    </div>
+                </td>
+            
+                    </tr>
+                   
+
+                    <% }); %>
+
+
+
+
+
+
+                    </tbody>
+                    </table>
+                    <!-- table-responsive.// -->
+            </div>
+        </div>
+        <!-- card-body end// -->
+        </div>
+        <!-- card end// -->
+        <!-- <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                            <li class="page-item"><a class="page-link" href="#">02</a></li>
+                            <li class="page-item"><a class="page-link" href="#">03</a></li>
+                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">16</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div> -->
+        </div>
+    </section>
+    <%- include('./layouts/adminFooter') %>
+
+
+
+
+        <script>
+            async function showUnlistAlert(id) {
+                console.log('list id----->' + id);
+                const result = await Swal.fire({
+                    title: 'Are you sure to unlist?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Unlist!'
+                });
+
+                if (result.isConfirmed) {
+                    // Handle the unlisting logic, e.g., make an AJAX request
+                    window.location.href = "/admin/unlistProducts/" + id;
+                }
+            };
+
+            async function showListAlert(id) {
+                console.log('UNlist id----->' + id);
+                const result = await Swal.fire({
+                    title: 'Are you sure to list?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, List it!'
+                });
+
+                if (result.isConfirmed) {
+                    // Handle the listing logic, e.g., make an AJAX request
+                    window.location.href = "/admin/listProduct/" + id;
+                }
+            };
+
+
+
+
+            // flash timer  
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // Automatically hide the flash message after 3000 milliseconds (3 seconds)
+                setTimeout(function () {
+                    var flashMessage = document.getElementById('flash-message');
+                    flashMessage.style.display = 'none';
+                }, 3000);
+            });
+
+        </script>

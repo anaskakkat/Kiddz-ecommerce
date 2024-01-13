@@ -1,0 +1,202 @@
+<%- include('./layouts/adminHeader') %>
+    <section class="content-main">
+        <div class="content-header">
+            <h2 class="content-title">Users</h2>
+
+            <div>
+                <!-- <a href="#" class="btn btn-primary"><i class="material-icons md-plus"></i> Create new</a> -->
+               
+            </div>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row gx-3">
+                    <div class="col-lg-4 col-md-6 me-auto">
+                     
+                        <input type="text" placeholder="Search..." class="form-control" />
+    
+                    </div>
+                    
+                            <div class="col-lg-2 col-md-3 col-6">
+                                <select class="form-select">
+                                    <option>Status</option>
+                                    <option>Active</option>
+                                    <option>Disabled</option>
+                                    <option>Show all</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 col-md-3 col-6">
+                                <select class="form-select">
+                                    <option>Show 20</option>
+                                    <option>Show 30</option>
+                                    <option>Show 40</option>
+                                </select>
+                            </div>
+                            <% if (message.length> 0) { %>
+                                <p id="flash-message"   class="<%= messageType === 'success' ? 'text-center  alert-success mt-5 ' : ' alert-danger text-center mt-5 ' %> alert-dismissible fade show">
+                                    <%= message %>
+                                </p>
+                        
+                            <% } %>
+                </div>
+            </header>
+            <!-- card-header end// -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Mobile Number</th>
+                                <th>Status</th>
+                                <th>Verified</th>
+                                <th class="text-end">Action </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% user.forEach(user=> { %>
+                                <tr>
+                                    <td width="40%">
+                                        <a href="#" class="itemside">
+                                            <div class="left">
+                                                <img src="/adminCss/imgs/people/avatar-2.png" class="img-sm img-avatar"
+                                                    alt="Userpic" />
+                                            </div>
+                                            <div class="info pl-3">
+                                                <h6 class="mb-0 title">
+                                                    <%=user.name %>
+                                                </h6>
+                                                <!-- <small class="text-muted">Seller ID: #439</small> -->
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <%=user.email %>
+                                    </td>
+                                    <td>
+                                        <%=user.mobilenumber %>
+                                    </td>
+                                    <% if(user.status==='block' ) { %>
+                                        <td><span class="badge rounded-pill alert-danger">
+                                                <%=user.status %>
+                                            </span></td>
+                                        <% } else { %>
+                                            <td><span class="badge rounded-pill alert-success">
+                                                    <%=user.status %>
+                                                </span></td>
+                                            <% } %>
+
+
+
+
+
+
+                                            <% if(user.status==='false' ) { %>
+                                                <td><span class="badge rounded-pill alert-danger">
+                                                        <%=user.verified %>
+                                                    </span></td>
+                                                <% } else { %>
+                                                    <td><span class="badge rounded-pill alert-success">
+                                                            <%=user.verified %>
+                                                        </span></td>
+                                                    <% } %>
+                                                <!-- <td>verified</td> -->
+
+                                                <td class="text-end">
+                                                    <% if (user.status==='block' ) { %>
+                                                        <!-- Some content here -->
+                                                        <a href="#"
+                                                            class="btn btn-sm btn-success rounded font-sm mt-15 "
+                                                            onclick="confirmUnblock('<%= user._id %>')">Unblock</a>
+                                                        <% } else { %>
+                                                            <!-- Some content here -->
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-danger rounded font-sm mt-15"
+                                                                onclick="confirmBlock('<%= user._id %>')">Block</a>
+                                                            <% } %>
+                                                </td>
+                                                <% }); %>
+                        </tbody>
+                    </table>
+
+                    <!-- table-responsive.// -->
+                </div>
+            </div>
+            <!-- card-body end// -->
+        </div>
+        <!-- card end// -->
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+
+    <script>
+        function confirmBlock(userId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action will block the user. You cannot undo this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, block it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Continue with the blocking action, e.g., redirect to the block URL
+                    window.location.href = `/admin/blockUser/${userId}`;
+                }
+            });
+
+            return false; // Prevents the default action (e.g., navigating to the href)
+        }
+
+        function confirmUnblock(userId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action will unblock the user.',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, unblock it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Continue with the unblocking action, e.g., redirect to the unblock URL
+                    window.location.href = `/admin/unblockUser/${userId}`;
+                }
+            });
+
+            return false; // Prevents the default action (e.g., navigating to the href)
+        };
+
+
+
+
+
+
+
+        // flas message timer 
+        document.addEventListener("DOMContentLoaded", function () {
+            // Automatically hide the flash message after 3000 milliseconds (3 seconds)
+            setTimeout(function () {
+                var flashMessage = document.getElementById('flash-message');
+                flashMessage.style.display = 'none';
+            }, 3000);
+        });
+
+
+    </script>
+    <%- include('./layouts/adminFooter') %>

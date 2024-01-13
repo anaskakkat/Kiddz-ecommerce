@@ -1,0 +1,49 @@
+<% users.address.forEach(address=> { %>
+    <form action="/updateAddress/<%= address._id %>" method="post"
+        style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 400px; margin: 0 auto;">
+
+        <h2 style="text-align: center; color: #333; margin-bottom: 20px;">Edit Address</h2>
+
+        <!-- Each input field has been adjusted for a flatter style -->
+
+        <label style="color: #555; margin-bottom: 8px; display: block;" for="name">Name:</label>
+        <input
+            style="width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+            type="text" id="name" name="name" value="<%= address.name %>" required>
+
+        <label style="color: #555; margin-bottom: 8px; display: block;" for="mobile">Mobile:</label>
+        <input
+            style="width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+            type="text" id="mobile" name="mobile" value="<%= address.mobile %>" required>
+
+        <label style="color: #555; margin-bottom: 8px; display: block;" for="pincode">Pincode:</label>
+        <input
+            style="width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+            type="text" id="pincode" name="pincode" value="<%= address.pincode %>" required>
+
+        <label style="color: #555; margin-bottom: 8px; display: block;" for="address">Address:</label>
+        <input
+            style="width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+            type="text" id="address" name="address" value="<%= address.address %>" required>
+
+        <label style="color: #555; margin-bottom: 8px; display: block;" for="landmark">Landmark:</label>
+        <input
+            style="width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+            type="text" id="landmark" name="landmark" value="<%= address.landmark %>" required>
+
+        <label style="color: #555; margin-bottom: 8px; display: block;" for="city">City:</label>
+        <input
+            style="width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+            type="text" id="city" name="city" value="<%= address.city %>" required>
+
+        <label style="color: #555; margin-bottom: 8px; display: block;" for="state">State:</label>
+        <input
+            style="width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+            type="text" id="state" name="state" value="<%= address.state %>" required>
+
+        <button
+            style="background-color: #4caf50; color: #fff; padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;"
+            type="submit">Update Address</button>
+    </form>
+
+<% }) %>

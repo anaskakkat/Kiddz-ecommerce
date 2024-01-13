@@ -1,0 +1,157 @@
+<%- include('./layouts/adminHeader') %>
+
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Categories</h2>
+            </div>
+
+
+            <div>
+                <input type="text" placeholder="Search Categories" class="form-control bg-white" />
+            </div>
+
+        </div>
+        <% if (message.length > 0) { %>
+            <div id="flash-message" class="<%= messageType === 'success' ? 'alert-success text-center mt-5' : 'alert-danger text-center mt-5' %> alert-dismissible fade show" role="alert">
+              <p><%= message %></p>
+            </div>
+          <% } %>
+          
+          
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+
+                                <form action="/admin/category" method="post">
+                                    <div class="mb-4">
+                                        <label for="product_name" class="form-label">Name</label>
+                                        <input type="text" placeholder="Type here" class="form-control"
+                                            id="product_name" name="name" required
+                                            pattern="^[A-Za-z0-9][A-Za-z0-9_ ]*$" />
+                                    </div>
+
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Description</label>
+                                        <textarea placeholder="Type here" class="form-control" name="description"
+                                            required pattern="^[A-Za-z0-9][A-Za-z0-9_ ]*$"></textarea>
+                                    </div>
+
+
+                                    <button class="btn btn-primary">Create Category</button>
+
+
+                                </form>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <th class="text-end">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% categories.forEach(category=> { %>
+                                                <tr>
+
+                                                    <td><b>
+                                                            <%= category.categoryName %>
+                                                        </b></td>
+                                                    <td>
+                                                        <%= category.description %>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <div class="cButtons">
+
+                                                            <% if(category.status==='block' ) { %>
+                                                                <a href="#"
+                                                                    class="btn btn-sm btn-success rounded text-white font-sm mt-15 mr-5"
+                                                                    onclick="showUnblockAlert('<%= category._id %>')">List</a>
+                                                                <% } else { %>
+                                                                    <a href="#"
+                                                                        class="btn btn-sm btn-danger rounded font-sm fw-5 mt-15 mr-5"
+                                                                        onclick="showBlockAlert('<%= category._id %>')">UnList</a>
+                                                                    <% } %>
+                                                                        <form
+                                                                            action="/admin/category/<%= category._id %>/editCategory"
+                                                                            method="get">
+                                                                            <button
+                                                                                class="btn btn-sm btn-brand rounded font-sm mt-15 bg-primary">Edit</button>
+                                                                        </form>
+                                                        </div>
+                                                        <!-- dropdown //end -->
+                                                    </td>
+
+
+                                                </tr>
+                                                <% }); %>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- .col// -->
+                        </div>
+                        <!-- .row // -->
+                    </div>
+                    <!-- card body .// -->
+                </div>
+                <!-- card .// -->
+    </section>
+
+
+    <!-- for sweet messages----------------------------------------------------------->
+    <script>
+        async function showUnblockAlert(categoryId) {
+            const result = await Swal.fire({
+                title: 'Are you sure to List?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Listed !'
+            });
+
+            if (result.isConfirmed) {
+                // Handle the unblocking logic, e.g., make an AJAX request
+                window.location.href = "/admin/unblockCategory/" + categoryId;
+            }
+        }
+
+        async function showBlockAlert(categoryId) {
+            const result = await Swal.fire({
+                title: 'Are you sure to Unlisting?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Unlist it!'
+            });
+
+            if (result.isConfirmed) {
+                // Handle the blocking logic, e.g., make an AJAX request
+                window.location.href = "/admin/blockCategory/" + categoryId;
+            }
+        }
+
+
+
+
+        // flash timer  
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Automatically hide the flash message after 3000 milliseconds (3 seconds)
+            setTimeout(function () {
+                var flashMessage = document.getElementById('flash-message');
+                flashMessage.style.display = 'none';
+            }, 3000);
+        });
+
+    </script>
+    <%- include('./layouts/adminFooter') %>

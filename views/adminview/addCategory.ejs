@@ -1,0 +1,34 @@
+<%- include('./layouts/adminHeader')   %>
+
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <form>
+                    <div class="mb-4">
+                        <label for="product_name" class="form-label">Name</label>
+                        <input type="text" placeholder="Type here" class="form-control" id="product_name" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="product_slug" class="form-label">Slug</label>
+                        <input type="text" placeholder="Type here" class="form-control" id="product_slug" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Parent</label>
+                        <select class="form-select">
+                            <option>Fruit</option>
+                            <option>Snack</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Description</label>
+                        <textarea placeholder="Type here" class="form-control"></textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary">Create category</button>
+                    </div>
+                </form>
+            </div>
+
+            <%- include('./layouts/adminFooter')   %>

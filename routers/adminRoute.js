@@ -1,0 +1,111 @@
+const express = require("express");
+const adminRouter = express();
+const adminControl = require("../controller/admin/adminController");
+const productController=require('../controller/admin/productController')
+const categoryController=require('../controller/admin/categoryController')
+
+const auth = require("../middlewares/authAdmin");
+const path = require('path');
+
+const sharp = require('sharp');
+const session = require("express-session");
+require("dotenv").config();
+
+const multer = require('multer');
+
+adminRouter.use(express.static(path.join(__dirname,'..','public','uploads')))
+
+
+
+adminRouter.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+// file upload  image strorage 
+const  storage = multer.diskStorage({
+  destination:(req,file,cb) => { 
+      cb(null,path.join(__dirname,'..','public','uploads','cropped'))
+  },
+
+filename: (req, file, cb) => {
+  // console.log('Uploaded file details:', file);
+    const name = Date.now() + '-' + file.originalname;
+    cb(null, name);
+  },
+})
+
+const upload = multer({storage:storage})
+
+
+
+
+
+
+
+// set view engine
+adminRouter.set("view engine", "ejs");
+adminRouter.set("views", path.join(__dirname, "..", "views", "adminview"));
+
+// admin login
+adminRouter.get("/login",  auth.isLogout,adminControl.adminLogin);
+
+// verify admin
+adminRouter.post("/login",adminControl.checkAdmin);
+
+//admin dashbord
+adminRouter.get("/dashboard",auth.isLogin,adminControl.adminDash);
+
+// admin logout
+adminRouter.get("/adminLogout",auth.isLogin, adminControl.adminLogout);
+
+// admin panel show user
+adminRouter.get("/users",auth.isLogin, adminControl.showUser);
+// user block
+adminRouter.get("/blockUser/:id",auth.isLogin, adminControl.blockUser);
+// user unblock
+adminRouter.get("/unblockUser/:id",auth.isLogin, adminControl.unblockUser);
+ 
+ 
+//show add product  page
+adminRouter.get("/addProduct",auth.isLogin, productController.addProduct);   
+// adding products page 
+// images file  upload 
+adminRouter.post('/addProducts', upload.array('productImages',4), productController.productsAdding); 
+
+//  admin panel show products
+adminRouter.get("/products",auth.isLogin, productController.products);
+
+//  admin panal edit products
+adminRouter.get("/products/editProduct",auth.isLogin, productController.editProducts);
+
+adminRouter.post("/products/editProduct", productController.updateProducts);
+// list products
+adminRouter.get("/unlistProducts/:id", auth.isLogin,productController.unlistProducts);
+
+//unlist products
+adminRouter.get("/listProduct/:id",auth.isLogin, productController.listProducts);
+
+// delete product 
+// adminRouter.get("/products/deleteProduct/",auth.isLogin, productController.deleteProduct);
+
+
+
+
+
+// show catogery
+adminRouter.get("/category",auth.isLogin, categoryController.category);
+// add category
+adminRouter.post("/Category", categoryController.addCategory);
+// edit category
+adminRouter.get("/category/:id/editCategory",auth.isLogin, categoryController.editCategory);
+// update category
+adminRouter.post("/editCategory/:id", categoryController.updateCategory);
+//block catogery
+adminRouter.get("/blockCategory/:categoryId",auth.isLogin, categoryController.blockCategory);
+// unblock category
+adminRouter.get("/unblockCategory/:categoryId",auth.isLogin, categoryController.unBlockCategory);
+
+module.exports = adminRouter;

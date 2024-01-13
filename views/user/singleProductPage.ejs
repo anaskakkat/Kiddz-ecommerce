@@ -11,9 +11,16 @@
     <div class="single">
 
         <div class="container">
+
             <div class="col-md-9">
                 <div class="col-md-5 grid">
                     <div class="flexslider">
+
+                        <% if (messages.length > 0) { %>
+                            <div style="color: red;">
+                                <%= messages[0] %>
+                            </div>
+                        <% } %>
                         <ul class="slides">
                             <% singleproducts.images.forEach(images=> { %>
                                 <li data-thumb="/<%= images %>">
@@ -43,7 +50,7 @@
                                 <li class="wish"><a href="#"><span class="glyphicon glyphicon-check"
                                             aria-hidden="true"></span>Add to Wishlist</a></li>
                                 <li class="compare text-muted"> Stock:<span id="stock" class="glyphicon fw-5">
-                                        <%= singleproducts.qty %>
+                                        <%= singleproducts.stock %>
                                     </span></li>
                             </ul>
 

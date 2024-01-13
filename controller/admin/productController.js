@@ -48,7 +48,7 @@ const productsAdding = async (req, res) => {
       productName: productName,
       description: productDesc,
       price: productPrice,
-      qty: productQty,
+      stock: productQty,
       category: productCat,
       brand: brand,
       images: resizedImages,

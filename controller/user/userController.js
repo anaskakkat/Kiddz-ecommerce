@@ -237,7 +237,8 @@ const singleProducts = async (req, res) => {
     // console.log('iddd----'+id);
     const singleproducts = await Products.findOne({ _id: id });
     // console.log("datas in products=> "+ singleproducts);
-    res.render("singleProductPage", { singleproducts,user});
+    const messages=req.flash('message')
+    res.render("singleProductPage", { singleproducts,user,messages});
   } catch (err) {
     console.log("home error", err.message);
   }

@@ -11,26 +11,26 @@ const showCart = async (req, res) => {
       "products.productId"
     );
 
-    // Calculate total on the server side
-    const calculateTotalQuantity = (products) => {
-      let totalQuantity = 0;
-      products.forEach((product) => {
-        totalQuantity += product.qty;
-      });
-      return totalQuantity;
-    };
-    // Calculate total on the server side
-    const calculateTotalPrice = (products) => {
-      let totalPrice = 0;
-      products.forEach((product) => {
-        totalPrice += product.productId.price * product.qty;
-      });
-      return totalPrice;
-    };
-    const totalPrice = calculateTotalPrice(cartItems.products);
-    const totalQuantity = calculateTotalQuantity(cartItems.products);
+    // // Calculate total on the server side
+    // const calculateTotalQuantity = (products) => {
+    //   let totalQuantity = 0;
+    //   products.forEach((product) => {
+    //     totalQuantity += product.qty;
+    //   });
+    //   return totalQuantity;
+    // };
+    // // Calculate total on the server side
+    // const calculateTotalPrice = (products) => {
+    //   let totalPrice = 0;
+    //   products.forEach((product) => {
+    //     totalPrice += product.productId.price * product.qty;
+    //   });
+    //   return totalPrice;
+    // };
+    // const totalPrice = calculateTotalPrice(cartItems.products);
+    // const totalQuantity = calculateTotalQuantity(cartItems.products);
     // console.log('cart items==>',cartItems);
-    res.render("cart", { cartItems, user, totalQuantity, totalPrice });
+    res.render("cart", { cartItems, user });
   } catch (err) {
     // res.render('')
     console.log("cart-error>>", err.message);
@@ -48,6 +48,9 @@ const addToCart = async (req, res) => {
       userId: userid,
       "products.productId": productid,
     });
+    if (!userid) {
+      return res.redirect('/userLogin');
+    }
 
     if (existingCartItem) {
       await Cart.updateOne(

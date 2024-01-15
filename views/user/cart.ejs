@@ -7,238 +7,197 @@
             <!-- <h2><a href="/">Home</a><label>/</label>Products</h2> -->
         </div>
     </div>
-    <div class="check-out">
-        <div class="container">
-            <div class="bs-example4" data-example-id="simple-responsive-table col-md-12">
+    <div id="reloadDiv">
+        <div class="check-out">
+            <div class="container">
 
-                <div class="table-responsive col-md-9">
-                    <table class="table-bordered  table-heading simpleCart_shelfItem" style=" margin-top: 21px;">
-                        <tr class="table-hd ">
-                            <th class="table-grid text-center   ">
-                                <h4>Product Details</h4>
-                            </th>
+                <div class="bs-example4" data-example-id="simple-responsive-table col-md-12">
+                    <% if (cartDetails && cartDetails.products && cartDetails.products.length > 0) { %>
+                        <div class="table-responsive col-md-9">
 
-                            <th class="text-center">
-                                <h4>Prices</h4>
-                            </th>
-                            <th class="text-center">
-                                <h4>Qty</h4>
-                            </th>
-                            <th class="text-center">
-                                <h4>Total</h4>
-                            </th>
-                        </tr>
-                        <% cartItems.products.forEach(product=> { %>
+                            <table class="table-bordered  table-heading simpleCart_shelfItem"
+                                style=" margin-top: 21px;">
+                             
+                                    <tr class="table-hd ">
+                                        <th class="table-grid text-center   ">
+                                            <h4>Product Details</h4>
+                                        </th>
+
+                                        <th class="text-center">
+                                            <h4>Prices</h4>
+                                        </th>
+                                        <th class="text-center">
+                                            <h4>Qty</h4>
+                                        </th>
+                                        <th class="text-center">
+                                            <h4>Total</h4>
+                                        </th>
+                                    </tr>
 
 
-                            <tr class="cart-header ">
-                                <td class="ring-in table-hover"><a href="" class="at-in"><img
-                                            src="<%= product.productId.images[0]%>" class="img-responsive" alt=""></a>
-                                    <div class="sed">
-                                        <h5><a href="">
-                                                <%= product.productId.productName%>
-                                            </a></h5>
-                                        <p>
+                                    <% let totalQuantity=0; let totalProductPrice=0;
+                                    cartDetails.products.forEach((cartItem)=> {
+                                    const itemTotalPrice = cartItem.productId.price * cartItem.qty;
+                                    totalQuantity += cartItem.qty;
+                                    totalProductPrice += itemTotalPrice;
+                                    %>
+                                    <tr class="cart-header ">
+                                        <td class="ring-in table-hover"><a href="" class="at-in"><img
+                                                    src="<%= cartItem.productId.images[0]%>" class="img-responsive"
+                                                    alt=""></a>
+                                            <div class="sed">
+                                                <h5><a href="">
+                                                        <%= cartItem.productId.productName%>
+                                                    </a></h5>
+                                                <p>
 
-                                        </p>
+                                                </p>
 
-                                    </div>
-                                    <div class="clearfix"> </div>
-                                    <!-- <div class="close1"></div> -->
-                                </td>
-                                <td>
-                                    <%= product.productId.price%>
-                                </td>
+                                            </div>
+                                            <div class="clearfix"> </div>
 
-                                <td>
-                                    <div class="quantity">
-                                        <div class="quantity-select">
-                                            <div class="entry value-minus">&nbsp;</div>
-                                            <div class="entry value"><span>
-                                                    <%= product.qty %>
-                                                </span></div>
-                                             <div class="entry value-plus " id>&nbsp;</div>
-                                        </div>
-                                    </div>
-                                </td>
+                                        </td>
+                                        <td>
+                                            <%= cartItem.productId.price%>
+                                        </td>
 
-                                <script>
-// Function to update the cart quantity on the server
-function updateCartQuantity(newVal) {
-    var apiUrl = '/updateCartItem';
-var productId = '<%= product._id %>';
-console.log(newVal, productId);
+                                        <td>
 
-// Example of a fetch request
-fetch(apiUrl, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        productId: productId,
-        quantity: newVal, // assuming newVal is the quantity
-    }),
-})
-.then(response => {
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    return response.json();
-})
-.then(data => {
-    console.log('Cart quantity updated on server:', data);
-    // Add any additional client-side logic if needed
-})
-.catch(error => {
-    console.error('There was a problem with the fetch operation:', error);
-    // Handle errors appropriately
-});
+                                            <div class="divbt"
+                                                style="display: flex; justify-content: center; align-items: center; gap: 5px;">
+                                                <button
+                                                    onclick="increaseQuantity('<%= cartDetails._id%>','<%=cartItem.productId._id %>',-1)"
+                                                    style="padding: 5px 10px; font-size: 16px;">-</button>
+                                                <input type="text" id="counter" disabled value="<%= cartItem.qty%>"
+                                                    style="width: 30px; text-align: center; padding: 5px; font-size: 16px;">
+                                                <button
+                                                    onclick="increaseQuantity('<%= cartDetails._id%>','<%=cartItem.productId._id %>',1)"
+                                                    style="padding: 5px 10px; font-size: 16px;">+</button>
+                                            </div>
 
-}
-
-// Rest of your existing code remains the same
-$('.value-plus').on('click', function () {
-    var $parent = $(this).parent();
-    var $value = $parent.find('.value');
-    
-    var newVal = parseInt($value.text(), 10) + 1;
-    $value.text(newVal);
-
-    updateCartQuantity(newVal);
-});
-
-$('.value-minus').on('click', function () {
-    var $parent = $(this).parent();
-    var $value = $parent.find('.value');
-    
-    var newVal = Math.max(parseInt($value.text(), 10) - 1, 1);
-    $value.text(newVal);
-
-    updateCartQuantity(newVal);
-});
+                                        </td>
 
 
 
+                                        <td class="item_price">₹<%= cartItem.productId.price * cartItem.qty %>
+                                        </td>
+                                        <td class="add-check"><a class="item_add hvr-skew-backward"
+                                                href="/cart/deleteCartItem/<%= cartItem.productId._id%>">Delete</a></td>
+                                    </tr>
+                                    <% }) %>
 
+                            </table>
 
-
-                                    // $('.value-plus').on('click', function () {
-                                    //     var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
-                                    //     divUpd.text(newVal);
-                                    //     updateCartQuantity(newVal);
-                                    //     // window.location.reload();
-
-                                    // });
-
-                                    // $('.value-minus').on('click', function () {
-                                    //     var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) - 1;
-                                    //     if(newVal>=1) divUpd.text(newVal);
-                                    //     updateCartQuantity(newVal);
-                                     
-                                    // });
-                                  
-                                    // function updateCartQuantity(newQuantity) {
-                                    //     // Assuming you have a product ID
-                                    //     console.log('product id:=>',productId);
-                                    //     // Send an asynchronous request to your server to update the quantity in the database
-                                    //     $.ajax({
-                                    //         type: 'POST',
-                                    //         url: '/updateCartItem', // Adjust the URL to your server
-                                    //         data: {
-                                    //             productId:productId,
-                                    //             quantity: newQuantity,
-                                    //         },
-                                    //         success: function (response) {
-                                    //             window.location.reload();
-                                    //             // Handle the response from the server if needed
-                                    //             console.log('Quantity updated successfully');
-                                    //         },
-                                    //         error: function (error) {
-                                    //             // window.location.reload();
-                                    //             console.error('Error updating quantity:', error);
-                                    //         }
-                                    //     });
-                                    // }
-
-                                     </script>
-
-                                <td class="item_price">₹<%= product.productId.price * product.qty %>
-                                </td>
-                                <td class="add-check"><a class="item_add hvr-skew-backward"
-                                        href="/cart/deleteCartItem/<%= product.productId._id%>">Delete</a></td>
-                            </tr>
-                            <% }) %>
-
-                    </table>
-                    <!-- <div class="produced">
-                        <a href="single.html" class="hvr-skew-backward">Produced To Buy</a>
-                    </div> -->
-                </div>
-
-
-                <!-- <div class="produced col-md-3" style=" background-color: #eaeaea; margin-top: 2vh; border:#6c757d solid 1px; border-radius: 10px;"> -->
-                <div class="col-md-3 order-md-2 mb-4">
-                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">Your cart</span>
-                        <span class="badge badge-secondary badge-pill">
-                            <%= cartItems.products.length %>
-                        </span>
-                    </h4>
-                    <ul class="list-group mb-3">
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                                <h5 class="my-0 ">Total Quantity:</h5>
-                                <!-- <small class="text-muted">Brief description</small> -->
-                            </div>
-                            <span class="text-muted">
-                                totalQuantity
-                            </span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                                <h5 class="my-0">Shipping</h5>
-                                <!-- <small class="text-muted">Brief description</small> -->
-                            </div>
-                            <span class="text-muted">Free Shipping</span>
-                        </li>
-                     
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Total Price: </span>
-                            <strong>₹ totalPrice</strong>
-                        </li>
-                    </ul>
-
-
-                    <!-- <form class="card p-2">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Promo code">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-secondary">Redeem</button>
-                            </div>
                         </div>
-                    </form> -->
-                    <a href="/checkout" class="hvr-skew-backward" style="margin-bottom: 10px;">checkout</a>
+
+
+
+                        <div class="col-md-3 order-md-2 mb-4">
+                            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-muted">Your cart</span>
+                                <span class="badge badge-secondary badge-pill">
+                                    <%= cartDetails.products.length%>
+                                </span>
+                            </h4>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                    <div>
+                                        <h5 class="my-0 ">Total Quantity:</h5>
+
+                                    </div>
+                                    <span class="text-muted">
+                                        <%= totalQuantity %>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                    <div>
+                                        <h5 class="my-0">Shipping</h5>
+
+                                    </div>
+                                    <span class="text-muted">₹0.00</span>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Total Price: </span>
+                                    <strong>₹<%= totalProductPrice %></strong>
+                                </li>
+                            </ul>
+
+
+                            <a href="/checkout" class="hvr-skew-backward" style="margin-bottom: 10px;">checkout</a>
+                        </div>
+
+                        <% }else{ %>
+                            <div class="container" style="background-color: #fff6f7;; padding: 20px; border-radius: 10px;" id="noCart">
+    <div class="row align-items-center">
+        <div class="col-12 text-center">
+            <h4 style="color: #004d40; font-size: 24px; margin-bottom: 20px;">Your Cart is Empty</h4>
+            <p style="color: #333; font-size: 18px;">Looks like there are no items in your cart.</p>
+            <a href="/showProducts">
+                <button class="btn btn-primary btn-md" style="width: 140px; margin-top: 20px;">Continue Shopping</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+                            <% } %>
                 </div>
-                <!-- </div> -->
+
+
             </div>
-
-
         </div>
 
-    </div>
-    </div>
+
+
+
+
+
+        <%- include('./layouts/footer') %>
+            <script>
+                function increaseQuantity(cartId, productId, count) {
+                    $.ajax({
+                        url: '/updateCartItem',
+                        method: 'post',
+                        data: {
+                            cartId: cartId,
+                            productId: productId,
+                            count: count
+
+                        },
+                        success: (response) => {
+                            if (response.success) {
+                                $('#reloadDiv').load('/cart #reloadDiv')
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    icon: 'error',
+                                    text: response.message,
+                                    timer: 2000
+                                })
+                            }
+                        },
+                        error: (error) => {
+                            Swal.fire({
+                                title: 'Error',
+                                icon: 'error',
+                                text: response.message,
+                                timer: 1500
+                            })
+                        }
+
+
+                    })
+                }
 
 
 
 
 
 
-    <%- include('./layouts/footer') %>
 
-        <script>
-
-        </script>
+            </script>
 
 
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -2,42 +2,35 @@ const Product = require("../../model/productModal");
 const Cart = require("../../model/cartModal");
 const Userdb = require("../../model/userModel");
 
+
+// -rendering cart page------------------------------------------------------------------------------
 const showCart = async (req, res) => {
   try {
     const userid = req.session.user_id;
     const user = await Userdb.findOne({ _id: userid });
+    if (!user) {
+      res.redirect("/userLogin");
+    } else {
+      const cartDetails = await Cart.findOne({ userId: userid }).populate({
+        path: "products.productId",
+      });
+      // const userData = await Userdb.findOne({ _id: userId });
+      
 
-    const cartItems = await Cart.findOne({ userId: userid }).populate(
-      "products.productId"
-    );
 
-    // // Calculate total on the server side
-    // const calculateTotalQuantity = (products) => {
-    //   let totalQuantity = 0;
-    //   products.forEach((product) => {
-    //     totalQuantity += product.qty;
-    //   });
-    //   return totalQuantity;
-    // };
-    // // Calculate total on the server side
-    // const calculateTotalPrice = (products) => {
-    //   let totalPrice = 0;
-    //   products.forEach((product) => {
-    //     totalPrice += product.productId.price * product.qty;
-    //   });
-    //   return totalPrice;
-    // };
-    // const totalPrice = calculateTotalPrice(cartItems.products);
-    // const totalQuantity = calculateTotalQuantity(cartItems.products);
-    // console.log('cart items==>',cartItems);
-    res.render("cart", { cartItems, user });
+      res.render("cart", {
+        user,
+        cartDetails,
+        
+      });
+    }
   } catch (err) {
     // res.render('')
     console.log("cart-error>>", err.message);
   }
 };
 
-// add to cart ---------------------------------->
+// add to cart ----------------------------------------------------------------------------------------------------------------->
 const addToCart = async (req, res) => {
   try {
     const productid = req.params.id;
@@ -49,7 +42,7 @@ const addToCart = async (req, res) => {
       "products.productId": productid,
     });
     if (!userid) {
-      return res.redirect('/userLogin');
+      return res.redirect("/userLogin");
     }
 
     if (existingCartItem) {
@@ -72,20 +65,9 @@ const addToCart = async (req, res) => {
     console.log("cart-error>>", err.message);
   }
 };
-//---checkout------------------------------->
-const checkout = async (req, res) => {
-  try {
-    const userid = req.session.user_id;
-    const user = await Userdb.findOne({ _id: userid });
 
-    res.render("checkout", { user });
-  } catch (err) {
-    // res.render('')
-    console.log("cart-error>>", err.message);
-  }
-};
 
-//delete cart item----------------------------------------->
+//delete cart item------------------------------------------------------------------------------------->
 const deleteCart = async (req, res) => {
   try {
     const productid = req.params.id;
@@ -103,29 +85,87 @@ const deleteCart = async (req, res) => {
     console.log("cart-error>>", err.message);
   }
 };
-//update cart------------------------------->
- 
+//update cart--------------------------------------------------------------------------------------->
+
 const updateCart = async (req, res) => {
-  try { 
-    const { productId, quantity } = req.body;
-    console.log('productId:', productId, 'quantity:', quantity);
+  try {
+    const { productId, count } = req.body;
+    const userId = req.session.user_id;
+    // console.log("userId:", userId, "productId:", productId, "count:", count);
+    const cart = await Cart.findOne({ userId: userId });
+    if (!cart) {
+      return res.json({ success: false, message: "Cart not found." });
+    }
 
-    // Your logic for updating the cart based on productId and quantity
+    const cartProduct = cart.products.find(
+      (item) => item.productId.toString() === productId
+    );
+    if (!cartProduct) {
+      return res.json({
+        success: false,
+        message: "Product not found in the cart.",
+      });
+    }
+    const product = await Product.findById(productId);
+    if (!product) {
+      console.log("Product not found in the database.");
+      return res.json({
+        success: false,
+        message: "Product not found in the database.",
+      });
+    }
 
-    // Send a response back
-    res.json({ message: 'Cart updated successfully' });
+    if (count == 1) {
+      if (cartProduct.qty < 10 && cartProduct.qty < product.stock) {
+        await Cart.updateOne(
+          { userId: userId, "products.productId": productId },
+          {
+            $inc: {
+              "products.$.qty": 1,
+              "products.$.total_price": product.price,
+            },
+          }
+        );
+        return res.json({ success: true });
+      } else {
+        const maxAllowedQuantity = Math.min(10, product.stock);
+        return res.json({
+          success: false,
+          message: `The maximum quantity available for this product is ${maxAllowedQuantity}. Please adjust your quantity.`,
+        });
+      }
+    } else if (count == -1) {
+      // Decrease quantity logic
+      if (cartProduct.qty > 1) {
+        await Cart.updateOne(
+          { userId: userId, "products.productId": productId },
+          {
+            $inc: {
+              "products.$.qty": -1,
+              "products.$.total_price": -product.price,
+            },
+          }
+        );
+        return res.json({ success: true });
+      } else {
+        return res.json({
+          success: false,
+          message: "Quantity cannot be less than 1.",
+        });
+      }
+    }
   } catch (err) {
-    console.log('cart-error>>', err.message);
-    // Handle errors appropriately and send a response
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.log("cart-error>>", err.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
 
 
 module.exports = {
   showCart,
   addToCart,
-  checkout,
   deleteCart,
   updateCart,
 };

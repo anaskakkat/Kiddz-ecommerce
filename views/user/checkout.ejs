@@ -120,7 +120,7 @@ Order price & total
         display: flex;
 
         justify-content: space-between;
-        
+
         padding: 7px 8px;
     }
 
@@ -152,17 +152,19 @@ Payment Information all input
 
     .first_lastName,
     .shipping_card,
-    .address  {
+    .address {
         display: flex;
         justify-content: space-between;
         margin: 10px 0;
-       
+
     }
+
     .address {
         margin: -29px -9px 6px 0;
     }
+
     .new_card {
-        width: 100%;
+        width: 40%;
         height: 100px;
         border: 2px solid #53b5aa;
         padding: 10px;
@@ -172,7 +174,7 @@ Payment Information all input
 
     .add_savedcard {
         width: 100%;
-        height: 100px;
+        height: auto;
         border: 2px solid #a1a1a1;
         padding: 10px;
         margin: 10px;
@@ -194,101 +196,208 @@ Procced Payment button
     }
 
     .name_address input,
-    .address  input {
+    .address input {
         margin: 5px;
         /* Adjust the value as needed */
     }
 </style>
 
 <%- include('./layouts/header') %>
-<div class="banner-top">
-    <div class="container">
-        <h1>Checkout</h1>
-        <em></em>
-        <!-- <h2><a href="/">Home</a><label>/</label>Products</h2> -->
+    <div class="banner-top">
+        <div class="container">
+            <h1>Checkout</h1>
+            <em></em>
+            <!-- <h2><a href="/">Home</a><label>/</label>Products</h2> -->
+        </div>
+
     </div>
+    <br>
+    <div class="main overflow-hidden">
+        <div class="containerM">
+            <div class="payment_details">
+                <!-- <h4 class="text-center" style="color: #F67777;" >Payment Information</h4> -->
 
-</div>
-<br>
-   <div class="main overflow-hidden">
-    <div class="containerM">
-        <div class="payment_details">
-            <!-- <h4 class="text-center" style="color: #F67777;" >Payment Information</h4> -->
 
-           
-            <div class="details_card">
-            <h4 class="text-center reducedfrom " style="color: #F67777; font-weight: bold;">Shipping Details</h4><hr>
+                <div class="details_card">
+                    <h4 class="text-center reducedfrom " style="color: #F67777; font-weight: bold;">Shipping Details
+                    </h4>
+                    <hr>
 
-                <div class="name_address">
+                    <div class="name_address">
                         <input type="text" placeholder="First Name" />
                         <input type="text" placeholder="mobile" />
-                        <input type="text" onkeyup="change()" id="put" placeholder="Address" />
-                    
-                    <div class="address" >
-                        <input type="number" placeholder="Pincode" />
-                        <input type="text" placeholder="landmark" />
-                        <input type="text" placeholder="city" />
-                        <input type="text" placeholder="state" />
-                    </div>
-                </div>
-                <h4 class="text-center reducedfrom " style="color: #F67777;font-weight: bold;">Addresses</h4><hr>
+                        <input type="text" placeholder="Address" />
 
-                <div class="shipping_card">
-                    <div class="new_card">
-                        <h4>Same as personal</h4>
-                        <p id="output">Bharat House Bombay Samachar Road</p>
-                        <p>400001</p>
-                    </div>
-                    <div class="add_savedcard">
-                        <h4>Saved Address</h4>
-                        <p>Lokhandwala Complex, Andheri (west)</p>
-                        <p>400053</p>
-                    </div>
-                </div>
-               
-            </div>
-        </div>
-        <div class="order_summary">
-            <div class="summary_card">
-                <h4 class="text-center reducedfrom " style="color: #F67777;font-weight: bold;">Order Summary</h4>
-                <hr>
-
-
-
-                <div class="card_item">
-                    <div class="product_img">
-                        <img src=https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=643&q=80"
-                            alt="" />
-                    </div>
-                    <div class="product_info">
-                        <h>Nike Shoes</h3>
-                        <p>Qty: </p>
-                      
-                        <div class="product_rate_info">
-                            <h4>$ 200</h4>
-                           
+                        <div class="address">
+                            <input type="number" placeholder="Pincode" />
+                            <input type="text" placeholder="landmark" />
+                            <input type="text" placeholder="city" />
+                            <input type="text" placeholder="state" />
                         </div>
                     </div>
+                    <h4 class="text-center reducedfrom " style="color: #F67777;font-weight: bold;">Addresses</h4>
+                    <hr>
+
+
+                    <% if (!user.address || user.address.length===0) { %>
+                        <div class="shipping_card">
+
+                            <div style="width: 100%;text-align: center;">
+                                <p class="text-muted mb-1">No address found</p>
+                            </div>
+                            <% } else { %>
+                                <!-- Display a form for selecting an address -->
+                                <form action="/" method="post" style="display: flex;">
+                                    <% user.address.forEach((address, index)=> { %>
+                                        <div class="add_savedcard">
+                                            <!-- Use radio buttons to allow the user to select an address -->
+                                            <input type="radio" id="address" name="selectedAddress" value="<%= index %>"
+                                                style="margin-right: 5px;accent-color:#F67777;">
+                                            <!-- Change color here -->
+                                            <h4>
+                                                <%= address.name %>
+                                            </h4>
+                                            <p class="text-muted mb-1">
+                                                <%= address.mobile %>
+                                            </p>
+                                            <p class="text-muted mb-1">
+                                                <%= address.address %>
+                                            </p>
+                                            <p class="text-muted mb-1">
+                                                <%= address.pincode %>, <%= address.city %>, <%= address.state %>
+                                            </p>
+
+                                        </div>
+                                        <% }) %>
+
+                                            <!-- Add a submit button to submit the selected address -->
+
+                                            <!-- <button type="submit">Select Address</button> -->
+                                </form>
+                                <% } %>
+                        </div>
+
+
                 </div>
-                
-                <hr />
-                <div class="order_price">
-                    <p>Order summary</p>
-                    <h4>$400</h4>
+            </div>
+            <div class="order_summary">
+                <div class="summary_card">
+                    <h4 class="text-center reducedfrom " style="color: #F67777;font-weight: bold;">Order Summary</h4>
+                    <hr>
+
+
+                    <% cart.products.forEach((pro)=>{ %>
+                        <div class="card_item">
+                            <div class="product_img">
+                                <img src="/<%=pro.productId.images[1] %>" alt="image" />
+                            </div>
+                            <div class="product_info">
+                                <h5 style="color: #F67777;">
+                                    <%=pro.productId.productName %>
+                                </h5>
+                                <p style="
+                                font-size: medium;
+                                font-weight: lighter; color: gray;">Qty: <%= pro.qty %>
+                                </p>
+
+                                <div class="product_rate_info">
+                                    <h4>
+                                        ₹<%= pro.productId.price * pro.qty %>
+                                    </h4>
+
+                                </div>
+                            </div>
+                        </div>
+                        <% } )%>
+                            <hr />
+                            <div class="order_price">
+                                <p>Order summary</p>
+                                <h4 id="totalAmount">₹<%= subTotal %>
+                                </h4>
+                            </div>
+                            <div class="order_service">
+                                <p>Shippng</p>
+                                <h4>₹0</h4>
+                            </div>
+                            <div class="order_total">
+                                <p>Total Amount</p>
+                                <h4>₹<%= subTotal %>
+                                </h4>
+                            </div>
+
+                            <input 
+                            class="proced_payment" 
+                            onclick="placeOrdersSelect()"
+                            style="background-color: #F67777; color: white; padding: 5px; cursor: pointer;"
+                            type="button"
+                            value="Place To Order"
+                            onmouseover="this.style.backgroundColor='#ef5e5e';"
+                            onmouseout="this.style.backgroundColor='#F67777';"
+                        >
+                        
                 </div>
-                <div class="order_service">
-                    <p>Shippng</p>
-                    <h4>$10</h4>
-                </div>
-                <div class="order_total">
-                    <p>Total Amount</p>
-                    <h4>$370</h4>
-                </div>
-               
-                <a href=""><input class="proced_payment " style="background-color: #F67777;color: white;" type="button" value="Place To Order"></a>
             </div>
         </div>
     </div>
-   </div>
     <%- include('./layouts/footer') %>
-       
+
+        <script>
+            async function placeOrdersSelect() {
+                const addressRadios = document.getElementsByName('selectedAddress')
+                let isSelectedAddress = false;
+                // Loop through address radio buttons to check if one is selected
+                for (const radio of addressRadios) {
+                    if (radio.checked) {
+                        isSelectedAddress = true;
+                        break;
+                    }
+                }
+                // Validate address selection
+                if (!isSelectedAddress) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please select an address.'
+                    });
+                    return; // Prevent further execution of the function
+                }
+
+                // If both address and payment are selected, proceed with placing the order
+                if (isSelectedAddress) {
+                    placeOrder()
+                }
+
+
+            }
+
+            async function placeOrder() {
+                // Find the selected address
+                const address = document.querySelector('input[name="selectedAddress"]:checked').value;
+
+                // Get the value of totalAmount
+                const totalAmountElement = document.getElementById('totalAmount');
+                const total = totalAmountElement ? totalAmountElement.textContent.trim() : '0';
+                // Proceed with placing the order
+                $.ajax({
+                    url: '/placeOrder',
+                    method: 'post',
+                    data: {
+                        selectedAddress: address,
+                        selectedPayment: payment,
+                        subTotal: total,
+                    },
+                    success: (response) => {
+                        if (response.success === true) {
+                            const param = response.params;
+                            const url = '/successPage/' + param;
+                            window.location.href = url;
+                        }
+
+                    },
+                });
+
+
+            }
+
+
+        </script>

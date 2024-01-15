@@ -1,6 +1,9 @@
+const Cart = require("../model/cartModal");
+
 const isLogin=async(req,res,next)=>{
     try {
       if (req.session.user_id){
+       
           next();
       }else{
         res.redirect('/userLogin')

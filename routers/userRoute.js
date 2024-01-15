@@ -3,12 +3,14 @@ const route = express();
 const userController = require("../controller/user/userController");
 const cartController = require("../controller/user/cartController");
 const userAccountController = require("../controller/user/userAccountController");
+ const checkoutController=require("../controller/user/checkoutController")
 const auth = require("../middlewares/authUser");
 const path = require("path");
 const session = require("express-session");
+const { request } = require("http");
 require("dotenv").config();
 
- 
+  
 
 
 route.use( 
@@ -51,28 +53,30 @@ route.post("/otp",userController.verifyOtpPage);
 // sign out 
 route.get("/userLogout", auth.isLogin,userController.userLogout);
 
-//show products page
+//show products page----------------.>
 route.get("/showProducts", userController.showProducts);
 // sigleproduct shwing 
 route.get("/showProducts/singleProducts", userController.singleProducts);
 // selected category showing
 route.get("/catShowProducts/:id", userController.catShowProducts);
-
+ 
 //add to cart page
-route.post("/addToCart/:id", cartController.addToCart);
-//show cart
+route.post("/addToCart/:id", cartController.addToCart); 
+//show cart 
 route.get('/cart',auth.isLogin, cartController.showCart);
 // delete single cart item 
 route.get('/cart/deleteCartItem/:id',auth.isLogin, cartController.deleteCart);
 //update cart //
-route.post('/updateCartItem', cartController.updateCart);
+route.post('/updateCartItem', cartController.updateCart); 
 
 
 
 //checkout page 
-route.get('/checkout',auth.isLogin, cartController.checkout);
+route.get('/checkout',auth.isLogin, checkoutController.checkout);
+//success page
+route.get('/successPage',auth.isLogin, checkoutController.successPage);
 
-//user profile
+//user profile---------->
 route.get('/userProfile',auth.isLogin, userAccountController.userProfile);
 // showadd address page
 route.get("/address",auth.isLogin, userAccountController.showAddress);

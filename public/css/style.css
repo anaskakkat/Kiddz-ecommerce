@@ -891,29 +891,26 @@ span.actual {
 /*--quantity-end--*/
 /* Skew Backward */
 .hvr-skew-backward {
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-  -webkit-transition-property: transform;
-  transition-property: transform;
-  -webkit-transform-origin: 0 100%;
-  transform-origin: 0 100%;
-  background-color: #F67777;
-   color: #fff;
-   padding: 0.5em 1em;
-   font-size:1em;
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-property: transform;
+    transition-property: transform;
+    -webkit-transform-origin: 0 100%;
+    background-color: #F67777;
+    color: #fff;
+    padding: 0.5em 1em;
+    font-size: 1em;
 }
 .hvr-skew-backward:hover, .hvr-skew-backward:focus, .hvr-skew-backward:active {
-	-webkit-transform: skew(10deg);
-	transform: skew(10deg);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Adjust the values for your preferred shadow */
+
 	color:#fff;
-	background:#FF6C6C;
+	background:#fd6868;
     text-decoration:none;
 }
 

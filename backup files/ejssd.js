@@ -1,49 +1,66 @@
-const getUserCart = async (req, res) => {
-  const isAuthenticated = req.cookies.userAccessToken || false;
-  let cartQty = req.cookies.cartQty;
-  const userId = req.user;
-  const cartItems = await CartModel.findOne({ userId: userId }).populate("items.productId");
-  const totalQty = cartItems.items.reduce((sum,item)=>{
-    return sum += item.quantity;
-  },0)
-  const totalPrice = cartItems.items.reduce((sum,item)=>{
-    return sum += item.productId.price;
-  },0)
-  res.render("./user/cart", { isAuthenticated, cartQty, cartItems,totalQty,totalPrice });
-};
+try {
+    const productid = req.params.id;
+    const cartQuantity = req.body.cartQuantity;
+    const userid = req.session.user_id;
+    if (!userid) {
+      res.redirect("/userLogin");
+    } else {
+      const product = await Product.findOne({ _id: productid });
+      const cart = await Cart.findOne({ userId: userid });
 
-
-
-
-const addToCart = async (req, res) => {
-  const productId = req.params.productId;
-  const cartQuantity = req.body.cartQuantity;
-  console.log(cartQuantity);
-  let userAccessToken = req.cookies.userAccessToken;
-  const userId = userConfig.getUserId(userAccessToken);
-  const updateCart = await CartModel.updateOne(
-    { userId: userId, "items.productId": productId },
-    { $inc: { "items.$.quantity": 1 } },
-  );
-  if (updateCart.matchedCount === 0) {
-    await CartModel.updateOne(
-      { userId: userId },
-      {
-        $addToSet: { items: { productId: productId, quantity: cartQuantity } },
-      },
-      { upsert: true },
-    );
+      if (cart) {
+        const existProduct = cart.items.find((x) => x.productId.toString() === productid);          if (existProduct) {
+            // Update existing product in the cart
+            await Cart.findOneAndUpdate(
+                { userId: userid, 'items.productId': productid },
+                {
+                    $inc: {
+                        'items.$.qty': quantity,
+                        'items.$.total_price': quantity * existProduct.price
+                    }
+                  }
+        };
+      }else{
+// Add new product to the cart
+await Cart.findOneAndUpdate(
+  { userId: userid },
+  {
+      $push: {
+          items: {
+            productId: productid,
+              qty: quantity,
+              price: product.price,
+              total_price: quantity * product.price
+          }
+      }
   }
-  res.redirect("back");
-};
+);
+      }else{
+ // Create a new cart and add the product
+ const newCart = new Cart({
+  userId: userid,
+  items: [{
+    productId: productid,
+      qty: quantity,
+      price: product.price,
+      total_price: quantity * product.price
+  }]
+});
 
-const removeFromCart = async (req, res) => {
-  const productId = req.params.productId;
-  const userId = userConfig.getUserId(req.cookies.userAccessToken);
-  console.log(productId, userId);
-  const updateCart = await CartModel.updateOne(
-    { userId: userId },
-    { $pull: { items: { productId: productId } } },
-  );
-  res.redirect("back");
+await newCart.save();
+      }
+    
+
+
+
+      
+           
+
+          
+
+     
+  } catch (err) {
+    // res.render('')
+    console.log("cart-error>>", err.message);
+  }
 };

@@ -6,7 +6,7 @@ const cartSchema =new  mongoose.Schema({
     ref: "Userdbs",
     required: true,
   },
-  products: [
+  items: [
     {
       productId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,6 +22,14 @@ const cartSchema =new  mongoose.Schema({
         type : Number,
         required : true
     },
+    price : {
+      type : Number,
+      required: true
+  },
+  status: {
+    type:String,
+    default:"pending"
+},
     },
   ],
   

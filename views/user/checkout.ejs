@@ -8,7 +8,7 @@
         width: 100%;
         height: auto;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: space-around;
         align-items: center;
         background-color: #f9fafc;
     }
@@ -53,9 +53,9 @@ Order Card Item Card
     }
 
     .card_item .product_img img {
-        height: 80px;
+        height: 60px;
         margin-right: 20px;
-        width: 70px;
+        width: 60px;
         border-radius: 5px;
     }
 
@@ -77,9 +77,7 @@ Order Card Item Card
         justify-content: space-between;
     }
 
-    /*
-cart item + & -
-*/
+
     .pqt {
         font-size: 20px;
         line-height: 30px;
@@ -173,7 +171,7 @@ Payment Information all input
     }
 
     .add_savedcard {
-        width: 100%;
+        width: 25%;
         height: auto;
         border: 2px solid #a1a1a1;
         padding: 10px;
@@ -200,6 +198,27 @@ Procced Payment button
         margin: 5px;
         /* Adjust the value as needed */
     }
+
+    /* ----------------------
+     */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+    }
 </style>
 
 <%- include('./layouts/header') %>
@@ -212,147 +231,231 @@ Procced Payment button
 
     </div>
     <br>
-    <div class="main overflow-hidden">
+    <div class="main" style="display: flex;">
         <div class="containerM">
-            <div class="payment_details">
+            <div class="" style="width: auto;">
+
                 <!-- <h4 class="text-center" style="color: #F67777;" >Payment Information</h4> -->
 
-
                 <div class="details_card">
-                    <h4 class="text-center reducedfrom " style="color: #F67777; font-weight: bold;">Shipping Details
-                    </h4>
-                    <hr>
+                    <div class="headerPayment">
+                        <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Shipping
+                            Details</h4>
+                        <button id="addAddressBtn" class="btn btn-primary">Add Address</button>
 
-                    <div class="name_address">
-                        <input type="text" placeholder="First Name" />
-                        <input type="text" placeholder="mobile" />
-                        <input type="text" placeholder="Address" />
+                        <hr>
 
-                        <div class="address">
-                            <input type="number" placeholder="Pincode" />
-                            <input type="text" placeholder="landmark" />
-                            <input type="text" placeholder="city" />
-                            <input type="text" placeholder="state" />
-                        </div>
                     </div>
-                    <h4 class="text-center reducedfrom " style="color: #F67777;font-weight: bold;">Addresses</h4>
-                    <hr>
 
+
+
+                    <br>
 
                     <% if (!user.address || user.address.length===0) { %>
-                        <div class="shipping_card">
 
-                            <div style="width: 100%;text-align: center;">
-                                <p class="text-muted mb-1">No address found</p>
-                            </div>
-                            <% } else { %>
-                                <!-- Display a form for selecting an address -->
-                                <form action="/" method="post" style="display: flex;">
-                                    <% user.address.forEach((address, index)=> { %>
-                                        <div class="add_savedcard">
-                                            <!-- Use radio buttons to allow the user to select an address -->
-                                            <input type="radio" id="address" name="selectedAddress" value="<%= index %>"
-                                                style="margin-right: 5px;accent-color:#F67777;">
-                                            <!-- Change color here -->
-                                            <h4>
-                                                <%= address.name %>
-                                            </h4>
-                                            <p class="text-muted mb-1">
-                                                <%= address.mobile %>
-                                            </p>
-                                            <p class="text-muted mb-1">
-                                                <%= address.address %>
-                                            </p>
-                                            <p class="text-muted mb-1">
-                                                <%= address.pincode %>, <%= address.city %>, <%= address.state %>
-                                            </p>
 
-                                        </div>
-                                        <% }) %>
-
-                                            <!-- Add a submit button to submit the selected address -->
-
-                                            <!-- <button type="submit">Select Address</button> -->
-                                </form>
-                                <% } %>
+                        <div style=" text-align: center;">
+                            <p class="text-muted mb-1">No address found</p>
                         </div>
+                        <% } else { %>
 
+                            <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Addresses
+                            </h4>
+                            <hr>
+                            <!-- Display a form for selecting an address -->
+                            <form action="/" method="post" style="display: flex;">
+                                <% user.address.forEach((address, index)=> { %>
+                                    <div class="add_savedcard">
+                                        <!-- Use radio buttons to allow the user to select an address -->
+                                        <input type="radio" id="address" name="selectedAddress"
+                                            value=" <%= address.name %>,<%= address.mobile %>,<%= address.address %>,<%= address.pincode %>, <%= address.city %>, <%= address.state %>"
+                                            style="margin-right: 5px;">
+                                        <!-- Change color here -->
+                                        <h4>
+                                            <%= address.name %>
+                                        </h4>
+                                        <p class="text-muted mb-1">
+                                            <%= address.mobile %>
+                                        </p>
+                                        <p class="text-muted mb-1">
+                                            <%= address.address %>
+                                        </p>
+                                        <p class="text-muted mb-1">
+                                            <%= address.pincode %>, <%= address.city %>, <%= address.state %>
+                                        </p>
+                                    </div>
+
+                                    <% }) %>
+                                        <!-- Add a submit button to submit the selected address -->
+                                        <!-- <button type="submit">Select Address</button> -->
+                            </form>
+                            <% } %>
 
                 </div>
+
             </div>
-            <div class="order_summary">
+            <!-- ... (Previous HTML code) ... -->
+            <!-- -----------------------------------------  -->
+            <div id="modalOverlay" class="modal-overlay">
+
+                <div id="modalContent" class="modal-content" style="width: 35%;">
+                    <!-- Your add address form goes here -->
+                    <form action="/checkoutAddAddress" method="post" id="">
+                        <div class="name_address col-md-12">
+
+                            <h2 class="text-center" style="margin: inherit;">Add Address</h2>
+
+                            <div class="address1">
+                                <input class="" type="text" placeholder=" Name" name="name" value="" required />
+                                <input class="" type="text" placeholder="mobile" name="mobile" value="" required />
+                                <input class="" type="text" id="put" placeholder="Address" name="address" value=""
+                                    required />
+
+                                <input class="" type="number" placeholder="Pincode" name="pincode" value="" required />
+                                <input class="" type="text" placeholder="landmark" name="landmark" value="" required />
+                                <input class="" type="text" placeholder="city" name="city" value="" required />
+                                <input class="" type="text" placeholder="state" name="state" value="" required />
+                            </div>
+                        </div>
+                        <input class="proced_payment hvr-skew-backward mt-3"
+                            style="background-color: #1540feca; color: white; padding: 10px; cursor: pointer;"
+                            type="submit" value="Add Address">
+                    </form>
+                    <button id="closeModalBtn" class="bt btn-danger">Close</button>
+                </div>
+            </div>
+
+
+            <!-- ---------------------------------------  -->
+            <div class="order_summary  ">
                 <div class="summary_card">
-                    <h4 class="text-center reducedfrom " style="color: #F67777;font-weight: bold;">Order Summary</h4>
+                    <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Order Summary
+                    </h4>
                     <hr>
-
-
-                    <% cart.products.forEach((pro)=>{ %>
+                    <% cart.items.forEach((pro)=> { %>
                         <div class="card_item">
                             <div class="product_img">
-                                <img src="/<%=pro.productId.images[1] %>" alt="image" />
+                                <img src="/<%= pro.productId.images[1] %>" alt="image" />
                             </div>
                             <div class="product_info">
                                 <h5 style="color: #F67777;">
-                                    <%=pro.productId.productName %>
+                                    <%= pro.productId.productName %>
                                 </h5>
-                                <p style="
-                                font-size: medium;
-                                font-weight: lighter; color: gray;">Qty: <%= pro.qty %>
+                                <p style="font-size: small; font-weight: lighter; color: gray;">Qty: <%= pro.qty %>
                                 </p>
-
                                 <div class="product_rate_info">
-                                    <h4>
-                                        ₹<%= pro.productId.price * pro.qty %>
-                                    </h4>
-
+                                    <h5>₹<%= pro.productId.price * pro.qty %>
+                                    </h5>
                                 </div>
                             </div>
                         </div>
-                        <% } )%>
+                        <% }) %>
                             <hr />
+
                             <div class="order_price">
-                                <p>Order summary</p>
-                                <h4 id="totalAmount">₹<%= subTotal %>
-                                </h4>
+                                <p>Order summary ₹</p>
+                                <span><span id="totalAmount">
+                                        <%= subTotal %>
+                                    </span>
+                                </span>
                             </div>
                             <div class="order_service">
-                                <p>Shippng</p>
+                                <p>Shipping</p>
                                 <h4>₹0</h4>
                             </div>
                             <div class="order_total">
                                 <p>Total Amount</p>
-                                <h4>₹<%= subTotal %>
-                                </h4>
+
+                                <span>₹<span id="totalAmount">
+                                        <%= subTotal %>
+                                    </span>
+                                </span>
                             </div>
 
-                            <input 
-                            class="proced_payment" 
-                            onclick="placeOrdersSelect()"
-                            style="background-color: #F67777; color: white; padding: 5px; cursor: pointer;"
-                            type="button"
-                            value="Place To Order"
-                            onmouseover="this.style.backgroundColor='#ef5e5e';"
-                            onmouseout="this.style.backgroundColor='#F67777';"
-                        >
-                        
+                            <!-- ... (Previous HTML code) ... -->
+
+
+
+
+
+
+
+
+
+                            <div class="summary" style="border: 1px solid #ddd; padding: 15px; margin-top: 20px;">
+                                <h3 class="summary-title text-center"
+                                    style="font-size: 18px;color: #F67777; margin-bottom: 10px;">Payment Mode
+                                </h3>
+                                <div style="display: flex;">
+                                    <input type="radio" name="payment" id="cod" style="width: auto;" value="cod"><label
+                                        for="cod">Cash on Delivery (COD)</label>
+                                </div>
+
+                                <div style="display: flex;">
+                                    <input type="radio" name="payment" id="online" style="width: auto;"
+                                        value="card"><label for="online">Online Payment</label>
+                                </div>
+                            </div>
+                            <br>
+                            <input  class="proced_payment hvr-skew-backward mt-3" onclick="placeOrdersSelect()"
+                                style="background-color: #F67777; color: white; padding: 10px; cursor: pointer;"
+                                type="button" value="Place To Order">
+
                 </div>
             </div>
         </div>
-    </div>
-    <%- include('./layouts/footer') %>
 
+    </div>
+    </div>
+
+    <%- include('./layouts/footer') %>
+        <!-- ---------------------------------------------------------------------------------------  -->
         <script>
+
+            document.getElementById('addAddressBtn').addEventListener('click', function () {
+                // Show the modal when the button is clicked
+                var modalOverlay = document.getElementById('modalOverlay');
+                modalOverlay.style.display = 'flex';
+            });
+
+            document.getElementById('closeModalBtn').addEventListener('click', function () {
+                // Hide the modal when the close button is clicked
+                var modalOverlay = document.getElementById('modalOverlay');
+                modalOverlay.style.display = 'none';
+            });
+            // -------------------------------------------------------------------------------------
+
+
+            // -------------------------------------------------------------------------------------
+
             async function placeOrdersSelect() {
+
+
                 const addressRadios = document.getElementsByName('selectedAddress')
+
+                const paymentRadios = document.getElementsByName('payment')
                 let isSelectedAddress = false;
+                let isSelectedPayment = false;
+
                 // Loop through address radio buttons to check if one is selected
                 for (const radio of addressRadios) {
                     if (radio.checked) {
                         isSelectedAddress = true;
+                        // console.log('address checked');
                         break;
                     }
                 }
+                // Loop through payment radio buttons to check if one is selected
+                for (const radio of paymentRadios) {
+                    if (radio.checked) {
+                        // console.log("payment checked");
+                        isSelectedPayment = true;
+                        break;
+                    }
+                }
+
                 // Validate address selection
+
                 if (!isSelectedAddress) {
                     Swal.fire({
                         icon: 'error',
@@ -361,9 +464,18 @@ Procced Payment button
                     });
                     return; // Prevent further execution of the function
                 }
+                if (!isSelectedPayment) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please select a payment method.'
+                    });
+                    return; // Prevent further execution of the function
+                }
 
                 // If both address and payment are selected, proceed with placing the order
-                if (isSelectedAddress) {
+                if (isSelectedAddress && isSelectedPayment) {
+                    // console.log('checcked success');
                     placeOrder()
                 }
 
@@ -373,13 +485,15 @@ Procced Payment button
             async function placeOrder() {
                 // Find the selected address
                 const address = document.querySelector('input[name="selectedAddress"]:checked').value;
-
+                const payment = document.querySelector('input[name="payment"]:checked').value;
+                // console.log('address==',address,'payment==',payment);
                 // Get the value of totalAmount
                 const totalAmountElement = document.getElementById('totalAmount');
                 const total = totalAmountElement ? totalAmountElement.textContent.trim() : '0';
+                // console.log('total',total);
                 // Proceed with placing the order
                 $.ajax({
-                    url: '/placeOrder',
+                    url: '/PlaceToOrder',
                     method: 'post',
                     data: {
                         selectedAddress: address,
@@ -389,7 +503,7 @@ Procced Payment button
                     success: (response) => {
                         if (response.success === true) {
                             const param = response.params;
-                            const url = '/successPage/' + param;
+                            const url = '/successPage/'+param;
                             window.location.href = url;
                         }
 

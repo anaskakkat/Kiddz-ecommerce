@@ -5,20 +5,29 @@
 
 
 
-<div style="max-width: 800px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+  <div
+    style="max-width: 800px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
     <div style="text-align: center; margin-bottom: 20px;">
       <h1>Order Success</h1>
     </div>
+
+
+
     <div style="text-align: center;">
-      <p>Your order has been successfully placed. Thank you for shopping with us!</p>
-      <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 15px;">
-        <h2>Order Details</h2>
-        <!-- Display order details here -->
-        <a href=""><p>Order ID: <span style="font-weight: bold;">123456789</span></p></a>
-        <p>Order Date: <span style="font-weight: bold;">January 15, 2024</span></p>
-        <!-- Add more details as needed -->
-      </div>
+      <p>Your order has been successfully placed. Thank you <%=order.user_name%> for shopping with us!</p>
+   
+        <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 15px;">
+          <h2>Order Details</h2>
+          <!-- Display order details here -->
+          <a href="">
+            <p>Order ID: <span style="font-weight: bold;"> <%= order._id %> </span></p>
+          </a>
+          <p>Order Date: <span style="font-weight: bold;"><%= order.date %></span></p>
+          <!-- Add more details as needed -->
+        </div>
+     
     </div>
+
     <div style="margin-top: 20px; text-align: center; color: #666;">
       <p>© 2024 Shoppin. All rights reserved.</p>
     </div>
@@ -27,7 +36,6 @@
 
 
 
-  
 
 
 
@@ -39,4 +47,5 @@
 
 
 
-<%- include('./layouts/footer') %>
+
+  <%- include('./layouts/footer') %>

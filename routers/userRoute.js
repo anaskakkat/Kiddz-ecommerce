@@ -68,11 +68,19 @@ route.get('/cart',auth.isLogin, cartController.showCart);
 route.get('/cart/deleteCartItem/:id',auth.isLogin, cartController.deleteCart);
 //update cart //
 route.post('/updateCartItem', cartController.updateCart); 
+ 
 
 
-
-//checkout page 
+//checkout page  
 route.get('/checkout',auth.isLogin, checkoutController.checkout);
+// place to order
+route.post('/PlaceToOrder',auth.isLogin, checkoutController.PlaceToOrder);
+// address save
+route.post("/checkoutAddAddress",checkoutController.checkoutAddAddress);
+//success page 
+route.get('/successPage/:id',auth.isLogin, checkoutController.successPage);
+
+
 //success page
 route.get('/successPage',auth.isLogin, checkoutController.successPage);
 

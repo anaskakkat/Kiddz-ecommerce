@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const orderSchema = new Schema({
-  user_id: {
+const orderSchema = new mongoose.Schema({
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Make sure this matches the name of your User model
+    ref: "Userdbs", // Make sure this matches the name of your User model
     required: true,
   },
   order_id: {
@@ -31,6 +30,7 @@ const orderSchema = new Schema({
     required: true,
   },
   status: {
+    // default:"pending",
     type: String,
     required: true,
   },
@@ -46,12 +46,12 @@ const orderSchema = new Schema({
   },
   items: [
     {
-      product_id: {
+      productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "product",
+        ref: "products",
         required: true,
       },
-      quantity: {
+      qty: {
         type: Number,
         required: true,
       },
@@ -74,4 +74,5 @@ const orderSchema = new Schema({
   ],
 });
 
-module.exports = mongoose.model("Order", orderSchema);
+const Order = mongoose.model("Order", orderSchema);
+module.exports = Order;

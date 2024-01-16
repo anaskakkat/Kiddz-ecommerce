@@ -4,11 +4,11 @@
         margin: 5px;
     }
 
-    .container-c {
+    .containerM {
         width: 100%;
-        height: 92vh;
+        height: auto;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: space-around;
         align-items: center;
         background-color: #f9fafc;
     }
@@ -18,10 +18,10 @@ Payment Information card
 */
     .details_card {
         width: 700px;
-        height: 400px;
+        height: auto;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
         border-radius: 8px;
-        padding: 10px;
+        padding: 14px 70px;
         background-color: #fff;
     }
 
@@ -31,7 +31,7 @@ Order Summary Card
     .summary_card {
         background-color: #fff;
         width: 350px;
-        height: 400px;
+        height: auto;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
         border-radius: 8px;
         padding: 10px;
@@ -66,8 +66,8 @@ Order Card Item Card
     }
 
     .product_info p {
-        color: #a1a1a1;
-        font-size: 14px;
+        color: #0d0d0d;
+        font-size: 17px;
     }
 
     .product_rate_info {
@@ -77,9 +77,7 @@ Order Card Item Card
         justify-content: space-between;
     }
 
-    /*
-cart item + & -
-*/
+
     .pqt {
         font-size: 20px;
         line-height: 30px;
@@ -120,7 +118,8 @@ Order price & total
         display: flex;
 
         justify-content: space-between;
-        padding: 10px;
+
+        padding: 7px 8px;
     }
 
     .order_price p,
@@ -155,10 +154,15 @@ Payment Information all input
         display: flex;
         justify-content: space-between;
         margin: 10px 0;
+
+    }
+
+    .address {
+        margin: -29px -9px 6px 0;
     }
 
     .new_card {
-        width: 100%;
+        width: 40%;
         height: 100px;
         border: 2px solid #53b5aa;
         padding: 10px;
@@ -167,8 +171,8 @@ Payment Information all input
     }
 
     .add_savedcard {
-        width: 100%;
-        height: 100px;
+        width: 25%;
+        height: auto;
         border: 2px solid #a1a1a1;
         padding: 10px;
         margin: 10px;
@@ -178,7 +182,7 @@ Payment Information all input
     /*
 Procced Payment button
 */
-    /* .proced_payment a {
+    .proced_payment a {
         padding: 10px 20px;
         width: 200px;
         border: 2px solid #f5f5f5;
@@ -187,17 +191,36 @@ Procced Payment button
         margin-left: 10px;
         cursor: pointer;
         text-decoration: none;
-    } */
+    }
 
     .name_address input,
     .address input {
         margin: 5px;
         /* Adjust the value as needed */
     }
+    /* ----------------------
+     */
+     .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
 </style>
 
 <%- include('./layouts/header') %>
-
     <div class="banner-top">
         <div class="container">
             <h1>Checkout</h1>
@@ -206,103 +229,264 @@ Procced Payment button
         </div>
 
     </div>
+    <br>
+    <div class="main" style="display: flex;">
+        <div class="containerM">
+            <div class="" style="width: auto;">
 
-    <br><br>
-    <div class="ma">
-        <div class="container-c">
-            <div class="payment_details">
-                <h3 class="text-center" style="color: #F67777;" >Payment Information</h3>
-                <br>
-               <div class="name_address">
-        <div class="first_lastName">
-          <input type="text" placeholder="First Name" />
-          <input type="text" placeholder="Last Name" />
-        </div>
-        <div class="address">
-          <input type="text" onkeyup="change()" id="put" placeholder="Address" />
-          <input type="number" placeholder="Pincode" />
-          <input type="text" placeholder="Country" />
-        </div>
-      </div>
+                <!-- <h4 class="text-center" style="color: #F67777;" >Payment Information</h4> -->
+
+                <div class="details_card">
+                    <div class="headerPayment">
+                        <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Shipping
+                            Details</h4>
+                        <hr>
+                    </div>
+                    <input type="radio" name="selectedAddress" id="newAddressRadio" value="newAddress">New Address
+
+                    <div class="name_address" id="newAddressFields"style="display: none;">
+                        <input type="text" name="name" placeholder="Name" class="form-control" />
+                        <input type="text" name="mobile" placeholder="Mobile" class="form-control" />
+                        <input type="text" name="address" placeholder="Address" class="form-control" />
+                        <input type="number" name="pincode" placeholder="Pincode" class="form-control" />
+                        <input type="text" name="landmark" placeholder="Landmark" class="form-control" />
+                        <input type="text" name="city" placeholder="City" class="form-control" />
+                        <input type="text" name="state" placeholder="State" class="form-control" />
+
+
+                    </div>
+                    <br>
+
+                    <% if (!user.address || user.address.length===0) { %>
+
+
+                        <div style=" text-align: center;">
+                            <p class="text-muted mb-1">No address found</p>
+                        </div>
+                        <% } else { %>
+                            <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Addresses
+                            </h4>
+                            <hr>
+                            <!-- Display a form for selecting an address -->
+                            <form action="/" method="post" style="display: flex;">
+                                <% user.address.forEach((address, index)=> { %>
+                                    <div class="add_savedcard">
+                                        <!-- Use radio buttons to allow the user to select an address -->
+                                        <input type="radio" id="address" name="selectedAddress"
+                                            value=" <%= address.name %>,<%= address.mobile %>,<%= address.address %>,<%= address.pincode %>, <%= address.city %>, <%= address.state %>"
+                                            style="margin-right: 5px; accent-color: #F67777;">
+                                        <!-- Change color here -->
+                                        <h4>
+                                            <%= address.name %>
+                                        </h4>
+                                        <p class="text-muted mb-1">
+                                            <%= address.mobile %>
+                                        </p>
+                                        <p class="text-muted mb-1">
+                                            <%= address.address %>
+                                        </p>
+                                        <p class="text-muted mb-1">
+                                            <%= address.pincode %>, <%= address.city %>, <%= address.state %>
+                                        </p>
+                                    </div>
+
+                                    <% }) %>
+                                        <!-- Add a submit button to submit the selected address -->
+                                        <!-- <button type="submit">Select Address</button> -->
+                            </form>
+                            <% } %>
+
+                </div>
+
             </div>
-            <div class="order_summary">
-                <h3 class="text-center reducedfrom " style="color: #F67777;">Order Summary</h3>
-                <br>
+            <!-- ... (Previous HTML code) ... -->
+      
+
+
+
+
+            <div class="order_summary  ">
                 <div class="summary_card">
-                    <div class="card_item">
-                        <div class="product_img">
-                            <img src=https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=643&q=80"
-                                alt="" />
-                        </div>
-                        <div class="product_info">
-                            <h1>Nike Shoes</h1>
-                            <p>Lorem Ipsum is simply dummy text.</p>
-                            <div class="close-btn">
-                                <i class="fa fa-close"></i>
+                    <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Order Summary
+                    </h4>
+                    <hr>
+                    <% cart.products.forEach((pro)=> { %>
+                        <div class="card_item">
+                            <div class="product_img">
+                                <img src="/<%= pro.productId.images[1] %>" alt="image" />
                             </div>
-                            <div class="product_rate_info">
-                                <h1>&#8377 200</h1>
-                                <span class="pqt-minus">-</span>
-                                <span class="pqt">1</span>
-                                <span class="pqt-plus">+</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card_item">
-                        <div class="product_img">
-                            <img src="https://images.unsplash.com/photo-1543512214-318c7553f230?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
-                                alt="" />
-                        </div>
-                        <div class="product_info">
-                            <h1>Amazon Prime</h1>
-                            <p>Lorem Ipsum is simply dummy text.</p>
-                            <div class="close-btn">
-                                <i class="fa fa-close"></i>
-                            </div>
-                            <div class="product_rate_info">
-                                <h1>&#8377 160</h1>
-                                <span class="pqt-minus">-</span>
-                                <span class="pqt">1</span>
-                                <span class="pqt-plus">+</span>
+                            <div class="product_info">
+                                <h5 style="color: #F67777;">
+                                    <%= pro.productId.productName %>
+                                </h5>
+                                <p style="font-size: medium; font-weight: lighter; color: gray;">Qty: <%= pro.qty %>
+                                </p>
+                                <div class="product_rate_info">
+                                    <h4>₹<%= pro.productId.price * pro.qty %>
+                                    </h4>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <hr />
-                    <div class="order_price">
-                        <p>Subtotal</p>
-                        <h4>&#8377 400</h4>
-                    </div>
-                    <div class="order_service">
-                        <p>Shipping</p>
-                        <h4>&#8377 10</h4>
-                    </div>
-                    <div class="order_total">
-                        <p>Total </p>
-                        <h4>&#8377 370</h4>
-                    </div>
+                        <% }) %>
+                            <hr />
+
+                            <div class="order_price">
+                                <p>Order summary</p>
+                                <span>₹<h4 id="totalAmount">
+                                        <%= subTotal %>
+                                    </h4>
+                                </span>
+                            </div>
+                            <div class="order_service">
+                                <p>Shipping</p>
+                                <h4>₹0</h4>
+                            </div>
+                            <div class="order_total">
+                                <p>Total Amount</p>
+
+                                <span>₹<h4 id="totalAmount">
+                                        <%= subTotal %>
+                                    </h4>
+                                </span>
+                            </div>
+
+                            <!-- ... (Previous HTML code) ... -->
+
+                            
+
+                           
+                        
+
+
+
+
+
+                            <div class="summary" style="border: 1px solid #ddd; padding: 15px; margin-top: 20px;">
+                                <h3 class="summary-title text-center"
+                                    style="font-size: 18px;color: #F67777; margin-bottom: 10px;">Payment Mode
+                                </h3>
+                                <div style="display: flex;">
+                                    <input type="radio" name="payment" id="cod" style="width: auto;"
+                                        value="cash on delivery"><label for="cod">Cash on Delivery (COD)</label>
+                                </div>
+
+                                <div style="display: flex;">
+                                    <input type="radio" name="payment" id="online" style="width: auto;"
+                                        value="online"><label for="online">Online Payment</label>
+                                </div>
+                            </div>
+                            <br>
+                            <input class="proced_payment hvr-skew-backward mt-3" onclick="placeOrdersSelect()"
+                                style="background-color: #F67777; color: white; padding: 10px; cursor: pointer;"
+                                type="button" value="Place To Order">
+
                 </div>
             </div>
         </div>
 
     </div>
-<br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
 
     <%- include('./layouts/footer') %>
+<!-- ---------------------------------------------------------------------------------------  -->
+        <script>
+
+document.getElementById('addAddressBtn').addEventListener('click', function() {
+    // Show the modal when the button is clicked
+    var modalOverlay = document.getElementById('modalOverlay');
+    modalOverlay.style.display = 'flex';
+});
+
+document.getElementById('closeModalBtn').addEventListener('click', function() {
+    // Hide the modal when the close button is clicked
+    var modalOverlay = document.getElementById('modalOverlay');
+    modalOverlay.style.display = 'none';
+});
+// -------------------------------------------------------------------------------------
+            async function placeOrdersSelect() {
+
+
+                const addressRadios = document.getElementsByName('selectedAddress')
+
+                const paymentRadios = document.getElementsByName('payment')
+                let isSelectedAddress = false;
+                let isSelectedPayment = false;
+
+                // Loop through address radio buttons to check if one is selected
+                for (const radio of addressRadios) {
+                    if (radio.checked) {
+                        isSelectedAddress = true;
+                        // console.log('address checked');
+                        break;
+                    }
+                }
+                // Loop through payment radio buttons to check if one is selected
+                for (const radio of paymentRadios) {
+                    if (radio.checked) {
+                        // console.log("payment checked");
+                        isSelectedPayment = true;
+                        break;
+                    }
+                }
+
+                // Validate address selection
+
+                if (!isSelectedAddress) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please select an address.'
+                    });
+                    return; // Prevent further execution of the function
+                }
+                if (!isSelectedPayment) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Please select a payment method.'
+                });
+                return; // Prevent further execution of the function
+              }
+
+                // If both address and payment are selected, proceed with placing the order
+                if (isSelectedAddress && isSelectedPayment) {
+                    // console.log('checcked success');
+                    placeOrder()
+                }
+
+
+            }
+
+            async function placeOrder() {
+                // Find the selected address
+                const address = document.querySelector('input[name="selectedAddress"]:checked').value;
+                const payment = document.querySelector('input[name="payment"]:checked').value;
+                // console.log('address==',address,'payment==',payment);
+                // Get the value of totalAmount
+                const totalAmountElement = document.getElementById('totalAmount');
+                const total = totalAmountElement ? totalAmountElement.textContent.trim() : '0';
+                // console.log('total',total);
+                // Proceed with placing the order
+                $.ajax({
+                    url: '/PlaceToOrder',
+                    method: 'post',
+                    data: {
+                        selectedAddress: address,
+                        selectedPayment: payment,
+                        subTotal: total,
+                    },
+                    success: (response) => {
+                        if (response.success === true) {
+                            const param = response.params;
+                            const url = '/successPage/' + param;
+                            window.location.href = url;
+                        }
+
+                    },
+                });
+
+
+            }
+
+
+        </script>

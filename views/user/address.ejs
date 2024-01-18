@@ -1,31 +1,33 @@
 <%- include('./layouts/header') %>
-    <%- include('./layouts/userHeader') %>
 
 
-        <br><br><br>
-
+<div style="width: 100%; height: 110px; background-color: #f3f3f3; text-align: center; font-size: 24px;font-weight: bolder; color: #7f7f7f;line-height: 100px;" > User Profile</div>
+    <%- include('./layouts/userHeader') %> 
+    <br>
 
         <div class="main ">
 
             <div class="container mt-5 text-center">
-                <% if (message.length> 0) { %>
-                    <div style="color: red;">
-                        <%= message[0] %>
-                    </div>
-                    <% } %>
+          
 
 
                         <div class="row ">
 
                             <div class="container col-md-7"
-                                style="border: 1px solid #ccc; border-radius: 5px; padding: 15px ; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                                style="margin-left: -15px;margin-top: -15px;">
                                 <a href="/addAddress"
-                                    style="display: inline-block; padding: 8px 20px;margin-bottom: 10px; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none; background-color: #3498db; color: #fff; border: 2px solid #3498db; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;"
+                                    style="display: inline-block;  padding: 8px 20px;margin-bottom: 10px; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none; background-color: #3498db; color: #fff; border: 2px solid #3498db; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;"
                                     onmouseover="this.style.backgroundColor='#2980b9'"
                                     onmouseout="this.style.backgroundColor='#3498db'">Create Address</a>
+                                    <% if (message.length> 0) { %>
+                                        <div style="color: red;">
+                                            <%= message[0] %>
+                                        </div>
+                                        <% } %>
+                                    <hr>
                                 <% user.address.forEach(userdata=> { %>
                                     <div class="col-lg-2 pb-5 address author-card pb-3 text-center"
-                                        style="border: 1px solid #ccc; padding: 16px 16px; border-radius: 8px; background-color: #f9f9f9; text-align: left; width: auto; margin:20px;">
+                                        style=" padding: 16px 16px; border-radius: 8px; text-align: left; width: auto;margin-right: 10px;font-size: small; font-weight: bold;">
 
                                         <p style="margin: 0;">Name: <%= userdata.name %>
                                         </p>
@@ -43,11 +45,11 @@
                                         </p>
 
                                         <a href="/editAddress/<%= userdata._id %>"
-                                            style="background-color: #4CAF50; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; text-decoration: none; display: inline-block;">
+                                            style="background-color: #4CAF50; color: white; padding: 0px 6px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; text-decoration: none; display: inline-block;">
                                             Edit
                                         </a>
                                         <a href="/deleteAddress/<%= userdata._id %>"
-                                            style="background-color: #f44336; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; text-decoration: none; display: inline-block;">
+                                            style="background-color: #f44336; color: white; padding: 0px 6px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; text-decoration: none; display: inline-block;">
                                             Delete
                                         </a>
 

@@ -46,7 +46,7 @@ route.post('/registration', userController.createUser);
  
 
 // otp page render 
-route.get("/otp",userController.otpPage);
+route.get("/otp",auth.isLogout,userController.otpPage);
 // verify otp 
 route.post("/otp",userController.verifyOtpPage);
 //  otp resend
@@ -97,7 +97,16 @@ route.get("/editAddress/:id", auth.isLogin,userAccountController.editAddress);
 // update address 
 route.post("/updateAddress/:id",userAccountController.updateAddress);
 //delete address
-route.get("/deleteAddress/:id",userAccountController.deleteAddress);
+route.get("/deleteAddress/:id",auth.isLogin,userAccountController.deleteAddress);
+// show order page user
+route.get("/ordePageUser",auth.isLogin,userAccountController.ordePageUser);
+// show user order  details 
+route.get("/ordePageUser/userOrderDetails/:orderID",auth.isLogin,userAccountController.userOrderDetails);
+
+//return reason 
+route.post("/ordePageUser/userOrderDetails",userAccountController.returnProduct);
+//product calceled 
+route.post("/ordePageUser/userOrderDetails",userAccountController.canceledProduct);
 
 
 

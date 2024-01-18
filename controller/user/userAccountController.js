@@ -1,5 +1,7 @@
-
+const Product = require("../../model/productModal");
+const Cart = require("../../model/cartModal");
 const Userdb = require("../../model/userModel");
+const Order = require("../../model/orderModel");
 
 //user profile-------------------------------------------->
 const userProfile = async (req, res) => {
@@ -138,14 +140,94 @@ const deleteAddress = async (req, res) => {
     const userid = req.session.user_id;
     // const user = await Userdb.findOne({ _id: userid });
     await Userdb.findOneAndUpdate(
-      { _id: userid},
-      { $pull:{address:{_id:addressid}} }
+      { _id: userid },
+      { $pull: { address: { _id: addressid } } }
     );
     req.flash("message", "Address Deleted ");
     console.log("address deleted");
     res.redirect("/address");
   } catch (err) {
     console.log("cart-error>>", err.message);
+  }
+};
+//user orders-------------------------------------------->
+const ordePageUser = async (req, res) => {
+  try {
+    const userid = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userid });
+
+    const orderDetails = await Order.find({ userId: userid });
+
+    // console.log("orderDetails==>", orderDetails);
+    res.render("orderPage", { user, orderDetails });
+  } catch (err) {
+    // res.render('')
+    console.log("cart-error>>", err.message);
+  }
+};
+//user orders details-------------------------------------------->
+const userOrderDetails = async (req, res) => {
+  try {
+    const orderId = req.params.orderID;
+    // console.log("orderId:::", orderId);
+    const userid = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userid });
+    const orderLists = await Order.findOne({ _id: orderId })
+      .populate("userId")
+      .populate("items.productId");
+
+    // console.log("orderLists==>", orderLists);
+    res.render("userOrderDetails", { user, orderLists });
+  } catch (err) {
+    // res.render('')
+    console.log("error>>", err.message);
+  }
+};
+//user return orders-------------------------------------------->
+const returnProduct = async (req, res) => {
+  try {
+    const { orderId, returnReason } = req.body;
+    const order = await Order.findOneAndUpdate(
+      { _id: orderId },
+      { $set: { returnReason: returnReason ,status:'Returned'} },
+      { upsert: true }
+    );
+    for (const item of order.items) {
+      // Find the product by ID and update its quantity
+      await Product.findByIdAndUpdate(item.productId, {
+          $inc: { stock: item.qty }
+      });
+  }
+    console.log('stock item updated');
+    res.json('success:true')
+    // res.redirect('back')
+  } catch (err) {
+    // res.render('')
+    console.log("error>>", err.message);
+  }
+};
+//user canceled orders-------------------------------------------->
+const canceledProduct = async (req, res) => {
+  try {
+    const { orderId, cancelReason } = req.body;
+    console.log(orderId,'cancle reaosn', cancelReason);
+    const order = await Order.findOneAndUpdate(
+      { _id: orderId },
+      { $set: { cancelationReason: cancelReason ,status:'Canceled'} },
+      { upsert: true }
+    );
+    for (const item of order.items) {
+      // Find the product by ID and update its quantity
+      await Product.findByIdAndUpdate(item.productId, {
+          $inc: { stock: item.qty }
+      });
+  }
+    console.log('cancle updated');
+    // res.json('success:true')
+    
+  } catch (err) {
+    // res.render('')
+    console.log("error>>", err.message);
   }
 };
 
@@ -157,4 +239,8 @@ module.exports = {
   editAddress,
   updateAddress,
   deleteAddress,
+  ordePageUser,
+  userOrderDetails,
+  returnProduct,
+  canceledProduct,
 };

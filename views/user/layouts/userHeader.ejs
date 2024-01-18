@@ -9,7 +9,7 @@
 
     .author-card {
         position: relative;
-        padding-bottom: 48px;
+        padding: 9px;
         background-color: #fff;
         box-shadow: 0 12px 20px 1px rgba(64, 64, 64, .09);
     }
@@ -58,7 +58,7 @@
     }
 
     .author-card .author-card-profile .author-card-avatar {
-        width: 85px;
+        width: 60px;
         border-radius: 50%;
         box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .15);
         overflow: hidden;
@@ -124,7 +124,7 @@
         margin-right: .25rem !important;
     }
 
-    
+
 
     .list-group-flush:last-child .list-group-item:last-child {
         border-bottom: 0;
@@ -186,7 +186,7 @@
 
     .list-group-item.active:not(.disabled)::before {
         background-color: #ac32e4;
-    } 
+    }
 
     .list-group-item::before {
         display: block;
@@ -198,33 +198,28 @@
         background-color: transparent;
         content: '';
     }
-  
 </style>
 
 
 
-    <br><br><br>
 
 
-    <div class="main">
-        <div class="container border mt-5">
-            <div class="row" style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin-bottom: 15px;background-color: #ebebeb;">
+<div class="main">
+    <div class="container border mt-5">
+        <br>
+        <div class="row">
+            <div class="headNav">
                 <div class="col-lg-4 pb-5">
                     <!-- Account Sidebar-->
                     <div class="author-card pb-3">
-                        <div class="author-card-cover"
-                            style="background-image: url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);">
-                            <a class="btn btn-style-1 btn-white btn-sm" href="#" data-toggle="tooltip" title=""
-                                data-original-title="You currently have 290 Reward points to spend"><i
-                                    class="fa fa-award text-md"></i>&nbsp;290 </a>
-                        </div>
+                        <br>
                         <div class="author-card-profile">
                             <div class="author-card-avatar"><img
                                     src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Daniel Adams">
                             </div>
                             <div class="author-card-details">
-                                <h5 class="author-card-name text-lg">Daniel Adams</h5><span
-                                    class="author-card-position">Joined February 06, 2017</span>
+                                <h5 class="author-card-name text-lg"><%= user.name %></h5>
+                                <!-- <spanclass="author-card-position">Joined February 06, 2017</span> -->
                             </div>
                         </div>
                     </div>
@@ -232,48 +227,65 @@
                         <nav class="list-group list-group-flush" id="profileNav">
 
                             <!-- <a class="list-group-item text-danger" href="/userProfile" id="profileSettingsLink"><i class="fe-icon-map-pin text-muted"></i>Profile Settings</a> -->
-                            <a class="list-group-item" href="/userProfile" id="profileSettingsLink"><i class="fe-icon-map-pin text-muted"></i>Profile</a>
-                            <a class="list-group-item" href="/address" id="addressesLink"><i class="fe-icon-map-pin text-muted"></i>Addresses</a>
-                            <a class="list-group-item" href="" target="__blank">
+                            <a class="list-group-item" href="/userProfile" id="profileSettingsLink"><i
+                                    class="fe-icon-map-pin text-muted"></i>Profile</a>
+                            <a class="list-group-item" href="/address" id="addressesLink"><i
+                                    class="fe-icon-map-pin text-muted"></i>Addresses</a>
+                            <a class="list-group-item" href="/ordePageUser" id="addressesLink"><i
+                                    class="fe-icon-map-pin text-muted"></i>Orders</a>
+                            <a class="list-group-item" href="/" id="addressesLink"><i
+                                    class="fe-icon-map-pin text-muted"></i></a>
+                            <a class="list-group-item" href="/" id="sesLink"><i
+                                    class="fe-icon-map-pin text-muted"></i></a>
+                            <a class="list-group-item" href="/" id="sesLink"><i
+                                    class="fe-icon-map-pin text-muted"></i></a>
+                          
+                               
+
+
+                            <!-- <a class="list-group-item" href="#">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div><i class="fe-icon-shopping-bag mr-1 text-muted"></i>
+                                        <div class="d-inline-block font-weight-medium text-uppercase">Orders</div>
+                                    </div><span class="badge badge-secondary">6</span>
+                                </div>
+                            </a> -->
+
+                            <!-- <a class="list-group-item" href="" target="__blank">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div><i class="fe-icon-heart mr-1 text-muted"></i>
                                         <div class="d-inline-block font-weight-medium text-uppercase">My Wishlist</div>
                                     </div><span class="badge badge-secondary">3</span>
                                 </div>
-                            </a>
-                            <a class="list-group-item" href="#">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div><i class="fe-icon-shopping-bag mr-1 text-muted"></i>
-                                        <div class="d-inline-block font-weight-medium text-uppercase">Orders List</div>
-                                    </div><span class="badge badge-secondary">6</span>
-                                </div>
-                            </a>
-                            <a class="list-group-item" href="https://www.bootdey.com/snippets/view/bs4-account-tickets"
+                            </a> -->
+
+                            <!-- <a class="list-group-item" href="https://www.bootdey.com/snippets/view/bs4-account-tickets"
                                 target="__blank">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div><i class="fe-icon-tag mr-1 text-muted"></i>
                                         <div class="d-inline-block font-weight-medium text-uppercase">My Tickets</div>
                                     </div><span class="badge badge-secondary">4</span>
                                 </div>
-                            </a>
-                        </nav>
+                            </a> -->
                     </div>
+                    </nav>
                 </div>
+            </div>
 
-                <script>
-                    // Get the current URL or route
-                    var currentURL = window.location.pathname;
-                
-                    // Get all links in the navigation
-                    var navLinks = document.querySelectorAll("#profileNav a");
-                
-                    // Loop through the links
-                    navLinks.forEach(function(link) {
-                        // Check if the link's href matches the current URL
-                        if (link.getAttribute("href") === currentURL) {
-                            // Add the "active" class to the matching link
-                            link.classList.add("active");
-                        }
-                    });
-                </script>
-                <script src="https://kit.fontawesome.com/0701bc866c.js" crossorigin="anonymous"></script>
+            <script>
+                // Get the current URL or route
+                var currentURL = window.location.pathname;
+
+                // Get all links in the navigation
+                var navLinks = document.querySelectorAll("#profileNav a");
+
+                // Loop through the links
+                navLinks.forEach(function (link) {
+                    // Check if the link's href matches the current URL
+                    if (link.getAttribute("href") === currentURL) {
+                        // Add the "active" class to the matching link
+                        link.classList.add("active");
+                    }
+                });
+            </script>
+            <script src="https://kit.fontawesome.com/0701bc866c.js" crossorigin="anonymous"></script>

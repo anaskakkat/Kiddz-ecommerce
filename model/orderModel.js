@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Userdbs", // Make sure this matches the name of your User model
+    ref: "userDb", // Make sure this matches the name of your User model
     required: true,
   },
   order_id: {
@@ -30,7 +30,7 @@ const orderSchema = new mongoose.Schema({
     required: true,
   },
   status: {
-    // default:"pending",
+    default:"Placed",
     type: String,
     required: true,
   },
@@ -43,6 +43,12 @@ const orderSchema = new mongoose.Schema({
   },
   total: {
     type: Number,
+  },
+  cancelationReason: {
+    type: String,
+  },
+  returnReason: {
+    type: String,
   },
   items: [
     {
@@ -63,13 +69,11 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
-      ordered_status: {
-        type: String,
-        default: "placed",
-      },
-      cancellationReason: {
-        type: String,
-      },
+      // ordered_status: {
+      //   type: String,
+      //   default: "Placed",
+      // },
+      
     },
   ],
 });

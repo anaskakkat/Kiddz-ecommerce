@@ -45,7 +45,7 @@ const checkout = async (req, res) => {
 const PlaceToOrder = async (req, res) => {
   try {
     const userid = req.session.user_id;
-    const date = new Date();
+    
     // console.log("body---------->", req.body);
     const { selectedAddress, selectedPayment, subTotal } = req.body;
 
@@ -61,7 +61,8 @@ const PlaceToOrder = async (req, res) => {
     // console.log("cartProducts==>", cartProducts);
     //  const totalQuantity = cartProducts.reduce((total, item) => total + item.quantity, 0);
     // date make
-
+    const date = new Date();
+    const orderDate = date.toLocaleDateString();
     const delivery = new Date(date.getTime() + 10 * 24 * 60 * 60 * 1000);
     const deliveryDate = delivery
       .toLocaleString("en-US", {
@@ -76,8 +77,8 @@ const PlaceToOrder = async (req, res) => {
       delivery_address: selectedAddress,
       user_name: userData.name,
       total_amount: subTotal,
-      date: date,
-      status: 'pending',
+      date: orderDate,
+      status: 'Placed',
       expected_delivery: deliveryDate,
       payment: selectedPayment,
       items: cartProducts,

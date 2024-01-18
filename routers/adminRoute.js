@@ -3,6 +3,7 @@ const adminRouter = express();
 const adminControl = require("../controller/admin/adminController");
 const productController=require('../controller/admin/productController')
 const categoryController=require('../controller/admin/categoryController')
+const orderController=require('../controller/admin/orderController')
 
 const auth = require("../middlewares/authAdmin");
 const path = require('path');
@@ -107,5 +108,14 @@ adminRouter.post("/editCategory/:id", categoryController.updateCategory);
 adminRouter.get("/blockCategory/:categoryId",auth.isLogin, categoryController.blockCategory);
 // unblock category
 adminRouter.get("/unblockCategory/:categoryId",auth.isLogin, categoryController.unBlockCategory);
+
+//orders page renser
+adminRouter.get("/orders",auth.isLogin, orderController.orders);
+//order  details  page
+adminRouter.get("/orders/orderDetails/:id",auth.isLogin, orderController.orderDetails);
+// change status
+adminRouter.post("/changeStatus",orderController.changeStatus);
+
+
 
 module.exports = adminRouter;

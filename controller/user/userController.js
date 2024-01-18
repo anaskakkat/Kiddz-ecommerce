@@ -10,17 +10,21 @@ const Category = require("../../model/category");
 // render home page--------------------------------->
 const sendHome = async (req, res) => {
   try {
-   const userId= req.session.user_id 
+    const userId = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userId });
 
- const user= await Userdb.findOne({_id:userId})
-  //  console.log('sssion-user=>',user);
+    const proCat = await Category.find({ status: "Unblock" });
+    const proDatas = await Products.aggregate([
+      { $match: { isListed: true } },
+      { $sort: { createdAt: -1 } },
+    ]);
 
-    res.render("userHome",{user});
+    res.render("userHome", { user, proCat, proDatas });
   } catch (err) {
     console.log("home error", err.message);
   }
 };
- 
+
 //render  user sign up-------------->
 const signupUser = async (req, res) => {
   try {
@@ -73,7 +77,7 @@ const sendOTPEmail = async (email, otp) => {
 const createUser = async (req, res) => {
   try {
     if (!req.body) {
-      return res.redirect("/registration",);
+      return res.redirect("/registration");
     }
     // hash the password
     const hashedpassword = await bcrypt.hash(req.body.userPassword, 10);
@@ -82,8 +86,8 @@ const createUser = async (req, res) => {
     // console.log(email);
     if (existingEmail) {
       req.flash("message", "Email already in use");
-     return res.redirect("/registration");
-   }
+      return res.redirect("/registration");
+    }
 
     // create a new user
     const user = new Userdb({
@@ -111,7 +115,7 @@ const createUser = async (req, res) => {
     // Send OTP via email
     await sendOTPEmail(email, otpValue);
     console.log(email + "email for render");
-    res.redirect(`/otp?email=${req.body.userEmail}`); 
+    res.redirect(`/otp?email=${req.body.userEmail}`);
   } catch (err) {
     // handle error
     console.error(err);
@@ -127,20 +131,19 @@ const verifyOtpPage = async (req, res) => {
     const enteredOtp = `${digit1}${digit2}${digit3}${digit4}`;
     console.log("otp verify email:----> " + email);
 
-
     const storedOtpData = await Otp.findOne({ email_id: email });
     const storedOtp = storedOtpData ? storedOtpData.otp : null;
 
     // console.log("new", enteredOtp, "old", storedOtp);
-    
+
     if (enteredOtp === storedOtp) {
       await Userdb.updateOne({ email: email }, { $set: { verified: true } });
       console.log("otp successfully verified");
-      res.render("userLogin"); 
+      res.render("userLogin");
     } else {
       req.flash("message", "Incorrect OTP. Please try again.");
       console.log("Incorrect OTP");
-      res.redirect("/otp"); 
+      res.redirect("/otp");
     }
   } catch (err) {
     // Handle errors
@@ -152,9 +155,8 @@ const verifyOtpPage = async (req, res) => {
 //  user login-------------->
 const loginUser = async (req, res) => {
   try {
-   
     messages = req.flash("message");
-    res.render("userLogin", { messages});
+    res.render("userLogin", { messages });
 
     console.log(messages, "log flash");
   } catch (err) {
@@ -176,19 +178,18 @@ const userLogout = (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const email= req.body.loginEmail
-    const user = await Userdb.findOne({ email:email});
-// console.log('user email=>',user);
+    const email = req.body.loginEmail;
+    const user = await Userdb.findOne({ email: email });
+    // console.log('user email=>',user);
     if (!user) {
       req.flash("message", "invalid Email");
       return res.redirect("/userLogin");
     }
 
     if (user.verified === "false") {
-      console.log('user not verifed please verify');
+      console.log("user not verifed please verify");
       return res.redirect("/userLogin");
     }
-    
 
     const passwordMatch = await bcrypt.compare(
       req.body.loginPassword,
@@ -216,11 +217,11 @@ const login = async (req, res) => {
 // show product in page/
 const showProducts = async (req, res) => {
   try {
-    const userId= req.session.user_id 
-    const user= await Userdb.findOne({_id:userId})
+    const userId = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userId });
     const proCat = await Category.find({ status: "Unblock" });
     const proDatas = await Products.find({ isListed: true });
-    res.render("showproducts", { proDatas, proCat , user   });
+    res.render("showproducts", { proDatas, proCat, user });
   } catch (err) {
     console.log("home error", err);
   }
@@ -230,15 +231,15 @@ const showProducts = async (req, res) => {
 
 const singleProducts = async (req, res) => {
   try {
-    const userId= req.session.user_id 
-    const user= await Userdb.findOne({_id:userId})
+    const userId = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userId });
     const id = req.query.id;
 
     // console.log('iddd----'+id);
     const singleproducts = await Products.findOne({ _id: id });
     // console.log("datas in products=> "+ singleproducts);
-    const messages=req.flash('message')
-    res.render("singleProductPage", { singleproducts,user,messages});
+    const messages = req.flash("message");
+    res.render("singleProductPage", { singleproducts, user, messages });
   } catch (err) {
     console.log("home error", err.message);
   }
@@ -276,4 +277,3 @@ module.exports = {
   singleProducts,
   catShowProducts,
 };
- 

@@ -86,6 +86,8 @@ route.get('/successPage',auth.isLogin, checkoutController.successPage);
 
 //user profile---------->
 route.get('/userProfile',auth.isLogin, userAccountController.userProfile);
+//user profile update---------->
+route.post('/updateProfile', userAccountController.updateProfile);
 // showadd address page
 route.get("/address",auth.isLogin, userAccountController.showAddress);
 // add address  page

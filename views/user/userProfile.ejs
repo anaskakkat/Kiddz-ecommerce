@@ -8,10 +8,14 @@
 
         <div class="col-lg-8 pb-5"
             style=" border: 1px solid #ffffff; border-radius: 0px;background-color: rgb(255, 255, 255); padding: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-
+        
             <div class="profile-content" id="address-container">
-
-                <form class="row">
+                <% if (messages.length > 0) { %>
+                    <div style="color: red;">
+                        <%= messages[0] %>
+                    </div>
+                <% } %>
+                <form class="row"  id="updateForm">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-fn">Name</label>
@@ -35,10 +39,9 @@
                         </div>
                     </div>
 
-                    <div style="inline-size: min-content;"> <button class="btn btn-style-1 btn-primary" type="button" data-toast=""
-                            data-toast-position="topRight" data-toast-type="success"
-                            data-toast-icon="fe-icon-check-circle" data-toast-title="Success!"
-                            data-toast-message="Your profile updated successfuly." style="margin-left: 16px;" >Update Profile</button>
+                    <div style="inline-size: min-content;">    
+                          <button class="btn btn-style-1 btn-primary m-5" type="button" onclick="updateProfile()">Update Profile</button>
+
                     </div>
 
 
@@ -66,3 +69,31 @@
 
 
         <%- include('./layouts/footer') %>
+
+        <script>
+            function updateProfile() {
+              // Fetch name, mobilenumber, and email values from the form
+              console.log('btn clicked');
+              const name = $("#account-fn").val();
+              const mobilenumber = $("#account-phone").val();
+              const email = "<%= user.email %>"; // Use the actual email value from your server-side code
+        
+              // Make an AJAX request to the server to update the profile
+              $.ajax({
+                url: '/updateProfile',
+                type: 'POST',
+                data: { name, mobilenumber, email },
+                success: function (response) {
+                    window.location.reload();
+                  // Handle success response
+                  console.log(response);
+                  // You can show a success message or perform additional actions here
+                },
+                error: function (error) {
+                  // Handle error response
+                  console.error(error);
+                  // You can show an error message or perform additional actions here
+                }
+              });
+            }
+          </script>

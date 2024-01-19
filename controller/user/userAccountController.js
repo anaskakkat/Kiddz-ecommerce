@@ -8,8 +8,8 @@ const userProfile = async (req, res) => {
   try {
     const userid = req.session.user_id;
     const user = await Userdb.findOne({ _id: userid });
-
-    res.render("userProfile", { user });
+    const messages = req.flash("message");
+    res.render("userProfile", { user, messages });
   } catch (err) {
     // res.render('')
     console.log("cart-error>>", err.message);
@@ -189,17 +189,17 @@ const returnProduct = async (req, res) => {
     const { orderId, returnReason } = req.body;
     const order = await Order.findOneAndUpdate(
       { _id: orderId },
-      { $set: { returnReason: returnReason ,status:'Returned'} },
+      { $set: { returnReason: returnReason, status: "Returned" } },
       { upsert: true }
     );
     for (const item of order.items) {
       // Find the product by ID and update its quantity
       await Product.findByIdAndUpdate(item.productId, {
-          $inc: { stock: item.qty }
+        $inc: { stock: item.qty },
       });
-  }
-    console.log('stock item updated');
-    res.json('success:true')
+    }
+    console.log("stock item updated");
+    res.json("success:true");
     // res.redirect('back')
   } catch (err) {
     // res.render('')
@@ -210,22 +210,42 @@ const returnProduct = async (req, res) => {
 const canceledProduct = async (req, res) => {
   try {
     const { orderId, cancelReason } = req.body;
-    console.log(orderId,'cancle reaosn', cancelReason);
+    console.log(orderId, "cancle reaosn", cancelReason);
     const order = await Order.findOneAndUpdate(
       { _id: orderId },
-      { $set: { cancelationReason: cancelReason ,status:'Canceled'} },
+      { $set: { cancelationReason: cancelReason, status: "Canceled" } },
       { upsert: true }
     );
     for (const item of order.items) {
       // Find the product by ID and update its quantity
       await Product.findByIdAndUpdate(item.productId, {
-          $inc: { stock: item.qty }
+        $inc: { stock: item.qty },
       });
-  }
-    console.log('cancle updated');
+    }
+    console.log("cancle updated");
     // res.json('success:true')
-    
   } catch (err) {
+    // res.render('')
+    console.log("error>>", err.message);
+  }
+};
+// update user details
+const updateProfile = async (req, res) => {
+  try {
+    const { name, mobilenumber, email } = req.body;
+    const user = await Userdb.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    // Update only the name and mobilenumber
+    user.name = name;
+    user.mobilenumber = mobilenumber;
+    const updatedUser = await user.save();
+    req.flash("message","profile updated succussfully");
+    console.log("profile updated succussfully");
+    res.json('succuss:true')
+    } catch (err) {
     // res.render('')
     console.log("error>>", err.message);
   }
@@ -243,4 +263,5 @@ module.exports = {
   userOrderDetails,
   returnProduct,
   canceledProduct,
+  updateProfile,
 };

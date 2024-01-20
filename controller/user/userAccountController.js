@@ -2,7 +2,7 @@ const Product = require("../../model/productModal");
 const Cart = require("../../model/cartModal");
 const Userdb = require("../../model/userModel");
 const Order = require("../../model/orderModel");
-
+const bcrypt = require("bcrypt");
 //user profile-------------------------------------------->
 const userProfile = async (req, res) => {
   try {
@@ -13,6 +13,64 @@ const userProfile = async (req, res) => {
   } catch (err) {
     // res.render('')
     console.log("cart-error>>", err.message);
+  }
+};
+//load changepassword-------------------------------------------->
+const changePassword = async (req, res) => {
+  try {
+    const userid = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userid });
+    const messages = req.flash("message");
+    res.render("changePassword", { user, messages });
+  } catch (err) {
+    // res.render('')
+    console.log("error>>", err.message);
+  }
+};
+//save  change password-------------------------------------------->
+const saveChangePassword = async (req, res) => {
+  try {
+    const userId = req.session.user_id;
+    const oldPassword = req.body.old_password;
+    const newPassword = req.body.new_password;
+    const confirmPassword = req.body.confirm_password;
+
+    const user = await Userdb.findById(userId);
+
+    // Check if the old password matches the hashed password in the database
+    const isPasswordMatch = await bcrypt.compare(
+      oldPassword,
+      user.password
+    );
+
+    if (!isPasswordMatch) {
+      req.flash("message", "Invalid old password");
+      console.log('Invalid old password');
+      return res.redirect("/changePassword");
+    }
+
+    // Check if the new password and confirm password match
+    if (newPassword !== confirmPassword) {
+      req.flash("message", "New password and confirm password do not match");
+      console.log('New password and confirm password do not match');
+      return res.redirect("/changePassword");
+    }
+
+    // Hash the new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    const updatedUser = await Userdb.findOneAndUpdate(
+      { _id: userId },
+      { $set: { password: hashedNewPassword } },
+      { new: true }
+    );
+
+    req.flash("message", "Password updated successfully!");
+    res.redirect("/changePassword");
+  } catch (err) {
+    console.error("Error:", err.message);
+    req.flash("message", "Error updating password");
+    res.redirect("/changePassword");
   }
 };
 
@@ -242,10 +300,10 @@ const updateProfile = async (req, res) => {
     user.name = name;
     user.mobilenumber = mobilenumber;
     const updatedUser = await user.save();
-    req.flash("message","profile updated succussfully");
+    req.flash("message", "profile updated succussfully");
     console.log("profile updated succussfully");
-    res.json('succuss:true')
-    } catch (err) {
+    res.json("succuss:true");
+  } catch (err) {
     // res.render('')
     console.log("error>>", err.message);
   }
@@ -264,4 +322,6 @@ module.exports = {
   returnProduct,
   canceledProduct,
   updateProfile,
+  changePassword,
+  saveChangePassword,
 };

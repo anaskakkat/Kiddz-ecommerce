@@ -20,7 +20,7 @@ route.use(
     saveUninitialized: false,
   })
 ); 
-
+route.use(auth.isBlocked)
 // route.use(auth.isLoggedIn);
 
 route.use(express.static(path.join(__dirname,'..','public','uploads')))
@@ -35,6 +35,8 @@ route.get("/",  userController.sendHome);
 route.get("/userLogin", auth.isLogout, userController.loginUser);
 // login submit 
 route.post("/userLogin", userController.login);
+//forget password
+route.get("/forgetOtp", auth.isLogout, userController.forgetOtp);
 
 
 
@@ -46,24 +48,28 @@ route.post('/registration', userController.createUser);
  
 
 // otp page render 
-route.get("/otp",auth.isLogout,userController.otpPage);
+// route.get("/otp",userController.otpPage);
 // verify otp 
 route.post("/otp",userController.verifyOtpPage);
 //  otp resend
 // sign out 
 route.get("/userLogout", auth.isLogin,userController.userLogout);
+// resend otp 
+route.post("/resentOtp",userController.resentOtp);
+
+
 
 //show products page----------------.>
 route.get("/showProducts", userController.showProducts);
 // sigleproduct shwing 
-route.get("/showProducts/singleProducts", userController.singleProducts);
+route.get("/showProducts/singleProducts",userController.singleProducts);
 // selected category showing
 route.get("/catShowProducts/:id", userController.catShowProducts);
  
 //add to cart page
 route.post("/addToCart/:id", cartController.addToCart); 
 //show cart 
-route.get('/cart',auth.isLogin, cartController.showCart);
+route.get('/cart',auth.isBlocked,auth.isLogin, cartController.showCart);
 // delete single cart item 
 route.get('/cart/deleteCartItem/:id',auth.isLogin, cartController.deleteCart);
 //update cart //
@@ -72,15 +78,13 @@ route.post('/updateCartItem', cartController.updateCart);
 
 
 //checkout page  
-route.get('/checkout',auth.isLogin, checkoutController.checkout);
+route.get('/checkout',auth.isBlocked,auth.isLogin, checkoutController.checkout);
 // place to order
 route.post('/PlaceToOrder',auth.isLogin, checkoutController.PlaceToOrder);
 // address save
 route.post("/checkoutAddAddress",checkoutController.checkoutAddAddress);
 //success page 
 route.get('/successPage/:id',auth.isLogin, checkoutController.successPage);
-
-
 //success page
 route.get('/successPage',auth.isLogin, checkoutController.successPage);
 
@@ -88,6 +92,10 @@ route.get('/successPage',auth.isLogin, checkoutController.successPage);
 route.get('/userProfile',auth.isLogin, userAccountController.userProfile);
 //user profile update---------->
 route.post('/updateProfile', userAccountController.updateProfile);
+//user profile update---------->
+route.get('/changePassword',auth.isLogin, userAccountController.changePassword);
+route.post('/changePassword', userAccountController.saveChangePassword);
+
 // showadd address page
 route.get("/address",auth.isLogin, userAccountController.showAddress);
 // add address  page
@@ -100,6 +108,7 @@ route.get("/editAddress/:id", auth.isLogin,userAccountController.editAddress);
 route.post("/updateAddress/:id",userAccountController.updateAddress);
 //delete address
 route.get("/deleteAddress/:id",auth.isLogin,userAccountController.deleteAddress);
+
 // show order page user
 route.get("/ordePageUser",auth.isLogin,userAccountController.ordePageUser);
 // show user order  details 

@@ -41,8 +41,8 @@ const checkAdmin = async (req, res) => {
         // Check if the user is an admin
         if (userdata.role === "admin") {
           console.log("Admin logged in");
-          req.session.user_id = userdata._id;
-          console.log('id===>',req.session.user_id );
+          req.session.admin_id = userdata._id;
+          console.log('id===>',req.session.admin_id );
           return res.render("adminDashboard");
         } else {
           req.flash("message", "Login failed: you are not an admin.");
@@ -89,7 +89,7 @@ const adminDash = async (req, res) => {
 // users show_page ------------------------------------------->
 const showUser = async (req, res) => {
   try {
-    message = req.flash("message");
+   const  message = req.flash("message");
 
     const user = await Userdb.find({ role: "user" });
     res.render("showUser", { user, message });

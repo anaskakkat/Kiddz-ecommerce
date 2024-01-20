@@ -36,7 +36,9 @@
 
 
                                 <% let totalQuantity=0; let totalProductPrice=0;
+
                                     cartDetails.items.forEach((cartItem)=> {
+                                        
                                     const itemTotalPrice = cartItem.productId.price * cartItem.qty;
                                     totalQuantity += cartItem.qty;
                                     totalProductPrice += itemTotalPrice;

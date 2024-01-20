@@ -232,7 +232,7 @@ a.item_add {
 /*--//header--*/
 /*--banner--*/
 .banner{
-    background: url(../images/birthday\ banner.webp);
+    background: url(../images/web3\ banner.webp);
     background-size:contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -1036,7 +1036,7 @@ nav.nav-sidebar {
 	border: none;
 	outline:none;
 	font-size: 0.9em;
-    color: #999;
+    color: #595959;
     width: 95%;
 }
 .login-do input[type="submit"]{

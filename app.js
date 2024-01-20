@@ -28,6 +28,7 @@ app.use((req, res, next) => {
   // res.setHeader("Expires", "0");
   next();
 });
+// app.use(checkBlocked)
 app.use(flash());
 app.use(nocache());
 app.use(express.urlencoded({ extended: true }));
@@ -40,6 +41,10 @@ app.use(cookieParser());
 
 // mongodb connection
 connectDB();
+
+
+
+
 
 // load assets
 app.use(express.static(path.join(__dirname, "/public")));

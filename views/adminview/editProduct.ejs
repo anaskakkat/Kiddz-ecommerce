@@ -71,10 +71,11 @@
                         </div>
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div>
+                                <!-- <div>
                                     <label class="form-label"></label>
-                                    <!-- <input class="form-control" id="image-input" type="file" multiple name="productImages" required /> -->
-                                </div>
+                                    <input class="form-control" id="image-input" type="file" multiple
+                                        name="productImages" required />
+                                </div> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -96,13 +97,25 @@
                             <div class="card-body">
                                 <h4>Image Preview</h4>
                                 <div class="row">
+                                    <!-- Display existing images -->
                                     <% products.images.forEach((img, index)=> { %>
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-6 image-container mt-5" data-index="<%= index %>">
                                             <img src="/<%= img %>" alt="">
-                                            <button class="remove-image-btn mb-2" data-image="/<%= img %>">Remove
-                                                Image</button>
+                                            <a href="#" class="remove-image-btn mb-2 text-danger"
+                                                onclick="removeImage('<%= img %>', '<%= index %>', '<%= products._id %>')">Remove
+                                                Image</a>
                                         </div>
                                         <% }) %>
+
+                                            <!-- Container for adding new images -->
+                                            <!-- Inside your HTML file -->
+                                            <div class="col-lg-6 add-image-container">
+                                                <input type="file" id="imageInput" accept="image/*">
+                                                <a href="#" id="addImageButton" >Add Image</a>
+                                            </div>
+
+
+
 
                                 </div>
 
@@ -127,23 +140,70 @@
     <%- include('./layouts/adminFooter') %>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Event delegation to handle Remove Image button clicks
-            document.getElementById('image-preview-container').addEventListener('click', function (event) {
-                if (event.target.classList.contains('remove-image-btn')) {
-                    // Find the closest parent container (col-lg-6) and remove it
-                    var imageContainer = event.target.closest('.col-lg-6');
-                    if (imageContainer) {
-                        var imageToRemove = imageContainer.querySelector('img').getAttribute('data-image');
-    
-                        // Remove the image preview from the DOM
-                        imageContainer.parentNode.removeChild(imageContainer);
-    
-                    
+        <script>
+            function removeImage(imgPath, index, productId) {
+                // Send an AJAX request to delete the image
+
+                fetch(`/admin/deleteImage/${productId}/${index}`, {
+                    method: 'POST',
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update the UI after successful deletion
+                        if (data.success) {
+                            const imageContainer = document.querySelector(`.image-container[data-index="${index}"]`);
+                            if (imageContainer) {
+                                imageContainer.remove();
+                            }
+                        } else {
+                            console.error(data.error);
+                            alert('Failed to delete image. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+            }
+            // Assuming you are using JavaScript for frontend logic
+            document.addEventListener('DOMContentLoaded', function () {
+                // Add event listener for the "Add Image" button
+                document.getElementById('addImageButton').addEventListener('click', function () {
+                    // Get the input element
+                    const imageInput = document.getElementById('imageInput');
+
+                    // Get the selected file
+                    const file = imageInput.files[0];
+
+                    // Check if a file is selected
+                    if (file) {
+                        // Create a FormData object to send the file to the server
+                        const formData = new FormData();
+                        formData.append('image', file);
+
+                        // Make a fetch request to the server to handle the image upload
+                        fetch('/admin/addImage', {
+                            method: 'POST',
+                            body: formData,
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    console.log('Image added successfully');
+                                    // Perform any additional actions on the client side
+                                } else {
+                                    console.error('Error adding image:', data.error);
+                                    // Handle the error on the client side
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Network error or other issue:', error);
+                                // Handle the error on the client side
+                            });
+                    } else {
+                        console.warn('No file selected');
                     }
-                }
+                });
             });
-        });
-    </script>
-    
+
+        </script>

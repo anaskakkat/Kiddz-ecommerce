@@ -10,7 +10,9 @@ const showCart = async (req, res) => {
     const user = await Userdb.findOne({ _id: userid });
     if (!user) {
       res.redirect("/userLogin");
-    } else {
+      
+    
+  }else {
       const cartDetails = await Cart.findOne({ userId: userid }).populate({
         path: "items.productId",
       });
@@ -44,7 +46,7 @@ const addToCart = async (req, res) => {
     const userid = req.session.user_id;
 
     if (!userid) {
-      res.redirect('/userLogin');
+      res.json({success:false})
     } else {
 
       const product = await Product.findOne({ _id: productid })
@@ -97,8 +99,7 @@ const addToCart = async (req, res) => {
       }
 
 
-      // res.json({ success: true });
-      res.redirect('back')
+      res.json({ success: true });
 
     }    
   } catch (err) {

@@ -1,7 +1,7 @@
 const isLogin=async(req,res,next)=>{
   try {
     
-    if (req.session.user_id){
+    if (req.session.admin_id){
       console.log("is login worked");
         next();
     }else{
@@ -16,7 +16,7 @@ const isLogin=async(req,res,next)=>{
 //------------------------------------------------------------------------------------------
 const isLogout = async (req, res, next) => {
 try {
-    if (req.session.user_id) {
+    if (req.session.admin_id) {
         res.redirect('/admin/dashboard');
 
     } else {

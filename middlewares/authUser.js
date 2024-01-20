@@ -1,4 +1,5 @@
 const Cart = require("../model/cartModal");
+const Userdb =require("../model/userModel");
 
 const isLogin=async(req,res,next)=>{
     try {
@@ -30,14 +31,27 @@ const isLogout = async (req, res, next) => {
 
 
 
-// is logged in 
-// const isLoggedIn = (req, res, next) => {
-//   res.locals.user = req.session.user_id ? req.session.user_id :null;
-//   next();
-// };
+// is Blocked in 
+const isBlocked =async (req, res, next) => {
+  if(req.session.user_id){
+    const user= await Userdb.findOne({_id:req.session.user_id})
+    if(user.status=='block'){
+      req.session.destroy()
+      console.log('seession worked');
+      res.redirect('/userLogin')
+
+    }else{
+      next();
+    }
+  }else{
+    next();
+  }
+    
+ 
+};
 
 module.exports={
   isLogin,
     isLogout,
-// isLoggedIn
+isBlocked,
 } 

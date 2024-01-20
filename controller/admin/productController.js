@@ -1,7 +1,7 @@
 const Product = require("../../model/productModal");
 const Category = require("../../model/category");
 const sharp = require("sharp");
-const fs = require('fs').promises;
+const fs = require("fs").promises;
 const path = require("path");
 const { log } = require("console");
 
@@ -39,7 +39,7 @@ const productsAdding = async (req, res) => {
         .toFile(resizedPath);
       resizedImages[i] = req.files[i].filename;
       // Unlink (delete) the original image
-      // await fs.unlink(originalPath); 
+      // await fs.unlink(originalPath);
     }
     // console.log("Resized image paths:", resizedImages);
 
@@ -92,15 +92,16 @@ const products = async (req, res) => {
 const editProducts = async (req, res) => {
   try {
     const productId = req.query.productId;
-    console.log("idd-->   " + productId);
+    // console.log("idd-->   " + productId);
     const products = await Product.findOne({ _id: productId });
-    
-    console.log("pro datas----> ", products);
+
+    // console.log("pro datas----> ", products);
     res.render("editProduct", { products: products });
   } catch (err) {
     console.log(err.message);
   }
 };
+
 // --unListing products---------------------------------------------------------->
 const unlistProducts = async (req, res) => {
   try {
@@ -121,7 +122,7 @@ const unlistProducts = async (req, res) => {
 const listProducts = async (req, res) => {
   try {
     const productId = req.params.id;
-    console.log("p id ---->", productId);
+    // console.log("p id ---->", productId);
     await Product.findByIdAndUpdate(
       { _id: productId },
       { $set: { isListed: true } }
@@ -137,13 +138,65 @@ const listProducts = async (req, res) => {
 
 const updateProducts = async (req, res) => {
   try {
+    // Handle the uploaded images in req.files array
+    const uploadedImages = req.files.map((file) => file.path);
+
+    // Handle other form data and update the product accordingly
+    const productId = req.body.productId;
+    const productName = req.body.productName;
+    const productDesc = req.body.productDesc;
+    // ... handle other form fields
+
+    // Update the product with the new images
+    await Product.findByIdAndUpdate(productId, {
+      $set: {
+        productName: productName,
+        description: productDesc,
+        images: uploadedImages,
+        // ... update other fields as needed
+      },
+    });
+
     res.redirect("/admin/products");
   } catch (err) {
     console.log(err.message);
   }
 };
-// --
+// -delete image of products----------
+const deleteImage = async (req, res) => {
+  try {
+    const { productId, index } = req.params;
+    console.log(` ProductId: ${productId}, Index: ${index}`);
+    const product = await Product.findById(productId);
+    console.log(` product details: ${productId}}`);
+    const imagePath = path.join(product.images[index]);
+    console.log(` imagePath : ${imagePath}}`);
+    // Delete the image file
+    await fs.unlink(path.join(process.cwd(), "public", "uploads", imagePath));
 
+    // Remove the image path from the product data
+    product.images.splice(index, 1);
+
+    // Save the updated product data
+    await product.save();
+
+
+    res.json({ success: true, message: "Image deleted successfully" });
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+// -add image of products----------
+const addImage = async (req, res) => {
+  try {
+    const imagePath = req.file.path;
+console.log('imagePath',imagePath);
+
+    res.json({ success: true, message: "Image deleted successfully" });
+  } catch (err) {
+    console.log(err.message);
+  }
+};
 module.exports = {
   addProduct,
   unlistProducts,
@@ -152,4 +205,6 @@ module.exports = {
   editProducts,
   listProducts,
   updateProducts,
+  deleteImage,
+  addImage,
 };

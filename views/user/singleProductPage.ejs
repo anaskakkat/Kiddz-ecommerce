@@ -16,19 +16,19 @@
                 <div class="col-md-5 grid">
                     <div class="flexslider">
 
-                        <% if (messages.length > 0) { %>
+                        <% if (messages.length> 0) { %>
                             <div style="color: red;">
                                 <%= messages[0] %>
                             </div>
-                        <% } %>
-                        <ul class="slides">
-                            <% singleproducts.images.forEach(images=> { %>
-                                <li data-thumb="/<%= images %>">
-                                    <div class="thumb-image"> <img src="/<%= images %>" data-imagezoom="true"
-                                            class="img-responsive"> </div>
-                                </li>
-                                <% }) %>
-                        </ul>
+                            <% } %>
+                                <ul class="slides">
+                                    <% singleproducts.images.forEach(images=> { %>
+                                        <li data-thumb="/<%= images %>">
+                                            <div class="thumb-image"> <img src="/<%= images %>" data-imagezoom="true"
+                                                    class="img-responsive"> </div>
+                                        </li>
+                                        <% }) %>
+                                </ul>
                     </div>
                 </div>
                 <div class="col-md-7 single-top-in">
@@ -201,3 +201,46 @@
 
 
             <%- include('./layouts/footer') %>
+
+
+            <script>
+            
+                // Add SweetAlert to show product added to cart
+                $('form').submit(function (e) {
+                    e.preventDefault();
+            
+                    // Check if the user is logged in
+                        // If logged in, make an AJAX request or submit the form data as needed
+                        $.ajax({
+                            type: 'POST',
+                            url: $(this).attr('action'),
+                            data: $(this).serialize(),
+                            success: function (response) {
+                                if(response.success){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: 'Product added to cart!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                }else{
+                                    Swal.fire({
+                            icon: 'info',
+                            title: 'Please log in to add items to your cart.',
+                            showConfirmButton: true
+                        });
+                                }
+                                
+                           
+                            },
+                            error: function (error) {
+                                console.error('Error adding product to cart:', error);
+                            }
+                        });
+                    
+                        // If not logged in, show a login prompt (you can customize this part)
+                    
+                    
+                });
+            </script>
+            

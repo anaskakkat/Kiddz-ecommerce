@@ -1,0 +1,167 @@
+<style>
+    /* Import Google font - Poppins */
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+    :where(.containerOtp, form, .input-field, header) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .containerOtp {
+        background-color: #ffffff;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        padding: 35px;
+        border-radius: 8px;
+        text-align: center;
+        margin: 0 auto;
+        /* Center the container horizontally */
+        max-width: 400px;
+        font-family: sans-serif;
+    }
+
+    .containerOtp h4 {
+        font-size: 1.25rem;
+        color: #333;
+        font-weight: 500;
+    }
+
+    form .input-field {
+        flex-direction: row;
+        column-gap: 10px;
+    }
+
+    .input-field input {
+        height: 45px;
+        width: 42px;
+        border-radius: 6px;
+        outline: none;
+        font-size: 1.125rem;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    .input-field input:focus {
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .input-field input::-webkit-inner-spin-button,
+    .input-field input::-webkit-outer-spin-button {
+        display: none;
+    }
+
+
+
+    /* Add this CSS to your existing styles */
+    a.button {
+         margin-top:10px;
+        width: 80%;
+        color: #fff;
+        font-size: 1rem;
+        border: none;
+        padding: 9px 0;
+        cursor: pointer;
+        border-radius: 6px;
+     
+        background: #F67777;
+       
+        text-decoration: none;
+    }
+
+    a.button:hover {
+        background-color: #F67777;
+        text-decoration: none;
+        color: #ffffff;
+        /* Darker green color on hover */
+    }
+</style>
+
+<%- include('./layouts/header') %>
+
+    <br><br>
+    <div class="boxOtp" style="justify-content: center; display: flex; width: auto;">
+        <div class="containerOtp">
+
+            <h4 style="color: #F67777;">OTP Verification</h4>
+            <br>
+            <h6>Enter 4-Digit Verification Code (OTP) <br /> Please check your email for the verification code</h6>
+            <br>
+            <form action="#" method="post" id="otpForm">
+                <div class="input-field">
+                    <input type="hidden" name="email" value="" />
+                    <input type="number" name="digit1" required />
+                    <input type="number" name="digit2" required disabled />
+                    <input type="number" name="digit3" required disabled />
+                    <input type="number" name="digit4" required disabled />
+                </div>
+
+                <span class="text-info-emphasis" id="timer" style="margin: 8px; color: #00059d;font-size: small;"></span>
+                <!-- Timer display -->
+                <a href="javascript:void(0);" onclick="resendOTP()" id="resendLink"
+                    style="display: none; margin-top: 3px;">Resend OTP</a> <!-- Resend link initially hidden -->
+
+                <a href="" id="verifyButton" class="button">Verify OTP</a>
+
+
+            </form>
+
+
+        </div>
+    </div>
+
+
+
+
+
+    <script src="/js/otp.js" defer></script>
+
+    <%- include('./layouts/footer') %>
+
+
+        <script>
+            let timer;
+            let countdown = 30; // seconds
+
+            function startTimer() {
+                timer = setInterval(function () {
+                    document.getElementById("timer").innerHTML = `Resend OTP in ${countdown} seconds`;
+                    if (countdown <= 0) {
+                        document.getElementById("resendLink").style.display = "inline"; // Show resend link
+                        document.getElementById("timer").innerHTML = "";
+                        clearInterval(timer);
+                    }
+                    countdown--;
+                }, 1000);
+            }
+
+            function resendOTP() {
+                // Reset countdown and start the timer again
+                countdown = 30;
+                document.getElementById("resendLink").style.display = "none"; // Hide resend link
+                startTimer();
+
+                // Logic to resend OTP goes here
+                fetch("/resentOtp", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email: "" }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.success) {
+                            alert(data.message);
+                        } else {
+                            alert(`Error: ${data.message}`);
+                        }
+                    })
+
+            }
+
+            // Start the timer when the page loads
+            document.addEventListener("DOMContentLoaded", function () {
+                startTimer();
+            });
+        </script>

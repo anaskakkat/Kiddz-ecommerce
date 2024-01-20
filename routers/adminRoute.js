@@ -81,16 +81,18 @@ adminRouter.get("/products",auth.isLogin, productController.products);
 
 //  admin panal edit products
 adminRouter.get("/products/editProduct",auth.isLogin, productController.editProducts);
-
-adminRouter.post("/products/editProduct", productController.updateProducts);
+//update products
+adminRouter.post("/products/editProduct",upload.array('productImages', 4), productController.updateProducts);
 // list products
 adminRouter.get("/unlistProducts/:id", auth.isLogin,productController.unlistProducts);
-
 //unlist products
 adminRouter.get("/listProduct/:id",auth.isLogin, productController.listProducts);
+// delete image  for editimageproducts
+adminRouter.post("/deleteImage/:productId/:index",productController.deleteImage);
+//add iamages for edit products
+adminRouter.post("/addImage/",upload.array('productImages', 4),productController.addImage);
 
-// delete product 
-// adminRouter.get("/products/deleteProduct/",auth.isLogin, productController.deleteProduct);
+
 
 
 

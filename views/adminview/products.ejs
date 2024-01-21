@@ -4,85 +4,62 @@
             <h2 class="content-title">Products</h2>
 
             <div>
-                <a href="/admin/addProduct" class="btn btn-primary"><i class="material-icons md-plus"></i> Create Product</a>
+                <a href="/admin/addProduct" class="btn btn-primary"><i class="material-icons md-plus"></i> New
+                    Product</a>
 
             </div>
         </div>
         <div class="card mb-4">
-            <header class="card-header">
-                <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
-
-                        <input type="text" placeholder="Search..." class="form-control" />
-
-                    </div>
-
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <select class="form-select">
-                            <option>Status</option>
-                            <option>Active</option>
-                            <option>Disabled</option>
-                            <option>Show all</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-6">
-                        <select class="form-select">
-                            <option>Show 20</option>
-                            <option>Show 30</option>
-                            <option>Show 40</option>
-                        </select>
-                    </div>
-
-                </div>
-            </header>
+          
             <!-- card-header end// -->
 
             <div class="card-body">
                 <div class="table-responsive">
-                    <% if (messages.length > 0) { %>
+                    <% if (messages.length> 0) { %>
                         <div style="color: red; text-align: center;">
                             <%= messages[0] %>
                         </div>
-                    <% } %>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>images</th>
-                                <th>product name</th>
-                                <th>category</th>
-                                <th>price</th> 
-                                <th>Stock</th>
+                        <% } %>
+                            <table class="table table-hover" id="example">
+                                <thead>
+                                    <tr>
+                                        <th>images</th>
+                                        <th>product name</th>
+                                        <th>category</th>
+                                        <th>price</th>
+                                        <th>Stock</th>
 
-                                <th>Status</th>
+                                        <th>Status</th>
 
-                                <th>List/UnList</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% ProductFind.forEach(product=> { %>
-                            <tr>
-                                
-                              
-                                    <td width="">
-                                        <div class="left">
-                                            <img src="<%= product.images[2] %>"
-                                                class="product-image img-sm img-thumbnail" alt="<%= product.images[0] %>" />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="info pl-3">
-                                            <h6 class="mb-0 title">
-                                                <%= product.productName %>
-                                            </h6>
-                                            <small class="text-muted">Id:<%= product.id %></small>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <%= product.category %>
-                                    </td>
-                                    <td>
-                                        Rs:<%= product.price %>
+                                        <th>List/UnList</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% ProductFind.forEach(product=> { %>
+                                        <tr>
+
+
+                                            <td width="">
+                                                <div class="left">
+                                                    <img src="<%= product.images[2] %>"
+                                                        class="product-image img-sm img-thumbnail"
+                                                        alt="<%= product.images[0] %>" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="info pl-3">
+                                                    <h6 class="mb-0 title">
+                                                        <%= product.productName %>
+                                                    </h6>
+                                                    <small class="text-muted">Id:<%= product.id %></small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <%= product.category %>
+                                            </td>
+                                            <td>
+                                                Rs:<%= product.price %>
                 </div>
                 </td>
                 <td>
@@ -115,11 +92,11 @@
                                 class="material-icons md-delete_forever"></i> Delete </a> -->
                     </div>
                 </td>
-            
-                    </tr>
-                   
 
-                    <% }); %>
+                </tr>
+
+
+                <% }); %>
 
 
 
@@ -150,9 +127,15 @@
                 </div> -->
         </div>
     </section>
-    <%- include('./layouts/adminFooter') %>
 
-
+        <script>
+            // Initialize DataTable
+            // Initialize DataTable
+            console.log(jQuery); // Check if jQuery is loaded
+            $(document).ready(function ($) {
+                $('#example').DataTable();
+            });
+        </script>
 
 
         <script>
@@ -199,8 +182,14 @@
                 // Automatically hide the flash message after 3000 milliseconds (3 seconds)
                 setTimeout(function () {
                     var flashMessage = document.getElementById('flash-message');
-                    flashMessage.style.display = 'none';
+                    if (flashMessage) {
+                        flashMessage.style.display = 'none';
+                    }
                 }, 3000);
             });
 
         </script>
+
+
+
+<%- include('./layouts/adminFooter') %>

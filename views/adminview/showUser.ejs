@@ -1,49 +1,35 @@
+<style>
+    /* Style for the DataTables search input */
+    div.dataTables_wrapper div.dataTables_filter {
+        text-align: right;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        margin-left: 5px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+</style>
+
+
+
 <%- include('./layouts/adminHeader') %>
     <section class="content-main">
-        <div class="content-header">
-            <h2 class="content-title">Users</h2>
-
-            <div>
-                <!-- <a href="#" class="btn btn-primary"><i class="material-icons md-plus"></i> Create new</a> -->
-               
-            </div>
-        </div>
+        
         <div class="card mb-4">
-            <header class="card-header">
-                <div class="row gx-3">
-                    <div class="col-lg-4 col-md-6 me-auto">
-                     
-                        <input type="text" placeholder="Search..." class="form-control" />
-    
-                    </div>
-                    
-                            <div class="col-lg-2 col-md-3 col-6">
-                                <select class="form-select">
-                                    <option>Status</option>
-                                    <option>Active</option>
-                                    <option>Disabled</option>
-                                    <option>Show all</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-md-3 col-6">
-                                <select class="form-select">
-                                    <option>Show 20</option>
-                                    <option>Show 30</option>
-                                    <option>Show 40</option>
-                                </select>
-                            </div>
-                            <% if (message.length> 0) { %>
-                                <p id="flash-message"   class="<%= messageType === 'success' ? 'text-center  alert-success mt-5 ' : ' alert-danger text-center mt-5 ' %> alert-dismissible fade show">
-                                    <%= message %>
-                                </p>
-                        
-                            <% } %>
-                </div>
-            </header>
+           
             <!-- card-header end// -->
             <div class="card-body">
+                <% if (message.length> 0) { %>
+                    <p id="flash-message"
+                        class="<%= messageType === 'success' ? 'text-center  alert-success mt-5 ' : ' alert-danger text-center mt-5 ' %> alert-dismissible fade show">
+                        <%= message %>
+                    </p>
+
+                    <% } %>
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="example">
                         <thead>
                             <tr>
                                 <th>User</th>
@@ -92,31 +78,31 @@
 
 
 
-                                            <% if(user.status==='false' ) { %>
-                                                <td><span class="badge rounded-pill alert-danger">
-                                                        <%=user.verified %>
-                                                    </span></td>
-                                                <% } else { %>
-                                                    <td><span class="badge rounded-pill alert-success">
+                                                <% if(user.status==='false' ) { %>
+                                                    <td><span class="badge rounded-pill alert-danger">
                                                             <%=user.verified %>
                                                         </span></td>
-                                                    <% } %>
-                                                <!-- <td>verified</td> -->
+                                                    <% } else { %>
+                                                        <td><span class="badge rounded-pill alert-success">
+                                                                <%=user.verified %>
+                                                            </span></td>
+                                                        <% } %>
+                                                            <!-- <td>verified</td> -->
 
-                                                <td class="text-end">
-                                                    <% if (user.status==='block' ) { %>
-                                                        <!-- Some content here -->
-                                                        <a href="#"
-                                                            class="btn btn-sm btn-success rounded font-sm mt-15 "
-                                                            onclick="confirmUnblock('<%= user._id %>')">Unblock</a>
-                                                        <% } else { %>
-                                                            <!-- Some content here -->
-                                                            <a href="#"
-                                                                class="btn btn-sm btn-danger rounded font-sm mt-15"
-                                                                onclick="confirmBlock('<%= user._id %>')">Block</a>
-                                                            <% } %>
-                                                </td>
-                                                <% }); %>
+                                                            <td class="text-end">
+                                                                <% if (user.status==='block' ) { %>
+                                                                    <!-- Some content here -->
+                                                                    <a href="#"
+                                                                        class="btn btn-sm btn-success rounded font-sm mt-15 "
+                                                                        onclick="confirmUnblock('<%= user._id %>')">Unblock</a>
+                                                                    <% } else { %>
+                                                                        <!-- Some content here -->
+                                                                        <a href="#"
+                                                                            class="btn btn-sm btn-danger rounded font-sm mt-15"
+                                                                            onclick="confirmBlock('<%= user._id %>')">Block</a>
+                                                                        <% } %>
+                                                            </td>
+                                                            <% }); %>
                         </tbody>
                     </table>
 
@@ -128,21 +114,22 @@
         <!-- card end// -->
         <div class="pagination-area mt-15 mb-50">
             <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-start">
-                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                    <li class="page-item"><a class="page-link" href="#">02</a></li>
-                    <li class="page-item"><a class="page-link" href="#">03</a></li>
-                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="#">16</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                    </li>
+                <ul class="pagination justify-content-start" id="pagination-list">
+
                 </ul>
             </nav>
         </div>
     </section>
+ 
+    <script>
+        // Initialize DataTable
+        console.log(jQuery); // Check if jQuery is loaded
+        $(document).ready(function ($) {
+            $('#example').DataTable();
+        });
 
 
+    </script>
     <script>
         function confirmBlock(userId) {
             Swal.fire({
@@ -184,19 +171,21 @@
 
 
 
-
-
-
-
         // flas message timer 
         document.addEventListener("DOMContentLoaded", function () {
             // Automatically hide the flash message after 3000 milliseconds (3 seconds)
             setTimeout(function () {
                 var flashMessage = document.getElementById('flash-message');
-                flashMessage.style.display = 'none';
+
+                if (flashMessage) {
+                    flashMessage.style.display = 'none';
+                }
             }, 3000);
         });
 
 
+
+
     </script>
-    <%- include('./layouts/adminFooter') %>
+
+<%- include('./layouts/adminFooter') %>

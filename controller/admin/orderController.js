@@ -4,11 +4,18 @@ const Order = require("../../model/orderModel");
 // admin order page ----------------------------------------------------->
 const orders = async (req, res) => {
   try {
-    message = req.flash("message");
-    const ordersList = await Order.find({});
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const totalOrders = await Order.countDocuments(); 
+    const totalPages = Math.ceil(totalOrders / pageSize); // Calculate total pages
 
-    // Render the admin panel view with the categories data
-    res.render("orders", { ordersList, message });
+    const ordersList = await Order.find({})
+      .sort({ date: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    message = req.flash("message");
+    res.render("orders", { ordersList, message,totalPages,currentPage: page });
   } catch (error) {
     console.log("error lodaing ejs", error);
   }
@@ -40,9 +47,8 @@ const changeStatus = async (req, res) => {
     // console.log("orderId", orderId, "status", status);/
     await Order.updateOne({ _id: orderId }, { $set: { status: status } });
 
-    console.log("status updated to =>",status);
+    console.log("status updated to =>", status);
     res.json({ updatedStatus: status });
-  
   } catch (err) {
     // res.render('')
     console.log("error>>", err.message);

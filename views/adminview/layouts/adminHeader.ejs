@@ -14,8 +14,18 @@
     <!-- Favicon -->
     <!-- <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" /> -->
     <!-- Template CSS -->
+
+
+       <!-- DataTables JS --> 
+       <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+       <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link href="/adminCss/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.css" integrity="sha512-bs9fAcCAeaDfA4A+NiShWR886eClUcBtqhipoY5DM60Y1V3BbVQlabthUBal5bq8Z8nnxxiyb1wfGX2n76N1Mw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.css"
+        integrity="sha512-bs9fAcCAeaDfA4A+NiShWR886eClUcBtqhipoY5DM60Y1V3BbVQlabthUBal5bq8Z8nnxxiyb1wfGX2n76N1Mw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 
 
 
@@ -23,7 +33,7 @@
         .active {
             background-color: rgba(59, 183, 126, 0.2);
             border-radius: 5px;
-            color: #000000; 
+            color: #000000;
         }
     </style>
 
@@ -47,10 +57,10 @@
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
-              
+
                 <li class="menu-item"><a href="/admin/users" class="menu-item has-submenu menu-link">
-                    <!-- <i class=" icon fa-solid fa-users fa-2xs"style="color: #adb5bd;"></i> -->
-                    <i class="icon material-icons md-people"></i>
+                        <!-- <i class=" icon fa-solid fa-users fa-2xs"style="color: #adb5bd;"></i> -->
+                        <i class="icon material-icons md-people"></i>
                         Users
                     </a>
                 </li>
@@ -59,7 +69,7 @@
                         <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
-                   
+
                 </li>
                 <li class="menu-item">
                     <a href="/admin/products" class="menu-item has-submenu menu-link">
@@ -67,7 +77,7 @@
                         Products
                     </a>
                 </li>
-               
+
 
                 <li class="menu-item"><a href="/admin/addProduct" class="menu-item has-submenu menu-link">
                         <i class="icon material-icons md-add_box"></i>
@@ -75,11 +85,11 @@
                     </a>
                 </li>
                 <li class="menu-item"><a href="/admin/category" class="menu-item has-submenu menu-link ">
-                    <!-- <i class=" icon fa-solid fa-list fa-2xs" style="color: #adb5bd;"></i>
+                        <!-- <i class=" icon fa-solid fa-list fa-2xs" style="color: #adb5bd;"></i>
                      -->
-                    <i class="icon material-icons md-view_list"></i>
+                        <i class="icon material-icons md-view_list"></i>
 
-                       Category
+                        Category
                     </a>
                 </li>
                 <!-- <li class="menu-item has-submenu">
@@ -230,20 +240,21 @@
 
 
 
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // Get the current URL path
-        var currentPath = window.location.pathname;
 
-        // Loop through each menu item and check if its href matches the current path
-        $('ul li a').each(function () {
-            var menuItemPath = $(this).attr('href');
+   
+        <script>
+            $(document).ready(function () {
+                // Get the current URL path
+                var currentPath = window.location.pathname;
 
-            if (currentPath === menuItemPath) {
-                // If the href matches, add a class to highlight the menu item
-                $(this).parent('li').addClass('active');
-            }
-        });
-    });
-</script>
+                // Loop through each menu item and check if its href matches the current path
+                $('ul li a').each(function () {
+                    var menuItemPath = $(this).attr('href');
+
+                    if (currentPath === menuItemPath) {
+                        // If the href matches, add a class to highlight the menu item
+                        $(this).parent('li').addClass('active');
+                    }
+                });
+            });
+        </script>

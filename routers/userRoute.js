@@ -35,8 +35,11 @@ route.get("/",  userController.sendHome);
 route.get("/userLogin", auth.isLogout, userController.loginUser);
 // login submit 
 route.post("/userLogin", userController.login);
-//forget password
-route.get("/forgetOtp", auth.isLogout, userController.forgetOtp);
+
+
+
+
+
 
 
 
@@ -47,11 +50,9 @@ route.post('/registration', userController.createUser);
 
  
 
-// otp page render 
-// route.get("/otp",userController.otpPage);
+
 // verify otp 
 route.post("/otp",userController.verifyOtpPage);
-//  otp resend
 // sign out 
 route.get("/userLogout", auth.isLogin,userController.userLogout);
 // resend otp 

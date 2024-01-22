@@ -101,7 +101,7 @@
                                 <input type="submit" value="login">
                             </label>
                             <div class="login-forgot-password">
-                                <a href="#" data-toggle="modal" data-target="#resetPasswordModal"
+                                <a href="/forgetMail" 
                                     style="text-decoration: none; font-weight: normal ; color: rgb(16, 45, 71);"
                                     class="">Forgot Password?</a>
 
@@ -126,24 +126,7 @@
 
         <!-- Reset Password Modal -->
         <!-- Reset Password Modal -->
-        <div id="resetPasswordModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" style="color: white;background-color: black;">&times;</button>
-                        <h4 class="modal-title">Reset Password</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p id="resetMessage">Enter your email address to reset your password:</p>
-                        <input type="text" id="resetEmail" placeholder="Email" required="" name="resetEmail"
-                            pattern="[A-Za-z0-9]*[@](gmail)*[\.](com)$">
-                        <button type="button" class="btn btn-primary" onclick="sendResetPasswordEmail()">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+     
 
 
     </div>
@@ -159,9 +142,7 @@
 
         <!-- JavaScript for handling reset password -->
         <script>
-
-
-            //reset password
+            // reset password
             function sendResetPasswordEmail() {
                 var resetEmail = document.getElementById('resetEmail').value;
                 var resetMessageElement = document.getElementById('resetMessage');
@@ -175,14 +156,6 @@
                     return;
                 }
 
-                // Add your logic to send a reset password email here
-                // For demonstration, show different messages for correct and incorrect emails
-                if (resetEmail === "correct@example.com") {
-                    resetMessageElement.innerHTML = "Reset password link sent to your email.";
-                } else {
-                    resetMessageElement.innerHTML = "Email not found. Please enter a registered email address.";
-                }
-
-                // Optionally, you may want to use AJAX to send a request to the server for processing
+                
             }
         </script>

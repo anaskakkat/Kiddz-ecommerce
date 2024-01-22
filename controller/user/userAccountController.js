@@ -38,21 +38,18 @@ const saveChangePassword = async (req, res) => {
     const user = await Userdb.findById(userId);
 
     // Check if the old password matches the hashed password in the database
-    const isPasswordMatch = await bcrypt.compare(
-      oldPassword,
-      user.password
-    );
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
 
     if (!isPasswordMatch) {
       req.flash("message", "Invalid old password");
-      console.log('Invalid old password');
+      console.log("Invalid old password");
       return res.redirect("/changePassword");
     }
 
     // Check if the new password and confirm password match
     if (newPassword !== confirmPassword) {
       req.flash("message", "New password and confirm password do not match");
-      console.log('New password and confirm password do not match');
+      console.log("New password and confirm password do not match");
       return res.redirect("/changePassword");
     }
 
@@ -214,10 +211,22 @@ const ordePageUser = async (req, res) => {
     const userid = req.session.user_id;
     const user = await Userdb.findOne({ _id: userid });
 
-    const orderDetails = await Order.find({ userId: userid });
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 6;
+    const totalOrders = await Order.countDocuments();
+    const totalPages = Math.ceil(totalOrders / pageSize); // Calculate total pages
 
-    // console.log("orderDetails==>", orderDetails);
-    res.render("orderPage", { user, orderDetails });
+    const orderDetails = await Order.find({})
+      .sort({ date: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    res.render("orderPage", {
+      user,
+      orderDetails,
+      currentPage: page,
+      totalPages,
+    });
   } catch (err) {
     // res.render('')
     console.log("cart-error>>", err.message);

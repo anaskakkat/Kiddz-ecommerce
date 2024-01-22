@@ -62,10 +62,10 @@ const PlaceToOrder = async (req, res) => {
     //  const totalQuantity = cartProducts.reduce((total, item) => total + item.quantity, 0);
     // date make
     const date = new Date();
-    const orderDate = date.toLocaleDateString();
+    const orderDate = date.toLocaleDateString("en-GB");
     const delivery = new Date(date.getTime() + 10 * 24 * 60 * 60 * 1000);
     const deliveryDate = delivery
-      .toLocaleString("en-US", {
+      .toLocaleString("en-GB", {
         year: "numeric",
         month: "short",
         day: "2-digit",

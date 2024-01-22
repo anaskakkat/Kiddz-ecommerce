@@ -4,6 +4,7 @@ const Otp = require("../../model/otpVerification");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const Category = require("../../model/category");
+const { returnProduct } = require("./userAccountController");
 
 // const validator = require("validator");
 
@@ -34,7 +35,6 @@ const signupUser = async (req, res) => {
     console.error(err);
   }
 };
-
 
 //  user verifyc otp  andcreate and save new User-------------->
 // ceaste Otp --
@@ -97,14 +97,12 @@ const resentOtp = async (req, res) => {
     req.flash("message", "OTP resent successfully");
     // Send the new OTP via email
     await sendOTPEmail(email, newOtpValue);
-   
 
- // Redirect to the resend OTP page with a success message
+    // Redirect to the resend OTP page with a success message
   } catch (err) {
     console.error(err);
     req.flash("message", "An error occurred during OTP resend");
     res.redirect("/resentOtp"); // Redirect to the resend OTP page with an error message
-
   }
 };
 //create user------------------------------------------------------------>
@@ -159,7 +157,7 @@ const createUser = async (req, res) => {
     console.log(email + "email for render");
     // res.redirect(`/otp?email=${req.body.userEmail}`);
     messages = req.flash("message");
-    res.render("otp", { email ,messages});
+    res.render("otp", { email, messages });
   } catch (err) {
     // handle error
     console.error(err);
@@ -190,7 +188,7 @@ const verifyOtpPage = async (req, res) => {
       console.log("Incorrect OTP");
       const messages = req.flash("message"); // Retrieve flash messages
 
-      res.render("otp",{email,messages});
+      res.render("otp", { email, messages });
     }
   } catch (err) {
     // Handle errors
@@ -199,13 +197,11 @@ const verifyOtpPage = async (req, res) => {
   }
 };
 
-
 //  user login----------------------------------------->
 const loginUser = async (req, res) => {
   try {
     messages = req.flash("message");
     res.render("userLogin", { messages });
-
   } catch (err) {
     console.log(err, err.message);
   }
@@ -215,7 +211,6 @@ const forgetOtp = async (req, res) => {
   try {
     messages = req.flash("message");
     res.render("forgetOtp", { messages });
-
   } catch (err) {
     console.log(err, err.message);
   }
@@ -250,11 +245,11 @@ const login = async (req, res) => {
 
       return res.redirect("/userLogin");
     }
-if(user.status=='block'){
-  req.flash("message", "your blocked");
+    if (user.status == "block") {
+      req.flash("message", "your blocked");
 
-  return res.redirect("/userLogin");
-}
+      return res.redirect("/userLogin");
+    }
     const passwordMatch = await bcrypt.compare(
       req.body.loginPassword,
       user.password
@@ -276,16 +271,7 @@ if(user.status=='block'){
     res.send("Error during login");
   }
 };
-//forget password  ------------------------------------------------>\
 
-const forgetPassword = async (req, res) => {
-  try {
-    messages = req.flash("message");
-    res.render("forgetPassword", { messages });
-  } catch (err) {
-    console.error(err);
-  }
-};
 
 // ------------------------------------------------------------------>
 // show product in page/
@@ -338,9 +324,10 @@ const catShowProducts = async (req, res) => {
   }
 };
 
+
+
 module.exports = {
   createUser,
-  forgetPassword,
   showProducts,
   sendHome,
   loginUser,
@@ -352,4 +339,6 @@ module.exports = {
   singleProducts,
   catShowProducts,
   forgetOtp,
+
+ 
 };

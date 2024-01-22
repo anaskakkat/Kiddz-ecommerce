@@ -12,11 +12,12 @@
     <%- include('./layouts/userHeader') %>
 
 
-        <section class="content-main col-md-8">
+        <section class="content-main col-md-8"
+            style="border: 1px solid #ffffff; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);">
             <div class="content-header">
                 <div>
-                    <h4 class="content-title card-title text-center" style="color: #e07171;">Ordes</h4>
-                    <hr>
+                    <h4 class="content-title card-title text-center" style="color: #e07171;margin: 6px;">Ordes</h4>
+
                 </div>
                 <!-- <div>
                 <input type="text" placeholder="Search order ID" class="form-control bg-white" />
@@ -25,16 +26,17 @@
             <% if ( orderDetails&& orderDetails.length<1) { %>
 
 
-                <div class="card mb-4" style="background-color: #f8f9fa; padding: 20px; text-align: center; font-family: 'YourStylishFont', sans-serif; font-size: 18px; color: #495057; border: 1px solid #ced4da; border-radius: 8px;">
+                <div class="card mb-4"
+                    style="background-color: #f8f9fa; padding: 20px; text-align: center; font-family: 'YourStylishFont', sans-serif; font-size: 18px; color: #495057; border: 1px solid #ced4da; border-radius: 8px;">
                     No Orders
                 </div>
-                
+
                 <%}else {%>
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover">
-                                    <thead>
+                                    <thead style="border-top: 2px solid #e6e6e6;">
                                         <tr>
                                             <th class="small-header">#ID</th>
                                             <!-- <th class="small-header" scope="col">Name</th> -->
@@ -42,58 +44,86 @@
                                             <th class="small-header" scope="col">Payment</th>
                                             <th class="small-header" scope="col">Status</th>
 
-                                            
+
                                             <th class="small-header" scope="col">Date</th>
                                             <th class="small-header" scope="col" class="text-end">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% orderDetails.forEach(order => { %>
-                                         
-                                   
-                                        <tr>
-                                            <td> <%= order._id %> </td>
-                                            <!-- <td><b>dadad</b></td> -->
-                                            <td><%= order. total_amount %></td>
-                                            <td><%= order.payment %></td>
-                                            <td><span class="badge rounded-pill alert-warning"><%= order. status %></span></td>
+                                        <% orderDetails.forEach(order=> { %>
 
-                                            <td><%= order. date %></td>
-                                            <td class="text-end">
-                                                <a href="/ordePageUser/userOrderDetails/<%= order._id %>" style="display: inline-block; padding: 5px 6px ; font-size: 14px; font-weight: bold; text-align: center; text-decoration: none; cursor: pointer; border: 2px solid #3498db; color: #3498db; background-color: #fff; border-radius: 5px; transition: background-color 0.3s, color 0.3s;" onmouseover="this.style.backgroundColor='#3498db'; this.style.color='#fff';" onmouseout="this.style.backgroundColor='#fff'; this.style.color='#3498db';">Detail</a>
-                                                <!-- <div class="dropdown">
-                                                    <a href="#" data-bs-toggle="dropdown"
-                                                        class="btn btn-light rounded btn-sm font-sm">
-                                                        <i class="material-icons md-more_horiz"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#">View detail</a>
-                                                        <a class="dropdown-item" href="#">Edit info</a>
-                                                        <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                    </div>
-                                                </div> -->
-                                            </td>
-                                        </tr>
-                                        <% }) %>
+
+                                            <tr>
+                                                <td>
+                                                    <%= order._id %>
+                                                </td>
+                                                <!-- <td><b>dadad</b></td> -->
+                                                <td>
+                                                    <%= order. total_amount %>
+                                                </td>
+                                                <td>
+                                                    <%= order.payment %>
+                                                </td>
+                                                <td><span class="badge rounded-pill alert-warning">
+                                                        <%= order. status %>
+                                                    </span></td>
+
+                                                <td>
+                                                    <%= order. date %>
+                                                </td>
+                                                <td class="text-end">
+                                                    <a href="/ordePageUser/userOrderDetails/<%= order._id %>"
+                                                        style="display: inline-block; padding: 5px 6px ; font-size: 14px; font-weight: bold; text-align: center; text-decoration: none; cursor: pointer; border: 2px solid #3498db; color: #3498db; background-color: #fff; border-radius: 5px; transition: background-color 0.3s, color 0.3s;"
+                                                        onmouseover="this.style.backgroundColor='#3498db'; this.style.color='#fff';"
+                                                        onmouseout="this.style.backgroundColor='#fff'; this.style.color='#3498db';">Detail</a>
+
+                                                </td>
+                                            </tr>
+                                            <% }) %>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pagination-area mt-15 mb-50">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-start">
-                                <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                                <li class="page-item"><a class="page-link" href="#">02</a></li>
-                                <li class="page-item"><a class="page-link" href="#">03</a></li>
-                                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                                <li class="page-item"><a class="page-link" href="#">16</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    <div class="pagination-area">
+
+                        <nav aria-label="Page navigation example" style="display: flex;justify-content: center;">
+                            <ul class="pagination">
+                                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                    <% if (currentPage> 1) { %>
+                                        <a class="page-link" href="/ordePageUser?page=<%= currentPage - 1 %>"
+                                            aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                        <% } else { %>
+                                            <span class="page-link" aria-hidden="true">&laquo;</span>
+                                            <% } %>
                                 </li>
+
+                                <% for (let i=1; i <=totalPages; i++) { %>
+                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                        <a class="page-link" href="/ordePageUser?page=<%= i %>">
+                                            <%= i %>
+                                        </a>
+                                    </li>
+                                    <% } %>
+
+                                        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                            <% if (currentPage < totalPages) { %>
+                                                <a class="page-link" href="/ordePageUser?page=<%= currentPage + 1 %>"
+                                                    aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                                <% } else { %>
+                                                    <span class="page-link" aria-hidden="true">&raquo;</span>
+                                                    <% } %>
+                                        </li>
                             </ul>
                         </nav>
+
+
+
                     </div>
                     <% } %>
         </section>

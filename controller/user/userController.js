@@ -8,6 +8,10 @@ const { returnProduct } = require("./userAccountController");
 
 // const validator = require("validator");
 
+function isValidEmail(email) {
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+}
 // render home page--------------------------------->
 const sendHome = async (req, res) => {
   try {
@@ -42,7 +46,7 @@ const createOTP = () => {
   // Generate a random 4-digit OTP
   return Math.floor(1000 + Math.random() * 9000);
 };
-// ----------------------------------------------------------
+// ------send mail----------------------------------------------------
 const sendOTPEmail = async (email, otp) => {
   // Configure nodemailer
   const transporter = nodemailer.createTransport({
@@ -207,14 +211,6 @@ const loginUser = async (req, res) => {
   }
 };
 //  user forget password otp----------------------------------------->
-const forgetOtp = async (req, res) => {
-  try {
-    messages = req.flash("message");
-    res.render("forgetOtp", { messages });
-  } catch (err) {
-    console.log(err, err.message);
-  }
-};
 
 //  user logout----------------------------------------->
 const userLogout = (req, res) => {
@@ -272,7 +268,6 @@ const login = async (req, res) => {
   }
 };
 
-
 // ------------------------------------------------------------------>
 // show product in page/
 const showProducts = async (req, res) => {
@@ -323,8 +318,108 @@ const catShowProducts = async (req, res) => {
     console.log("home error", err.message);
   }
 };
+// ------forgotPassword------------------------------------------------------------------------>
+//forget mail page show
+const forgotPassword = async (req, res) => {
+  try {
+    messages = req.flash("message");
+    res.render("forgetMail", { messages });
+  } catch (err) {
+    console.log(err, err.message);
+  }
+};
+//forget mail page post check
+const forgetEmailCheck = async (req, res) => {
+  try {
+    const enteredEmail = req.body.email;
+    // console.log(enteredEmail);
+    const existUser = await Userdb.findOne({ email: enteredEmail });
+    // console.log(existUser);
+    if (!existUser || !isValidEmail(enteredEmail)) {
+      req.flash("message", "No User Found");
+      return res.redirect("/forgotPassword");
+    }
 
+    const otpValue = createOTP();
 
+    const otp = new Otp({
+      email_id: enteredEmail,
+      otp: otpValue,
+    });
+    await Otp.deleteMany({});
+    await otp.save();
+
+    // Send OTP via email
+    await sendOTPEmail(enteredEmail, otpValue);
+    // console.log(enteredEmail + "email for render");
+    // res.redirect(`/otp?email=${req.body.userEmail}`);
+    messages = req.flash("message");
+    res.render("forgetOtp", { messages, enteredEmail });
+  } catch (err) {
+    console.log(err, err.message);
+  }
+};
+// otp verifyrender  -------------------------------------------->
+const forgetVerifyOtpPage = async (req, res) => {
+  try {
+    const { email, digit1, digit2, digit3, digit4 } = req.body;
+    console.log("otp email", email);
+    const enteredOtp = `${digit1}${digit2}${digit3}${digit4}`;
+
+    const storedOtpData = await Otp.findOne({ email_id: email });
+    const storedOtp = storedOtpData ? storedOtpData.otp : null;
+
+    // console.log("new", enteredOtp, "old", storedOtp);
+
+    if (enteredOtp === storedOtp) {
+      console.log("otp successfully verified");
+      console.log("email for render", email);
+      res.render("NewPassword", { email, messages });
+    } else {
+      console.log("Incorrect OTP");
+      req.flash("message", "Incorrect OTP. Please submit again.");
+      return res.redirect("/forgotPassword");
+    }
+  } catch (err) {
+    // Handle errors
+    console.error(err);
+    // res.redirect("/otp");
+  }
+};
+
+//  user new password verifyning save----------------------------------------->
+const newPasswordVerify = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const newPassword = req.body.newPassword;
+    const confirmPassword = req.body.confirmPassword;
+    console.log(
+      "newPassword  ",
+      newPassword,
+      "   confirmPassword  ",
+      confirmPassword,
+      "   email  ",
+      email
+    );
+    // Example server-side validation
+    if (newPassword.trim() !== confirmPassword.trim()) {
+      req.flash("message", "Passwords do not match");
+      return res.redirect("/newPassword");
+    }
+    const hashedpassword = await bcrypt.hash(newPassword, 10);
+
+    await Userdb.updateOne(
+      { email: email },
+      { $set: { password: hashedpassword } }
+    );
+    console.log("Password Changed");
+    req.flash("message", "Password Changed");
+    res.redirect("/userLogin");
+  } catch (err) {
+    console.log(err, err.message);
+    return res.redirect("/newPassword");
+  }
+};
 
 module.exports = {
   createUser,
@@ -338,7 +433,9 @@ module.exports = {
   verifyOtpPage,
   singleProducts,
   catShowProducts,
-  forgetOtp,
+  forgotPassword,
+  forgetEmailCheck,
+  forgetVerifyOtpPage,
 
- 
+  newPasswordVerify,
 };

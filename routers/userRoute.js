@@ -38,6 +38,18 @@ route.post("/userLogin", userController.login);
 
 
 
+//forgot password page render
+route.get("/forgotPassword",auth.isLogout, userController.forgotPassword);
+//forgot password page render
+route.post("/forgotPassword",userController.forgetEmailCheck);
+//forgot otp post
+route.post("/forgetVerifyOtpPage",userController.forgetVerifyOtpPage);
+//newPasswordVerify
+route.post("/newPassword",auth.isLogout, userController.newPasswordVerify);
+
+
+
+
 
 
 

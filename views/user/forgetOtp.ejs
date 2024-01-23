@@ -1,6 +1,7 @@
 <style>
     /* Import Google font - Poppins */
     @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
     :where(.containerOtp, form, .input-field, header) {
         display: flex;
         flex-direction: column;
@@ -54,7 +55,7 @@
 
     /* Add this CSS to your existing styles */
     a.button {
-         margin-top:10px;
+        margin-top: 10px;
         width: 80%;
         color: #fff;
         font-size: 1rem;
@@ -62,9 +63,9 @@
         padding: 9px 0;
         cursor: pointer;
         border-radius: 6px;
-     
+
         background: #F67777;
-       
+
         text-decoration: none;
     }
 
@@ -86,21 +87,23 @@
             <br>
             <h6>Enter 4-Digit Verification Code (OTP) <br /> Please check your email for the verification code</h6>
             <br>
-            <form action="#" method="post" id="otpForm">
+            <form action="/forgetVerifyOtpPage" method="post" id="otpForm">
                 <div class="input-field">
-                    <input type="hidden" name="email" value="" />
+                    <input type="hidden" name="email" value="<%= enteredEmail %>" />
                     <input type="number" name="digit1" required />
-                    <input type="number" name="digit2" required disabled />
-                    <input type="number" name="digit3" required disabled />
-                    <input type="number" name="digit4" required disabled />
+                    <input type="number" name="digit2" required  />
+                    <input type="number" name="digit3" required  />
+                    <input type="number" name="digit4" required  />
                 </div>
 
-                <span class="text-info-emphasis" id="timer" style="margin: 8px; color: #00059d;font-size: small;"></span>
+                <!-- <span class="text-info-emphasis" id="timer"
+                    style="margin: 8px; color: #00059d;font-size: small;"></span>  -->
                 <!-- Timer display -->
                 <a href="javascript:void(0);" onclick="resendOTP()" id="resendLink"
                     style="display: none; margin-top: 3px;">Resend OTP</a> <!-- Resend link initially hidden -->
-
-                <a href="" id="verifyButton" class="button">Verify OTP</a>
+                <input type="button" value="Verify OTP"
+                    style="width: 80%; color: #fff; font-size: 1rem; border: none; padding: 10px 0; cursor: pointer; border-radius: 6px; background: #F67777; text-decoration: none; margin: 10px 0;"
+                    onclick="verifyOTP()" />
 
 
             </form>
@@ -113,12 +116,28 @@
 
 
 
-    <script src="/js/otp.js" defer></script>
+    <!-- <script src="/js/otp.js" defer></script> -->
 
     <%- include('./layouts/footer') %>
 
+        <script>   function verifyOTP() {
+                // Add any client-side verification logic here if needed
 
+                // Submit the form programmatically
+                document.getElementById("otpForm").submit();
+            }</script>
         <script>
+
+
+            function verifyOTP() {
+                // Add any client-side verification logic here if needed
+
+                // Submit the form programmatically
+                document.getElementById("otpForm").submit();
+            }
+
+
+            ////////////////////////////////////////////
             let timer;
             let countdown = 30; // seconds
 

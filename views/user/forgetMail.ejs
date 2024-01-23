@@ -1,12 +1,9 @@
 <style>
-    /* Import Google font - Poppins */
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
-
-    :where(.containerOtp, form, .input-field, header) {
+    .boxOtp {
         display: flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+        height: 70vh;
     }
 
     .containerOtp {
@@ -15,91 +12,82 @@
         padding: 35px;
         border-radius: 8px;
         text-align: center;
-        margin: 0 auto;
-        /* Center the container horizontally */
         max-width: 400px;
         font-family: sans-serif;
     }
 
     .containerOtp h4 {
-        font-size: 1.25rem;
-        color: #333;
+        font-size: 15px;
+        color: #F67777;
         font-weight: 500;
+        margin-bottom: 20px;
     }
 
-    form .input-field {
-        flex-direction: row;
-        column-gap: 10px;
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .input-field input {
         height: 45px;
-        width: 42px;
+        width: 100%;
         border-radius: 6px;
         outline: none;
-        font-size: 1.125rem;
+        font-size: 16px;
         text-align: center;
         border: 1px solid #ddd;
+        margin-bottom: 10px;
     }
 
     .input-field input:focus {
         box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
     }
 
-    .input-field input::-webkit-inner-spin-button,
-    .input-field input::-webkit-outer-spin-button {
-        display: none;
+    .input-field div {
+        color: red;
+        margin-bottom: 10px;
     }
 
-
-
-    /* Add this CSS to your existing styles */
-    form.button {
-        margin-top: 10px;
-        width: 80%;
+    .button {
+        width: 60%;
         color: #fff;
-        font-size: 1rem;
+        font-size: 15px;
         border: none;
-        padding: 9px 0;
+        padding: 10px 0;
         cursor: pointer;
         border-radius: 6px;
-
         background: #F67777;
-
         text-decoration: none;
     }
 
-    form.button:hover {
+    .button:hover {
         background-color: #f85555;
-        text-decoration: none;
-        color: #ffffff;
-        /* Darker green color on hover */
     }
 </style>
 
 <%- include('./layouts/header') %>
 
-<br><br>
+    <br><br>
+    <br><br>
+
+
     <div class="boxOtp">
         <div class="containerOtp">
-
-
-            <h4 style="color: #F67777;">Enter Email</h4>
-            <br>
-            <form id="otpForm" action="/sendEmailData" method="post">
-                <input class="input-field" type="email" name="email" id="email" value="" required />
+            <h4>Enter Email</h4>
+            <form action="/forgotPassword" method="post">
+                <div class="input-field">
+                    <input type="email" name="email" id="email" value="" placeholder="Your Email" required />
+                </div>
                 <% if (messages.length> 0) { %>
                     <div style="color: red;">
                         <%= messages[0] %>
                     </div>
                     <% } %>
-                        <button type="" class="button">Get OTP</button>
-
+                        <button type="submit" class="button">Get OTP</button>
             </form>
-
         </div>
     </div>
-
 
 
 

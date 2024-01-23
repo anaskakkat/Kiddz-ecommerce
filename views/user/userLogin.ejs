@@ -101,9 +101,12 @@
                                 <input type="submit" value="login">
                             </label>
                             <div class="login-forgot-password">
-                                <a href="/forgetMail" 
-                                    style="text-decoration: none; font-weight: normal ; color: rgb(16, 45, 71);"
-                                    class="">Forgot Password?</a>
+                                <a href="/forgotPassword"
+                                    style="text-decoration: none; font-weight: normal; color: rgb(16, 45, 71); transition: color 0.3s ease;"
+                                    onmouseover="this.style.color='#f85555';"
+                                    onmouseout="this.style.color='rgb(16, 45, 71)';" class="">
+                                    Forgot Password?
+                                </a>
 
                             </div>
                 </div>
@@ -126,7 +129,7 @@
 
         <!-- Reset Password Modal -->
         <!-- Reset Password Modal -->
-     
+
 
 
     </div>
@@ -156,6 +159,6 @@
                     return;
                 }
 
-                
+
             }
         </script>

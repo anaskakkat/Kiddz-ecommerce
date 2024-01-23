@@ -87,10 +87,12 @@ adminRouter.post("/products/editProduct",upload.array('productImages', 4), produ
 adminRouter.get("/unlistProducts/:id", auth.isLogin,productController.unlistProducts);
 //unlist products
 adminRouter.get("/listProduct/:id",auth.isLogin, productController.listProducts);
+
+
 // delete image  for editimageproducts
 adminRouter.post("/deleteImage/:productId/:index",productController.deleteImage);
 //add iamages for edit products
-adminRouter.post("/addImage/",upload.array('productImages', 4),productController.addImage);
+adminRouter.post("/addImage/:productId",upload.single('image'),productController.addImage);
 
 
 

@@ -94,9 +94,11 @@ const editProducts = async (req, res) => {
     const productId = req.query.productId;
     // console.log("idd-->   " + productId);
     const products = await Product.findOne({ _id: productId });
+    const categories = await Category.find({ status: "Unblock" });
+
 
     // console.log("pro datas----> ", products);
-    res.render("editProduct", { products: products });
+    res.render("editProduct", { products: products,categories });
   } catch (err) {
     console.log(err.message);
   }
@@ -138,13 +140,27 @@ const listProducts = async (req, res) => {
 
 const updateProducts = async (req, res) => {
   try {
-    // Handle the uploaded images in req.files array
-    const uploadedImages = req.files.map((file) => file.path);
-
-    // Handle other form data and update the product accordingly
-    const productId = req.body.productId;
-    const productName = req.body.productName;
-    const productDesc = req.body.productDesc;
+    // const productId = req.body.productId;
+    const {
+      productId,
+      productName,
+      productDesc,
+      productPrice,
+      productQty,
+      productCat,
+      brand,
+    } = req.body;
+    console.log("productID-->", productId);
+    console.log(
+      "product sdetails",
+  
+      productName,
+      productDesc,
+      productPrice,
+      productQty,
+      productCat,
+      brand
+    );
     // ... handle other form fields
 
     // Update the product with the new images
@@ -152,11 +168,15 @@ const updateProducts = async (req, res) => {
       $set: {
         productName: productName,
         description: productDesc,
-        images: uploadedImages,
-        // ... update other fields as needed
+        productName: productName,
+        description: productDesc,
+        price: productPrice,
+        stock: productQty,
+        category: productCat,
+        brand: brand,
       },
     });
-
+    req.flash("message", " Product Updated");
     res.redirect("/admin/products");
   } catch (err) {
     console.log(err.message);
@@ -180,7 +200,6 @@ const deleteImage = async (req, res) => {
     // Save the updated product data
     await product.save();
 
-
     res.json({ success: true, message: "Image deleted successfully" });
   } catch (err) {
     console.log(err.message);
@@ -189,10 +208,30 @@ const deleteImage = async (req, res) => {
 // -add image of products----------
 const addImage = async (req, res) => {
   try {
-    const imagePath = req.file.path;
-console.log('imagePath',imagePath);
+    console.log("iam body", req.body);
+    const { productId } = req.params;
+    console.log("productID-->", productId, "request file -->", req.file);
 
-    res.json({ success: true, message: "Image deleted successfully" });
+    const originalPath = req.file.path;
+    const resizedPath = path.join(
+      __dirname,
+      `../../public/uploads`,
+      req.file.filename
+    );
+    console.log("images name-->", req.file.filename);
+    await sharp(originalPath)
+      .resize(400, 500, { fit: "fill" })
+      .toFile(resizedPath);
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      {
+        $push: { images: req.file.filename },
+      },
+      { new: true }
+    );
+
+    res.json({ success: true, message: "Images added successfully" });
   } catch (err) {
     console.log(err.message);
   }

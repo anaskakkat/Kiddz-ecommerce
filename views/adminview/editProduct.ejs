@@ -12,7 +12,7 @@
 
         </div>
 
-        <form action="/admin/editProducts/" method="post" enctype="multipart/form-data" class="row">
+        <form action="/admin//products/editProduct" method="post" enctype="multipart/form-data" class="row">
             <div class="col-lg-6 data-table">
                 <!-- Basic Info Card -->
                 <div class="card mb-4">
@@ -20,6 +20,7 @@
                         <h4>Basic</h4>
                     </div>
                     <div class="card-body">
+                        <input type="hidden" name="productId" value="<%= products._id %>">
                         <div class="mb-4">
                             <label for="productName" class="form-label">Product title</label>
                             <input type="text" placeholder="Product name" class="form-control" id="productName"
@@ -44,7 +45,7 @@
                                 <div class="mb-4">
                                     <label class="form-label" for="productQty">Quantity</label>
                                     <input placeholder="Qty" type="number" class="form-control" id="productQty"
-                                        name="productQty" min="0" required value="<%= products.qty%>" />
+                                        name="productQty" min="0" required value="<%= products.stock%>" />
                                 </div>
                             </div>
                         </div>
@@ -52,12 +53,13 @@
                             <div class="col-lg-4">
                                 <div class="mb-4">
                                     <label class="form-label" for="productCat">Category</label>
-                                    <select class="form-select" name="productCat" id="productCat" required
-                                        value="<%= products.category%>">
-                                        <option>
-                                            <%= products.category%>
-                                        </option>
-
+                                    <select class="form-select" name="productCat" id="productCat" required>
+                                        <% categories.forEach(category=> { %>
+                                            <option value="<%= category.categoryName %>"
+                                                <%=products.category===category.categoryName ? 'selected' : '' %>>
+                                                <%= category.categoryName %>
+                                            </option>
+                                            <% }); %>
                                     </select>
                                 </div>
                             </div>
@@ -69,15 +71,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <!-- <div>
-                                    <label class="form-label"></label>
-                                    <input class="form-control" id="image-input" type="file" multiple
-                                        name="productImages" required />
-                                </div> -->
-                            </div>
-                        </div>
+
                         <div class="card-body">
                             <button type="submit" id="submitForm" class="btn btn-md rounded font-sm hover-up">Save
                                 Product</button>
@@ -111,7 +105,8 @@
                                             <!-- Inside your HTML file -->
                                             <div class="col-lg-6 add-image-container">
                                                 <input type="file" id="imageInput" accept="image/*">
-                                                <a href="#" id="addImageButton" >Add Image</a>
+                                                <a href="#" id="addImageButton"
+                                                    onclick="uploadImage(event,'<%= products._id %>')">Add Image</a>
                                             </div>
 
 
@@ -123,6 +118,15 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Add this HTML for the custom alert at the top of your document body -->
+                <div id="customAlert" class="alert alert-warning alert-dismissible fade show" role="alert"
+                    style="display: none;">
+                    <strong>Warning!</strong> Maximum number of images reached (4).
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+
 
                 <!-- Crop Images Button -->
                 <div class="row">
@@ -142,14 +146,14 @@
 
         <script>
             function removeImage(imgPath, index, productId) {
-                // Send an AJAX request to delete the image
+
 
                 fetch(`/admin/deleteImage/${productId}/${index}`, {
                     method: 'POST',
                 })
                     .then(response => response.json())
                     .then(data => {
-                        // Update the UI after successful deletion
+
                         if (data.success) {
                             const imageContainer = document.querySelector(`.image-container[data-index="${index}"]`);
                             if (imageContainer) {
@@ -165,45 +169,64 @@
                         alert('An error occurred. Please try again.');
                     });
             }
-            // Assuming you are using JavaScript for frontend logic
-            document.addEventListener('DOMContentLoaded', function () {
-                // Add event listener for the "Add Image" button
-                document.getElementById('addImageButton').addEventListener('click', function () {
-                    // Get the input element
-                    const imageInput = document.getElementById('imageInput');
 
-                    // Get the selected file
-                    const file = imageInput.files[0];
 
-                    // Check if a file is selected
+            // --------------------------------------------------------------------------------
+
+            function uploadImage(event, productId) {
+                event.preventDefault();
+
+                // Check if the maximum number of images is less than 4, then proceed to upload
+                if (document.querySelectorAll('.image-container').length < 4) {
+                    var input = document.getElementById('imageInput');
+                    var file = input.files[0];
+
                     if (file) {
-                        // Create a FormData object to send the file to the server
-                        const formData = new FormData();
+                        var formData = new FormData();
                         formData.append('image', file);
 
-                        // Make a fetch request to the server to handle the image upload
-                        fetch('/admin/addImage', {
-                            method: 'POST',
-                            body: formData,
-                        })
-                            .then(response => response.json())
-                            .then(data => {
+                        // Use jQuery's $.ajax to send the image data to the server
+                        $.ajax({
+                            url: `/admin/addImage/${productId}`,
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (data) {
+                                // Check the value of 'success' in the JSON response
                                 if (data.success) {
-                                    console.log('Image added successfully');
-                                    // Perform any additional actions on the client side
+                                    location.reload();
+                                    console.log('Image uploaded successfully!');
                                 } else {
-                                    console.error('Error adding image:', data.error);
-                                    // Handle the error on the client side
+                                    console.error('Image upload failed:', data.message);
+                                    showCustomAlert(data.message); // Show custom alert on upload failure
                                 }
-                            })
-                            .catch(error => {
-                                console.error('Network error or other issue:', error);
-                                // Handle the error on the client side
-                            });
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error during image upload:', error);
+                            }
+                        });
                     } else {
-                        console.warn('No file selected');
+                        console.error('No file selected.');
                     }
-                });
-            });
+                } else {
+                    // Show custom alert for reaching the maximum limit
+                    showCustomAlert('Maximum number of images reached (4).');
+                }
+            }
+
+            // sweet alert-----------
+
+            function showCustomAlert(message) {
+                const customAlert = document.getElementById('customAlert');
+                customAlert.innerHTML = `<strong>Warning!</strong> ${message}`;
+                customAlert.style.display = 'block';
+
+                setTimeout(() => {
+                    customAlert.style.display = 'none';
+                }, 5000); // Hide the alert after 5 seconds (adjust as needed)
+            }
+            // -----------------------------------------------------------------------------------------------------
+
 
         </script>

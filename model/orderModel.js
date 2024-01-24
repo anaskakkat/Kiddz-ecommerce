@@ -6,7 +6,7 @@ const orderSchema = new mongoose.Schema({
     ref: "userDb", // Make sure this matches the name of your User model
     required: true,
   },
-  order_id: {
+  orderId: {
     type: String,
   },
   delivery_address: {

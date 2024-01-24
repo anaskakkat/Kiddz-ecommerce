@@ -214,13 +214,13 @@ const ordePageUser = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 6;
     const totalOrders = await Order.countDocuments();
-    const totalPages = Math.ceil(totalOrders / pageSize); // Calculate total pages
+    const totalPages = Math.ceil(totalOrders / pageSize); 
 
     const orderDetails = await Order.find({})
-      .sort({ date: -1 })
+      .sort({ _id: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
-
+console.log('orderDetails',orderDetails);
     res.render("orderPage", {
       user,
       orderDetails,
@@ -277,7 +277,7 @@ const returnProduct = async (req, res) => {
 const canceledProduct = async (req, res) => {
   try {
     const { orderId, cancelReason } = req.body;
-    console.log(orderId, "cancle reaosn", cancelReason);
+    console.log(orderId, "cancele reaosn", cancelReason);
     const order = await Order.findOneAndUpdate(
       { _id: orderId },
       { $set: { cancelationReason: cancelReason, status: "Canceled" } },
@@ -290,7 +290,7 @@ const canceledProduct = async (req, res) => {
       });
     }
     console.log("cancle updated");
-    // res.json('success:true')
+    res.json({success:true})
   } catch (err) {
     // res.render('')
     console.log("error>>", err.message);

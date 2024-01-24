@@ -55,7 +55,7 @@
 
                                             <tr>
                                                 <td>
-                                                    <%= order._id %>
+                                                    <%= order.orderId %>
                                                 </td>
                                                 <!-- <td><b>dadad</b></td> -->
                                                 <td>
@@ -64,12 +64,17 @@
                                                 <td>
                                                     <%= order.payment %>
                                                 </td>
-                                                <td><span class="badge rounded-pill alert-warning">
-                                                        <%= order. status %>
-                                                    </span></td>
-
                                                 <td>
-                                                    <%= order. date %>
+                                                    <span class="badge rounded-pill 
+                                                    <%= order.status == 'Canceled' ? 'alert-danger' : 
+                                                       order.status == 'Deliverd' ? 'alert-success' : 
+                                                       order.status == 'Placed' ? 'alert-info' : 
+                                                       order.status == 'Returned' ? 'alert-danger' : 'alert-warning' %>">
+                                                        <%= order.status %>
+                                                    </span>
+                                                    </td>
+                                                <td>
+                                                    <%= order.date %>
                                                 </td>
                                                 <td class="text-end">
                                                     <a href="/ordePageUser/userOrderDetails/<%= order._id %>"

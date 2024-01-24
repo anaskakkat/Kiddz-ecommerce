@@ -94,12 +94,22 @@ route.post('/updateCartItem', cartController.updateCart);
 route.get('/checkout',auth.isBlocked,auth.isLogin, checkoutController.checkout);
 // place to order
 route.post('/PlaceToOrder',auth.isLogin, checkoutController.PlaceToOrder);
+// place to order
+route.post('/verifyPayment',auth.isLogin, checkoutController.verifyPayment);
+
+
+
+
+
 // address save
 route.post("/checkoutAddAddress",checkoutController.checkoutAddAddress);
 //success page 
 route.get('/successPage/:id',auth.isLogin, checkoutController.successPage);
 //success page
 route.get('/successPage',auth.isLogin, checkoutController.successPage);
+
+
+
 
 //user profile---------->
 route.get('/userProfile',auth.isLogin, userAccountController.userProfile);
@@ -108,6 +118,8 @@ route.post('/updateProfile', userAccountController.updateProfile);
 //user profile update---------->
 route.get('/changePassword',auth.isLogin, userAccountController.changePassword);
 route.post('/changePassword', userAccountController.saveChangePassword);
+
+
 
 // showadd address page
 route.get("/address",auth.isLogin, userAccountController.showAddress);
@@ -121,6 +133,9 @@ route.get("/editAddress/:id", auth.isLogin,userAccountController.editAddress);
 route.post("/updateAddress/:id",userAccountController.updateAddress);
 //delete address
 route.get("/deleteAddress/:id",auth.isLogin,userAccountController.deleteAddress);
+
+
+
 
 // show order page user
 route.get("/ordePageUser",auth.isLogin,userAccountController.ordePageUser);

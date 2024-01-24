@@ -159,49 +159,56 @@
                                     <% if (orderLists.cancellationReason) { %>
                                         <p class="text-primary">Order Canceled</p>
                                         <% } else { %>
-                                    <button id="cancelOrderBtn" class="btn btn-danger" data-toggle="modal"
-                                        data-target="#cancelOrderModal">
-                                        Cancel Order
-                                    </button>
-                                    <% } %>
-                                    <% } else if (orderLists.status==='Deliverd' ) { %>
-                                        <% if (orderLists.returnReason) { %>
-                                            <p class="text-primary">Return submitted</p>
-                                            <% } else { %>
-                                                <button id="returnOrderBtn" class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#returnOrderModal">
-                                                    Return Order
-                                                </button>
-                                                <% } %>
-                                                    <% } %>
+                                            <button id="cancelOrderBtn" class="btn btn-danger" data-toggle="modal"
+                                                data-target="#cancelOrderModal">
+                                                Cancel Order
+                                            </button>
+                                            <% } %>
+                                                <% } else if (orderLists.status==='Deliverd' ) { %>
+                                                    <% if (orderLists.returnReason) { %>
+                                                        <p class="text-primary">Return submitted</p>
+                                                        <% } else { %>
+                                                            <button id="returnOrderBtn" class="btn btn-primary"
+                                                                data-toggle="modal" data-target="#returnOrderModal">
+                                                                Return Order
+                                                            </button>
+                                                            <% } %>
+                                                                <% } %>
 
 
 
-                                                        <div class="subtotall float-end">
-                                                            <dl class="dlist">
-                                                                <dt class="small-text">
-                                                                    Subtotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ₹<%=
-                                                                        orderLists.total_amount %>
-                                                                </dt>
-                                                                <!-- Remove the following <dd> element -->
-                                                            </dl>
-                                                            <dl class="dlist">
-                                                                <dt class="small-text">
-                                                                    Shipping:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                    ₹00.00</dt>
-                                                            </dl>
-                                                            <dl class="dlist">
-                                                                <dt class="small-text">Grand total:&nbsp; ₹<%=
-                                                                        orderLists.total_amount %>
-                                                                </dt>
-                                                            </dl>
-                                                            <dl class="dlist">
-                                                                <dt class="text-muted small-text">Status: <span
-                                                                        class="badge rounded-pill alert-success text-success">
-                                                                        <%= orderLists.status %>
-                                                                    </span></dt>
-                                                            </dl>
-                                                        </div>
+                                                                    <div class="subtotall float-end">
+                                                                        <dl class="dlist">
+                                                                            <dt class="small-text">
+                                                                                Subtotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                ₹<%= orderLists.total_amount %>
+                                                                            </dt>
+                                                                            <!-- Remove the following <dd> element -->
+                                                                        </dl>
+                                                                        <dl class="dlist">
+                                                                            <dt class="small-text">
+                                                                                Shipping:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                ₹00.00</dt>
+                                                                        </dl>
+                                                                        <dl class="dlist">
+                                                                            <dt class="small-text">Grand total:&nbsp; ₹
+                                                                                <%= orderLists.total_amount %>
+                                                                            </dt>
+                                                                        </dl>
+                                                                        <dl class="dlist">
+                                                                            <dt class="text-muted small-text">Status:
+                                                                                <span
+                                                                                    class="badge rounded-pill 
+                                                                                    <%= orderLists.status == 'Canceled' ? 'alert-danger' : 
+                                                                                       orderLists.status == 'Deliverd' ? 'alert-success' : 
+                                                                                       orderLists.status == 'Placed' ? 'alert-info' : 
+                                                                                       orderLists.status == 'Returned' ? 'alert-danger' : 'alert-warning' %> text-success">
+                                                                                    <%= orderLists.status %>
+                                                                                </span>
+                                                                            </dt>
+
+                                                                        </dl>
+                                                                    </div>
 
 
 
@@ -218,15 +225,16 @@
                                             </div>
                                             <div class="modal-body">
                                                 <label for="cancelReason">Reason for Cancellation:</label>
-                                                <input type="text" id="cancelReason" name="cancelReason"class="form-control">
+                                                <input type="text" id="cancelReason" name="cancelReason"
+                                                    class="form-control">
                                                 <div id="flashMessage" style="color: red;"></div>
 
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-danger"
-                                                    id="confirmCancelBtn"  onclick="submitCancel()">Confirm Cancel</button>
+                                                <button type="button" class="btn btn-danger" id="confirmCancelBtn"
+                                                    onclick="submitCancel()">Confirm Cancel</button>
                                             </div>
                                         </div>
                                     </div>
@@ -315,11 +323,10 @@
                         .then(response => response.json())
                         .then(data => {
                             // Handle the response from the server (e.g., show a success message)
-                            console.log(data);  
+                            console.log(data);
                             if (data.success) {
                                 submitButton.innerText = 'Success!';
 
-                                // If successful, reload the page
                             }
 
 
@@ -340,7 +347,7 @@
                 function submitCancel() {
                     // Get the return reason from the input field
                     var cancelReason = document.getElementById("cancelReason").value
-console.log(cancelReason);
+                    console.log(cancelReason);
                     // Validate return reason
                     if (/^\s*$/.test(cancelReason)) {
                         displayFlashMessage("Please provide a valid r reason.", "text-danger");
@@ -362,13 +369,11 @@ console.log(cancelReason);
                     })
                         .then(response => response.json())
                         .then(data => {
-                            // Handle the response from the server (e.g., show a success message)
-                            console.log(data);  
+                            console.log(data);
                             if (data.success) {
                                 submitButton.innerText = 'Success!';
-                    window.location.reload();
 
-                                // If successful, reload the page
+
                             }
 
 
@@ -381,7 +386,7 @@ console.log(cancelReason);
 
                     // Close the modal after submitting
                     $('#returnOrderModal').modal('hide');
-                    // window.location.reload();
+                    window.location.reload();
 
 
                 }

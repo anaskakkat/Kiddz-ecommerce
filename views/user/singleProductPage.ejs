@@ -1,3 +1,11 @@
+<style>
+    .disabled {
+        pointer-events: none;
+        opacity: 0.5;
+        /* Add any other styles as needed */
+    }
+</style>
+
 <%- include('./layouts/header') %>
 
     <!--banner-->
@@ -76,8 +84,9 @@
                                 var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
                                 if (newVal <= stock) {
                                     divUpd.text(newVal);
+                                    updateCartQuantity(newVal);
+
                                 }
-                                updateCartQuantity(newVal);
                             });
                             $('.value-minus').on('click', function () {
                                 let stock = $('#stock').text();
@@ -102,13 +111,13 @@
                     </div>
 
                 </div>
-                <script>
+                <!-- <script>
                     function updateCartQuantity(value) {
                         console.log('cartqty', value)
                         $('#cartQuantity').val(value)
                         $('productQty').val(value)
                     }
-                </script>
+                </script> -->
                 <div class="clearfix"> </div>
                 <!---->
                 <div class="tab-head">
@@ -203,44 +212,75 @@
             <%- include('./layouts/footer') %>
 
 
-            <script>
-            
-                // Add SweetAlert to show product added to cart
-                $('form').submit(function (e) {
-                    e.preventDefault();
-            
-                    // Check if the user is logged in
+                <script>
+                    // Add SweetAlert to show product added to cart
+                    $('form').submit(function (e) {
+                        e.preventDefault();
+
+                        // Check if the user is logged in
                         // If logged in, make an AJAX request or submit the form data as needed
-                        $.ajax({
-                            type: 'POST',
-                            url: $(this).attr('action'),
-                            data: $(this).serialize(),
-                            success: function (response) {
-                                if(response.success){
+                        var stock = parseInt($('#stock').text(), 10);
+                        if (stock > 0) {
+                            $.ajax({
+                                type: 'POST',
+                                url: $(this).attr('action'),
+                                data: $(this).serialize(),
+                                success: function (response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Product added to cart!',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        });
+                                    } else {
+                                        // Different SweetAlert message for not logged in user
+                                        if (response.message === "User not logged in.") {
+                                            Swal.fire({
+                                                icon: 'info',
+                                                title: 'Please log in to add items to your cart.',
+                                                showConfirmButton: true
+                                            });
+                                        } else {
+                                            // Default SweetAlert message for other errors
+                                            Swal.fire({
+                                                icon: 'warning',
+                                                title: 'No Stock Available. , Stock Qty Already In Cart.',
+                                                showConfirmButton: true
+                                            });
+                                        }
+                                    }
+                                },
+                                error: function (error) {
+                                    console.error('Error adding product to cart:', error);
+                                    // Default SweetAlert message for other errors
                                     Swal.fire({
-                                    icon: 'success',
-                                    title: 'Product added to cart!',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                }else{
-                                    Swal.fire({
-                            icon: 'info',
-                            title: 'Please log in to add items to your cart.',
-                            showConfirmButton: true
-                        });
+                                        icon: 'info',
+                                        title: 'An error occurred while adding the product to your cart.',
+                                        showConfirmButton: true
+                                    });
                                 }
-                                
-                           
-                            },
-                            error: function (error) {
-                                console.error('Error adding product to cart:', error);
-                            }
-                        });
-                    
-                        // If not logged in, show a login prompt (you can customize this part)
-                    
-                    
-                });
-            </script>
-            
+                            });
+                        } else {
+                            // Display SweetAlert if stock is zero
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Product out of stock!',
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+
+                    // Update the cart quantity and check if plus button should be disabled
+                    function updateCartQuantity(value) {
+                        var stock = parseInt($('#stock').text(), 10);
+                        var quantity = parseInt(value, 10);
+                        $('#cartQuantity').val(quantity);
+
+                        // Update quantity display
+                        $('#quantity span').text(quantity);
+
+                        // Disable plus button if quantity equals stock
+                        $('.value-plus').toggleClass('disabled', quantity >= stock);
+                    }
+                </script>

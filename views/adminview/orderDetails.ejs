@@ -5,7 +5,7 @@
 
         <div class="content-header">
             <div>
-              
+
 
 
                 <h4 class="content-title card-title">Order detail</h4>
@@ -69,8 +69,8 @@
                                 <p class="mb-1">
                                     Shipping: <br />
                                     Pay method: <%= orderDetails.payment%> <br />
-                                    Status: <%= orderDetails.status %>
-                                       
+                                        Status: <%= orderDetails.status %>
+
                                 </p>
                                 <!-- <a href="#">Download info</a> -->
                             </div>
@@ -153,10 +153,17 @@
                                                             <dt class="text-muted">Status:</dt>
                                                             <dd>
                                                                 <span
-                                                                    class="badge rounded-pill alert-success text-success">
+                                                                    class="badge rounded-pill text-dark 
+                                                                    <%= orderDetails.status == 'Canceled' ? 'alert-danger' : 
+                                                                       orderDetails.status == 'Deliverd' ? 'alert-success' : 
+                                                                       orderDetails.status == 'Placed' ? 'alert-info' : 
+                                                                       orderDetails.status == 'Returned' ? 'alert-danger' : 'alert-warning' %> text-success">
                                                                     <%= orderDetails.status %>
                                                                 </span>
                                                             </dd>
+
+
+
                                                         </dl>
                                                     </article>
                                                 </td>

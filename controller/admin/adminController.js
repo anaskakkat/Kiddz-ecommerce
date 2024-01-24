@@ -1,6 +1,8 @@
 const Userdb = require("../../model/userModel");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
+const Order = require("../../model/orderModel");
+const Product = require("../../model/productModal");
 
 // admin login -------------------------------------------------->/
 const adminLogin = async (req, res) => {
@@ -42,8 +44,8 @@ const checkAdmin = async (req, res) => {
         if (userdata.role === "admin") {
           console.log("Admin logged in");
           req.session.admin_id = userdata._id;
-          console.log('id===>',req.session.admin_id );
-          return res.render("adminDashboard");
+          console.log("id===>", req.session.admin_id);
+          return res.redirect("/admin/dashboard");
         } else {
           req.flash("message", "Login failed: you are not an admin.");
           console.log("Logging failed: not an admin");
@@ -77,10 +79,51 @@ const adminLogout = async (req, res) => {
   }
 };
 
-// -----render-dashbord --------------------------------------------------->
+// -----render-dashbord ------ chart sale details--------------------------------------------->
 const adminDash = async (req, res) => {
   try {
-    res.render("adminDashboard");
+    const orders = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 },
+          totalOrderAmount: { $sum: "$total_amount" },
+        },
+      },
+    ]);
+    const totalProducts = await Product.aggregate([
+      {
+        $count: "totalProducts",
+      },
+    ]);
+
+    const users = await Userdb.aggregate([
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+    const { totalOrders, totalOrderAmount } = orders[0];
+    const product = totalProducts[0].totalProducts;
+    console.log(
+      "countProducts",
+      product,
+      "totalOrderAmount ",
+      totalOrderAmount,
+      " totalOrders",
+      totalOrders
+    );
+
+    res.render("adminDashboard", {
+      totalOrders,
+      totalOrderAmount,
+      product,
+      users,
+    });
   } catch (err) {
     console.log(err.message);
   }
@@ -89,7 +132,7 @@ const adminDash = async (req, res) => {
 // users show_page ------------------------------------------->
 const showUser = async (req, res) => {
   try {
-   const  message = req.flash("message");
+    const message = req.flash("message");
 
     const user = await Userdb.find({ role: "user" });
     res.render("showUser", { user, message });
@@ -130,9 +173,6 @@ const unblockUser = async (req, res) => {
   }
 };
 
-
-
-
 module.exports = {
   adminLogin,
 
@@ -143,5 +183,4 @@ module.exports = {
   showUser,
   blockUser,
   unblockUser,
-
 };

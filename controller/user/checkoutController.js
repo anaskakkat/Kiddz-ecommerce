@@ -2,7 +2,23 @@ const Product = require("../../model/productModal");
 const Cart = require("../../model/cartModal");
 const Userdb = require("../../model/userModel");
 const Order = require("../../model/orderModel");
+const OrderId = require("order-id");
+const Razorpay = require("razorpay");
+const { response } = require("../../routers/userRoute");
+const crypto = require("crypto");
 
+//razorpay secret
+
+var instance = new Razorpay({
+  key_id: "rzp_test_30bTTgzLa7YbmF",
+  key_secret: "GcnWUhLqCmiOlWRlXG5Cm0ZS",
+});
+// Function to generate HMAC-SHA256
+function hmac_sha256(data, key) {
+  const hmac = crypto.createHmac("sha256", key);
+  hmac.update(data);
+  return hmac.digest("hex");
+}
 //-- load-checkout--------------------------------------------------------------------------->
 const checkout = async (req, res) => {
   try {
@@ -45,7 +61,7 @@ const checkout = async (req, res) => {
 const PlaceToOrder = async (req, res) => {
   try {
     const userid = req.session.user_id;
-    
+
     // console.log("body---------->", req.body);
     const { selectedAddress, selectedPayment, subTotal } = req.body;
 
@@ -59,8 +75,7 @@ const PlaceToOrder = async (req, res) => {
     // console.log("cartData==>", cartData);
     const cartProducts = cartData.items;
     // console.log("cartProducts==>", cartProducts);
-    //  const totalQuantity = cartProducts.reduce((total, item) => total + item.quantity, 0);
-    // date make
+
     const date = new Date();
     const orderDate = date.toLocaleDateString("en-GB");
     const delivery = new Date(date.getTime() + 10 * 24 * 60 * 60 * 1000);
@@ -72,13 +87,17 @@ const PlaceToOrder = async (req, res) => {
       })
       .replace(/\//g, "-");
 
+    const orderid = new OrderId();
+    const uniqueOrderId = orderid.generate();
+
     const order = new Order({
+      orderId: uniqueOrderId,
       userId: userid,
       delivery_address: selectedAddress,
       user_name: userData.name,
       total_amount: subTotal,
       date: orderDate,
-      status: 'Placed',
+      status: "Pending",
       expected_delivery: deliveryDate,
       payment: selectedPayment,
       items: cartProducts,
@@ -94,20 +113,76 @@ const PlaceToOrder = async (req, res) => {
       const productId = cartProducts[i].productId;
       const count = cartProducts[i].qty;
 
-      await Product.updateOne(
-        { _id: productId },
-        { $inc: { stock: -count } }
+      await Product.updateOne({ _id: productId }, { $inc: { stock: -count } });
+      // console.log("order placed");
+      // return res.json({ success: true, params: orderId });
+    }
+    console.log("orderId", orderId, "subTotal", subTotal);
+    if (selectedPayment == "cod") {
+       await Order.updateOne(
+        { _id: orderId },
+        { $set: { status: "Placed"} }
       );
       console.log("order placed");
-      return res.json({ success: true, params: orderId });
-
+      res.json({ codSuccess: true, params: orderId });
+    } else {
+      const razorpayOrder = await genarateRazorpay(orderId, subTotal);
+      //  console.log("Razorpay order generated successfully",razorpayOrder);
+      res.json({ razorpayOrder });
     }
-    console.log("order placed");
-    res.json({ success: true,params: orderId });
-    
   } catch (err) {
-
     console.log("error", err.message);
+  }
+};
+
+// -----------------------------------------
+
+const genarateRazorpay = async (orderId, subTotal) => {
+  try {
+    const options = {
+      amount: subTotal * 100,
+      currency: "INR",
+      receipt: orderId.toString(),
+    };
+
+    const order = await instance.orders.create(options);
+    // console.log("Razorpay order created:", order);
+    return order;
+  } catch (err) {
+    console.error("Error creating Razorpay order:", err);
+    // Handle errors appropriately, e.g., render an error page
+  }
+};
+
+//verify payment from razorpay ----------------------------------------------------
+const verifyPayment = async (req, res) => {
+  try {
+    console.log("body->", req.body);
+    const razorpay_payment_id = req.body.payment.razorpay_payment_id;
+    const razorpay_order_id = req.body.payment.razorpay_order_id;
+    const razorpay_signature = req.body.payment.razorpay_signature;
+    const recieptID = req.body.payment.razorpay_signature;
+    console.log("razorpay_payment_id:", razorpay_payment_id);
+    console.log("razorpay_order_id:", razorpay_order_id);
+    console.log("razorpay_signature:", razorpay_signature);
+    console.log("recieptID:", recieptID);
+
+    generated_signature = hmac_sha256(
+      razorpay_order_id + "|" + razorpay_payment_id,
+      "GcnWUhLqCmiOlWRlXG5Cm0ZS"
+    );
+
+    if (generated_signature == razorpay_signature) {
+      console.log("payment is successful");
+      const update = await Order.updateOne(
+        { _id: recieptID },
+        { $set: { status: "Placed", payment: "razorpay" } }
+      );
+    }
+    res.redirect("/successPage");
+  } catch (err) {
+    // res.render('')
+    console.log("cart-error>>", err.message);
   }
 };
 
@@ -148,16 +223,16 @@ const checkoutAddAddress = async (req, res) => {
 
 const successPage = async (req, res) => {
   try {
-    const id=req.params.id
-    console.log('body----',id);
+    const id = req.params.id;
+    console.log("body----", id);
     const userid = req.session.user_id;
     const user = await Userdb.findOne({ _id: userid });
 
     const order = await Order.findOne({ _id: id }).populate("items.productId");
 
-console.log('oreder-->',order);
+    console.log("oreder-->", order);
 
-    res.render("successPage", { user,order });
+    res.render("successPage", { user, order });
   } catch (err) {
     // res.render('')
     console.log("error", err.message);
@@ -168,4 +243,5 @@ module.exports = {
   successPage,
   PlaceToOrder,
   checkoutAddAddress,
+  verifyPayment,
 };

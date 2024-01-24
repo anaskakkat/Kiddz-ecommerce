@@ -80,7 +80,7 @@ const addProduct = async (req, res) => {
 
 const products = async (req, res) => {
   try {
-    const ProductFind = await Product.find();
+    const ProductFind = await Product.find().sort({ _id: -1 })
     const messages = req.flash("message");
     res.render("products", { ProductFind, messages });
   } catch (err) {

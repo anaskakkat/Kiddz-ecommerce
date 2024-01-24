@@ -17,6 +17,7 @@
 Payment Information card
 */
     .details_card {
+        min-height: 487px;
         width: 700px;
         height: auto;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
@@ -219,6 +220,33 @@ Procced Payment button
         border-radius: 8px;
         text-align: center;
     }
+
+    #modalOverlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        /* semi-transparent black background */
+        justify-content: center;
+        align-items: center;
+        display: flex;
+
+
+
+    }
+
+    #modalContent {
+        width: 35%;
+        background: #fff;
+        /* white background for the modal content */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
 </style>
 
 <%- include('./layouts/header') %>
@@ -241,7 +269,13 @@ Procced Payment button
                     <div class="headerPayment">
                         <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Shipping
                             Details</h4>
-                        <button id="addAddressBtn" class="btn btn-primary">Add Address</button>
+                        <br>
+                        <div class="addButton" style="
+                        display: flex;
+                        justify-content: center;">
+                            <button id="addAddressButton">Add Address</button>
+
+                        </div>
 
                         <hr>
 
@@ -249,7 +283,7 @@ Procced Payment button
 
 
 
-                    <br>
+
 
                     <% if (!user.address || user.address.length===0) { %>
 
@@ -263,7 +297,7 @@ Procced Payment button
                             </h4>
                             <hr>
                             <!-- Display a form for selecting an address -->
-                            <form action="/" method="post" style="display: flex;">
+                            <form action="/" method="post" style="display: flex;justify-content: center;">
                                 <% user.address.forEach((address, index)=> { %>
                                     <div class="add_savedcard">
                                         <!-- Use radio buttons to allow the user to select an address -->
@@ -295,14 +329,13 @@ Procced Payment button
 
             </div>
             <!-- ... (Previous HTML code) ... -->
-            <!-- -----------------------------------------  -->
+            <!-- ----------------------------modal-------------  -->
             <div id="modalOverlay" class="modal-overlay">
 
                 <div id="modalContent" class="modal-content" style="width: 35%;">
                     <!-- Your add address form goes here -->
                     <form action="/checkoutAddAddress" method="post" id="">
                         <div class="name_address col-md-12">
-
                             <h2 class="text-center" style="margin: inherit;">Add Address</h2>
 
                             <div class="address1">
@@ -310,7 +343,6 @@ Procced Payment button
                                 <input class="" type="text" placeholder="mobile" name="mobile" value="" required />
                                 <input class="" type="text" id="put" placeholder="Address" name="address" value=""
                                     required />
-
                                 <input class="" type="number" placeholder="Pincode" name="pincode" value="" required />
                                 <input class="" type="text" placeholder="landmark" name="landmark" value="" required />
                                 <input class="" type="text" placeholder="city" name="city" value="" required />
@@ -318,13 +350,14 @@ Procced Payment button
                             </div>
                         </div>
                         <input class="proced_payment hvr-skew-backward mt-3"
-                            style="background-color: #1540feca; color: white; padding: 10px; cursor: pointer;"
+                            style="background-color: #081e82ca; color: white; padding: 10px; cursor: pointer; width: 40%;     margin-top: 3px;"
                             type="submit" value="Add Address">
                     </form>
-                    <button id="closeModalBtn" class="bt btn-danger">Close</button>
+                    <button id="closeModalBtn" class="btn btn-danger" onclick="closeModal()">Close</button>
                 </div>
             </div>
 
+            <!-- ----------------------------modal--- end----------  -->
 
             <!-- ---------------------------------------  -->
             <div class="order_summary  ">
@@ -397,7 +430,7 @@ Procced Payment button
                                 </div>
                             </div>
                             <br>
-                            <input  class="proced_payment hvr-skew-backward mt-3" onclick="placeOrdersSelect()"
+                            <input class="proced_payment hvr-skew-backward mt-3" onclick="placeOrdersSelect()"
                                 style="background-color: #F67777; color: white; padding: 10px; cursor: pointer;"
                                 type="button" value="Place To Order">
 
@@ -408,110 +441,161 @@ Procced Payment button
     </div>
     </div>
 
-    <%- include('./layouts/footer') %>
-        <!-- ---------------------------------------------------------------------------------------  -->
-        <script>
-
-            document.getElementById('addAddressBtn').addEventListener('click', function () {
-                // Show the modal when the button is clicked
-                var modalOverlay = document.getElementById('modalOverlay');
-                modalOverlay.style.display = 'flex';
-            });
-
-            document.getElementById('closeModalBtn').addEventListener('click', function () {
-                // Hide the modal when the close button is clicked
-                var modalOverlay = document.getElementById('modalOverlay');
-                modalOverlay.style.display = 'none';
-            });
-            // -------------------------------------------------------------------------------------
+    <!-- ---------------------------------------------------------------------------------------  -->
+    <script>
 
 
-            // -------------------------------------------------------------------------------------
 
-            async function placeOrdersSelect() {
+        function closeModal() {
+            document.getElementById("modalOverlay").style.display = "none";
+        }
+
+        document.getElementById("addAddressButton").addEventListener("click", function () {
+            openModal();
+        });
+        function openModal() {
+            document.getElementById("modalOverlay").style.display = "block";
+        }
 
 
-                const addressRadios = document.getElementsByName('selectedAddress')
+        // -------------------------------------------------------------------------------------
 
-                const paymentRadios = document.getElementsByName('payment')
-                let isSelectedAddress = false;
-                let isSelectedPayment = false;
 
-                // Loop through address radio buttons to check if one is selected
-                for (const radio of addressRadios) {
-                    if (radio.checked) {
-                        isSelectedAddress = true;
-                        // console.log('address checked');
-                        break;
-                    }
+        // -------------------------------------------------------------------------------------
+
+        async function placeOrdersSelect() {
+
+
+            const addressRadios = document.getElementsByName('selectedAddress')
+
+            const paymentRadios = document.getElementsByName('payment')
+            let isSelectedAddress = false;
+            let isSelectedPayment = false;
+
+            // Loop through address radio buttons to check if one is selected
+            for (const radio of addressRadios) {
+                if (radio.checked) {
+                    isSelectedAddress = true;
+                    // console.log('address checked');
+                    break;
                 }
-                // Loop through payment radio buttons to check if one is selected
-                for (const radio of paymentRadios) {
-                    if (radio.checked) {
-                        // console.log("payment checked");
-                        isSelectedPayment = true;
-                        break;
-                    }
+            }
+            // Loop through payment radio buttons to check if one is selected
+            for (const radio of paymentRadios) {
+                if (radio.checked) {
+                    // console.log("payment checked");
+                    isSelectedPayment = true;
+                    break;
                 }
-
-                // Validate address selection
-
-                if (!isSelectedAddress) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Please select an address.'
-                    });
-                    return; // Prevent further execution of the function
-                }
-                if (!isSelectedPayment) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Please select a payment method.'
-                    });
-                    return; // Prevent further execution of the function
-                }
-
-                // If both address and payment are selected, proceed with placing the order
-                if (isSelectedAddress && isSelectedPayment) {
-                    // console.log('checcked success');
-                    placeOrder()
-                }
-
-
             }
 
-            async function placeOrder() {
-                // Find the selected address
-                const address = document.querySelector('input[name="selectedAddress"]:checked').value;
-                const payment = document.querySelector('input[name="payment"]:checked').value;
-                // console.log('address==',address,'payment==',payment);
-                // Get the value of totalAmount
-                const totalAmountElement = document.getElementById('totalAmount');
-                const total = totalAmountElement ? totalAmountElement.textContent.trim() : '0';
-                // console.log('total',total);
-                // Proceed with placing the order
-                $.ajax({
-                    url: '/PlaceToOrder',
-                    method: 'post',
-                    data: {
-                        selectedAddress: address,
-                        selectedPayment: payment,
-                        subTotal: total,
-                    },
-                    success: (response) => {
-                        if (response.success === true) {
-                            const param = response.params;
-                            const url = '/successPage/'+param;
-                            window.location.href = url;
-                        }
+            // Validate address selection
 
-                    },
+            if (!isSelectedAddress) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select an address.'
                 });
+                return; // Prevent further execution of the function
+            }
+            if (!isSelectedPayment) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a payment method.'
+                });
+                return; // Prevent further execution of the function
+            }
 
-
+            // If both address and payment are selected, proceed with placing the order
+            if (isSelectedAddress && isSelectedPayment) {
+                console.log('isSelectedAddress', isSelectedAddress, 'isSelectedPayment', isSelectedPayment);
+                placeOrder()
             }
 
 
-        </script>
+        }
+
+        async function placeOrder() {
+            // Find the selected address
+            const address = document.querySelector('input[name="selectedAddress"]:checked').value;
+            const payment = document.querySelector('input[name="payment"]:checked').value;
+            // console.log('address==',address,'payment==',payment);
+            // Get the value of totalAmount
+            const totalAmountElement = document.getElementById('totalAmount');
+            const total = totalAmountElement ? totalAmountElement.textContent.trim() : '0';
+            console.log('total', total);
+            // Proceed with placing the order
+            $.ajax({
+                url: '/PlaceToOrder',
+                method: 'post',
+                data: {
+                    selectedAddress: address,
+                    selectedPayment: payment,
+                    subTotal: total,
+                },
+                success: (response) => {
+                    if (response.codSuccess === true) {
+                        const param = response.params;
+                        const url = '/successPage/' + param;
+                        window.location.href = url;
+                    } else if (response.razorpayOrder) {
+                        razorpayPayment(response.razorpayOrder);
+                    } else {
+                        console.error("Unexpected response from the server:", response);
+                    }
+
+                },
+            });
+
+
+        }
+
+        function razorpayPayment(order) {
+            console.log('order:>', order);
+
+            var options = {
+                "key": "rzp_test_30bTTgzLa7YbmF",
+                "amount": order.amount,
+                "currency": "INR",
+                "name": "Shopin",
+                "description": "Test Transaction",
+                "image": "https://example.com/your_logo",
+                "order_id": order.id,
+                "handler": function (response) {
+                    // alert(response.razorpay_payment_id);
+                    // alert(response.razorpay_order_id);
+                    // alert(response.razorpay_signature)
+                    verifyPayment(response, order)
+                },
+                "prefill": {
+                    "name": "Gaurav Kumar",
+                    "email": "gaurav.kumar@example.com",
+                    "contact": "9000090000"
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                    "color": "#F67777"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+
+
+        }
+        function verifyPayment(payment, order) {
+            console.log('verifyPayment called');
+            $.ajax({
+                url: '/verifyPayment',
+                method: 'post',
+                data: {
+                    payment, order
+                }
+            })
+        }
+
+    </script>
+    <%- include('./layouts/footer') %>

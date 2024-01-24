@@ -35,7 +35,7 @@
 
                                 <tr>
                                     <td>
-                                        <%= orders._id %>
+                                        #<%= orders.orderId %>
                                     </td>
                                     <td><b>
                                             <%= orders.user_name %>
@@ -45,9 +45,20 @@
                                     <td>
                                         <%= orders.payment %>
                                     </td>
-                                    <td><span class="badge rounded-pill alert-warning">
+
+                                    <td>
+                                        <span
+                                            class="badge rounded-pill 
+                                                    <%= orders.status == 'Canceled' ? 'alert-danger' : 
+                                                       orders.status == 'Deliverd' ? 'alert-success' : 
+                                                       orders.status == 'Placed' ? 'alert-info' : 
+                                                       orders.status == 'Returned' ? 'alert-danger' : 'alert-warning' %>">
                                             <%= orders.status %>
-                                        </span></td>
+                                        </span>
+                                    </td>
+
+
+
                                     <td>
                                         <%= orders.date %>
                                     </td>

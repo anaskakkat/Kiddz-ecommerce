@@ -22,6 +22,7 @@ const sendHome = async (req, res) => {
     const proDatas = await Products.aggregate([
       { $match: { isListed: true } },
       { $sort: { createdAt: -1 } },
+      { $limit: 8 },
     ]);
 
     res.render("userHome", { user, proCat, proDatas });

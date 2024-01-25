@@ -174,7 +174,7 @@ Payment Information all input
     .add_savedcard {
         width: 25%;
         height: auto;
-        border: 2px solid #a1a1a1;
+        border: 2px solid #ffc3c3;
         padding: 10px;
         margin: 10px;
         border-radius: 10px;
@@ -202,24 +202,6 @@ Procced Payment button
 
     /* ----------------------
      */
-    .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-content {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        text-align: center;
-    }
 
     #modalOverlay {
         display: none;
@@ -232,7 +214,7 @@ Procced Payment button
         /* semi-transparent black background */
         justify-content: center;
         align-items: center;
-        display: flex;
+
 
 
 
@@ -242,10 +224,77 @@ Procced Payment button
         width: 35%;
         background: #fff;
         /* white background for the modal content */
-        padding: 20px;
+        padding: 10px;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         text-align: center;
+    }
+
+    #addAddressButton {
+        background-color: #3498db;
+        /* Blue background color */
+        color: #fff;
+        /* White text color */
+        padding: 10px 20px;
+        /* Add some padding to the button */
+        font-size: 16px;
+        /* Set the font size */
+        border: none;
+        /* Remove the border */
+        border-radius: 5px;
+        /* Add a slight border-radius */
+        cursor: pointer;
+        /* Add a pointer cursor on hover */
+        transition: background-color 0.3s;
+        /* Add a smooth transition effect */
+    }
+
+    #addAddressButton:hover {
+        background-color: #2980b9;
+        /* Darker blue color on hover */
+    }
+
+    .radio-container {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Style for the radio button */
+    .radio-container input[type="radio"] {
+        width: auto;
+        margin-right: 5px;
+        /* Add some space between the radio button and label */
+    }
+
+    /* Style for the label */
+    .radio-container label {
+        cursor: pointer;
+        color: #333;
+        /* Default color for the label */
+    }
+
+    /* Style for the checked radio button and its label */
+    .radio-container input[type="radio"]:checked+label {
+        color: #e74c3c !important;
+        /* Change the color to your desired accent color */
+        font-weight: bold;
+        /* Optionally, make the label bold when selected */
+    }
+
+    /* Default styles for the radio button */
+    input[type="radio"] {
+        margin-right: 5px;
+    }
+
+    /* Styles for the radio button when checked */
+    input[type="radio"]:checked {
+        /* Set your accent color */
+        background-color: rose;
+
+        /* Add a border */
+        border: 2px solid rose;
+
+        /* Add any other styles you want when the radio button is checked */
     }
 </style>
 
@@ -273,7 +322,7 @@ Procced Payment button
                         <div class="addButton" style="
                         display: flex;
                         justify-content: center;">
-                            <button id="addAddressButton">Add Address</button>
+                            <button id="addAddressButton" class="btn-info text-dark ">Add Address</button>
 
                         </div>
 
@@ -332,21 +381,27 @@ Procced Payment button
             <!-- ----------------------------modal-------------  -->
             <div id="modalOverlay" class="modal-overlay">
 
-                <div id="modalContent" class="modal-content" style="width: 35%;">
+                <div id="modalContent" class="modal-content" style="width: 35%; margin: auto;">
                     <!-- Your add address form goes here -->
-                    <form action="/checkoutAddAddress" method="post" id="">
+                    <form action="/checkoutAddAddress" method="post" onsubmit="return validateForm()">
                         <div class="name_address col-md-12">
                             <h2 class="text-center" style="margin: inherit;">Add Address</h2>
 
                             <div class="address1">
-                                <input class="" type="text" placeholder=" Name" name="name" value="" required />
-                                <input class="" type="text" placeholder="mobile" name="mobile" value="" required />
-                                <input class="" type="text" id="put" placeholder="Address" name="address" value=""
-                                    required />
-                                <input class="" type="number" placeholder="Pincode" name="pincode" value="" required />
-                                <input class="" type="text" placeholder="landmark" name="landmark" value="" required />
-                                <input class="" type="text" placeholder="city" name="city" value="" required />
-                                <input class="" type="text" placeholder="state" name="state" value="" required />
+                                <input class="" type="text" placeholder=" Name" name="name" pattern="[A-Za-z ]+"
+                                    title="Only letters and spaces are allowed" required />
+                                <input class="" type="tel" placeholder="mobile" name="mobile" pattern="\d{10}"
+                                    title="Please enter a 10-digit phone number" required />
+                                <input class="" type="text" id="put" placeholder="Address" name="address"
+                                    pattern=".*\S+.*" title="Please enter a non-empty address" required />
+                                <input class="" type="number" placeholder="Pincode" name="pincode" pattern="\d{6}"
+                                    title="Please enter a 6-digit pincode" required />
+                                <input class="" type="text" placeholder="landmark" name="landmark" pattern=".*\S+.*"
+                                    title="Please enter a non-empty landmark" required />
+                                <input class="" type="text" placeholder="city" name="city" pattern="[A-Za-z ]+"
+                                    title="Only letters and spaces are allowed" required />
+                                <input class="" type="text" placeholder="state" name="state" pattern="[A-Za-z ]+"
+                                    title="Only letters and spaces are allowed" required />
                             </div>
                         </div>
                         <input class="proced_payment hvr-skew-backward mt-3"
@@ -356,7 +411,6 @@ Procced Payment button
                     <button id="closeModalBtn" class="btn btn-danger" onclick="closeModal()">Close</button>
                 </div>
             </div>
-
             <!-- ----------------------------modal--- end----------  -->
 
             <!-- ---------------------------------------  -->
@@ -419,14 +473,14 @@ Procced Payment button
                                 <h3 class="summary-title text-center"
                                     style="font-size: 18px;color: #F67777; margin-bottom: 10px;">Payment Mode
                                 </h3>
-                                <div style="display: flex;">
+                                <div class="radio-container">
                                     <input type="radio" name="payment" id="cod" style="width: auto;" value="cod"><label
                                         for="cod">Cash on Delivery (COD)</label>
                                 </div>
 
-                                <div style="display: flex;">
-                                    <input type="radio" name="payment" id="online" style="width: auto;"
-                                        value="card"><label for="online">Online Payment</label>
+                                <div class="radio-container">
+                                    <input type="radio" name="payment" id="online" value="razopay">
+                                    <label for="online">Razopay</label>
                                 </div>
                             </div>
                             <br>
@@ -443,7 +497,16 @@ Procced Payment button
 
     <!-- ---------------------------------------------------------------------------------------  -->
     <script>
-
+        function validateForm() {
+            var inputs = document.querySelectorAll('#modalContent input');
+            for (var i = 0; i < inputs.length; i++) {
+                if (!inputs[i].checkValidity()) {
+                    alert(inputs[i].validationMessage);
+                    return false;
+                }
+            }
+            return true;
+        }
 
 
         function closeModal() {
@@ -472,7 +535,6 @@ Procced Payment button
             let isSelectedAddress = false;
             let isSelectedPayment = false;
 
-            // Loop through address radio buttons to check if one is selected
             for (const radio of addressRadios) {
                 if (radio.checked) {
                     isSelectedAddress = true;
@@ -480,7 +542,6 @@ Procced Payment button
                     break;
                 }
             }
-            // Loop through payment radio buttons to check if one is selected
             for (const radio of paymentRadios) {
                 if (radio.checked) {
                     // console.log("payment checked");
@@ -489,7 +550,6 @@ Procced Payment button
                 }
             }
 
-            // Validate address selection
 
             if (!isSelectedAddress) {
                 Swal.fire({
@@ -497,7 +557,7 @@ Procced Payment button
                     title: 'Oops...',
                     text: 'Please select an address.'
                 });
-                return; // Prevent further execution of the function
+                return;
             }
             if (!isSelectedPayment) {
                 Swal.fire({
@@ -505,10 +565,10 @@ Procced Payment button
                     title: 'Oops...',
                     text: 'Please select a payment method.'
                 });
-                return; // Prevent further execution of the function
+                return;
             }
 
-            // If both address and payment are selected, proceed with placing the order
+
             if (isSelectedAddress && isSelectedPayment) {
                 console.log('isSelectedAddress', isSelectedAddress, 'isSelectedPayment', isSelectedPayment);
                 placeOrder()
@@ -593,6 +653,12 @@ Procced Payment button
                 method: 'post',
                 data: {
                     payment, order
+                },
+                success: (response) => {
+                     (response.razorpaySuccess) 
+                        const param = response.params;
+                        const url = '/successPage/' + param;
+                        window.location.href = url;
                 }
             })
         }

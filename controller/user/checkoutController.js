@@ -119,15 +119,12 @@ const PlaceToOrder = async (req, res) => {
     }
     console.log("orderId", orderId, "subTotal", subTotal);
     if (selectedPayment == "cod") {
-       await Order.updateOne(
-        { _id: orderId },
-        { $set: { status: "Placed"} }
-      );
+      await Order.updateOne({ _id: orderId }, { $set: { status: "Placed" } });
       console.log("order placed");
       res.json({ codSuccess: true, params: orderId });
     } else {
       const razorpayOrder = await genarateRazorpay(orderId, subTotal);
-      //  console.log("Razorpay order generated successfully",razorpayOrder);
+      console.log("Razorpay order generated successfully", razorpayOrder);
       res.json({ razorpayOrder });
     }
   } catch (err) {
@@ -161,11 +158,12 @@ const verifyPayment = async (req, res) => {
     const razorpay_payment_id = req.body.payment.razorpay_payment_id;
     const razorpay_order_id = req.body.payment.razorpay_order_id;
     const razorpay_signature = req.body.payment.razorpay_signature;
-    const recieptID = req.body.payment.razorpay_signature;
+    const receiptID = req.body.order.receipt;
+
     console.log("razorpay_payment_id:", razorpay_payment_id);
     console.log("razorpay_order_id:", razorpay_order_id);
     console.log("razorpay_signature:", razorpay_signature);
-    console.log("recieptID:", recieptID);
+    console.log("recieptID:", receiptID);
 
     generated_signature = hmac_sha256(
       razorpay_order_id + "|" + razorpay_payment_id,
@@ -175,14 +173,15 @@ const verifyPayment = async (req, res) => {
     if (generated_signature == razorpay_signature) {
       console.log("payment is successful");
       const update = await Order.updateOne(
-        { _id: recieptID },
+        { _id: receiptID },
         { $set: { status: "Placed", payment: "razorpay" } }
       );
+      console.log("status changed");
     }
-    res.redirect("/successPage");
+    res.json({ razorpaySuccess: true, params: receiptID });
   } catch (err) {
     // res.render('')
-    console.log("cart-error>>", err.message);
+    console.log("razorpay-error>>", err.message);
   }
 };
 

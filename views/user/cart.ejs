@@ -160,7 +160,9 @@
 
         <%- include('./layouts/footer') %>
             <script>
-                function increaseQuantity(cartId, productId, count) {
+                console.log("script loaded");
+
+                 function increaseQuantity(cartId, productId, count) {
                     $.ajax({
                         url: '/updateCartItem',
                         method: 'post',

@@ -7,3 +7,18 @@
                             </div>
                         </div>
                     </form> 
+
+
+
+
+
+
+
+
+
+                    <div class="addButton" style="
+                    display: flex;
+                    justify-content: center;">
+                        <button id="addAddressBtn" class="btn btn-primary">Add Address</button>
+
+                    </div>

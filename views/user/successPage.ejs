@@ -14,12 +14,12 @@
 
 
     <div style="text-align: center;">
-      <p>Your order has been successfully placed. Thank you <%=order.user_name%> for shopping with us!</p>
+      <p>Your order has been successfully placed. Thank you  for shopping with us!</p>
    
         <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 15px;">
           <h2>Order Details</h2>
           <!-- Display order details here -->
-          <a href="">
+          <a href="/ordePageUser/userOrderDetails/<%= order._id %>">
             <p>Order ID: <span style="font-weight: bold;"> <%= order._id %> </span></p>
           </a>
           <p>Order Date: <span style="font-weight: bold;"><%= order.date %></span></p>

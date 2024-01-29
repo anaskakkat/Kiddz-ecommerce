@@ -82,6 +82,8 @@ const adminLogout = async (req, res) => {
 // -----render-dashbord ------ chart sale details--------------------------------------------->
 const adminDash = async (req, res) => {
   try {
+    const recentOrders = await Order.find({}).sort({ _id: -1 }).limit(5);
+
     const orders = await Order.aggregate([
       {
         $group: {
@@ -104,7 +106,7 @@ const adminDash = async (req, res) => {
         },
       },
       {
-        $limit: 5,
+        $limit: 4,
       },
     ]);
     const { totalOrders, totalOrderAmount } = orders[0];
@@ -117,12 +119,43 @@ const adminDash = async (req, res) => {
       " totalOrders",
       totalOrders
     );
-
+    const monthlyRevenueData = await Order.aggregate([
+      {
+        $match: {
+          status: { $ne: "Pending" },
+        },
+      },
+      {
+        $addFields: {
+          date: {
+            $dateFromString: {
+              dateString: "$date",
+              format: "%d/%m/%Y",
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            month: { $month: "$date" },
+            year: { $year: "$date" },
+          },
+          monthly_revenue: { $sum: "$total_amount" },
+        },
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1 },
+      },
+    ]);
+    console.log("monthlyRevenueData::", monthlyRevenueData);
     res.render("adminDashboard", {
       totalOrders,
       totalOrderAmount,
       product,
       users,
+      recentOrders,
+      monthlyRevenueData,
     });
   } catch (err) {
     console.log(err.message);
@@ -172,15 +205,83 @@ const unblockUser = async (req, res) => {
     console.log(error);
   }
 };
+// unblock user-------------------------------->
+const salesReport = async (req, res) => {
+  try {
+    res.render("salesReport");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//dashboard details
+const dashboardData = async (req, res) => {
+  try {
+    const orderData = await Order.aggregate([
+      {
+        $group: {
+          _id: {
+            month: { $month: { $toDate: "$createdAt" } },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          "_id.month": 1,
+        },
+      },
+    ]);
+    const orderCount = await Order.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const orderStatusLabels = orderCount.map((item) => item._id);
+    const orderStatusCounts = orderCount.map((item) => item.count);
+    const productData = await Product.aggregate([
+      // Modify this part based on how you aggregate product data
+      {
+        $group: {
+          _id: {
+            month: { $month: { $toDate: "$createdAt" } },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          "_id.month": 1,
+        },
+      },
+    ]);
+    // console.log("orderData::", orderData, "productData::", productData);
+    console.log(
+      "orderStatusLabels:",
+      orderStatusLabels,
+      "orderStatusCounts:",
+      orderStatusCounts
+    );
+    res
+      .status(200)
+      .json({ orderData, productData, orderStatusLabels, orderStatusCounts });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 module.exports = {
   adminLogin,
-
+  dashboardData,
   checkAdmin,
   adminDash,
   adminLogout,
-
   showUser,
   blockUser,
+  salesReport,
   unblockUser,
 };

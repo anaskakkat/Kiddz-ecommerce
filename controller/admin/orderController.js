@@ -7,7 +7,7 @@ const orders = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
     const totalOrders = await Order.countDocuments();
-    const totalPages = Math.ceil(totalOrders / pageSize); // Calculate total pages
+    const totalPages = Math.ceil(totalOrders / pageSize);
 
     const ordersList = await Order.find({})
       .sort({ _id: -1 })
@@ -36,9 +36,8 @@ const orderDetails = async (req, res) => {
     const orderDetails = await Order.findOne({ _id: orderID })
       .populate("userId")
       .populate("items.productId");
-    // console.log("orderDetails", orderDetails);
+    console.log("orderDetails", orderDetails);
 
-    // Render the admin panel view with the categories data
     res.render("orderDetails", { message, orderDetails });
   } catch (error) {
     console.log("error lodaing ejs", error);

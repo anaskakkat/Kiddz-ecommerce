@@ -1,41 +1,69 @@
 <%- include('./layouts/header') %>
-<%- include('./layouts/userHeader') %>
+    <%- include('./layouts/userHeader') %>
 
 
-<br><br><br>
-<div class="main " style="font-family: Arial, sans-serif;  margin: 0;display: flex; padding: 0; justify-content: center; align-items: center; height: 100vh;">
-    
+        <br><br><br>
+          <div class="main"
+                style="margin-top: -60px; font-family: Arial, sans-serif;; padding: 0; justify-content: center; align-items: center; height: 100vh; overflow: hidden;">
 
-    <form action="/addAddress" method="post" style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 400px;">
+                <div class="col-md-12">
+                    <form action="/addAddress" method="post"
+                        style="background-color: #fff; padding: 20px; border-radius: 1px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin: 0 auto;">
 
-        <h2 style="text-align: center; color: #333;">Add Address</h2>
-    
-        <label style="display: block; margin-bottom: 8px; color: #555;" name="name">Name:</label>
-        <input style="width: 100%; padding: 8px; margin-bottom: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" type="text" id="name" name="name" required>
-    
-        <label style="display: block; margin-bottom: 8px; color: #555;" name="mobile">Mobile:</label>
-        <input style="width: 100%; padding: 8px; margin-bottom: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" type="text" id="mobile" name="mobile" required>
-    
-        <label style="display: block; margin-bottom: 8px; color: #555;" name="pincode">Pincode:</label>
-        <input style="width: 100%; padding: 8px; margin-bottom: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" type="text" id="pincode" name="pincode" required>
-    
-        <label style="display: block; margin-bottom: 8px; color: #555;" name="address">Address:</label>
-        <input style="width: 100%; padding: 8px; margin-bottom: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" type="text" id="address" name="address" required>
-    
-        <label style="display: block; margin-bottom: 8px; color: #555;" name="landmark">Landmark:</label>
-        <input style="width: 100%; padding: 8px; margin-bottom: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" type="text" id="landmark" name="landmark" required>
-    
-        <label style="display: block; margin-bottom: 8px; color: #555;" name="city">City:</label>
-        <input style="width: 100%; padding: 8px; margin-bottom: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" type="text" id="city" name="city" required>
-    
-        <label style="display: block; margin-bottom: 8px; color: #555;" name="state">State:</label>
-        <input style="width: 100%; padding: 8px; margin-bottom: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" type="text" id="state" name="state" required>
-    
-        <button style="background-color: #4caf50; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;" type="submit">Add Address</button>
-    </form>
-</div>
-<br><br>
+                        <h4 style="text-align: center; color: #333; margin-bottom: 15px;">Add Address</h4>
+
+                        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;">
+                            <div style="flex-basis: calc(50% - 8px);">
+                                <input
+                                    style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+                                    type="text" id="name" name="name" placeholder="Name" required>
+                            </div>
+
+                            <div style="flex-basis: calc(50% - 8px);">
+                                <input
+                                    style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+                                    type="text" id="mobile" name="mobile" placeholder="Mobile" required>
+                            </div>
+
+                            <div style="flex-basis: calc(50% - 8px);">
+                                <input
+                                    style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+                                    type="text" id="pincode" name="pincode" placeholder="Pincode" required>
+                            </div>
+
+                            <div style="flex-basis: calc(50% - 8px);">
+                                <input
+                                    style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+                                    type="text" id="address" name="address" placeholder="Address" required>
+                            </div>
+
+                            <div style="flex-basis: calc(50% - 8px);">
+                                <input
+                                    style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+                                    type="text" id="landmark" name="landmark" placeholder="Landmark" required>
+                            </div>
+
+                            <div style="flex-basis: calc(50% - 8px);">
+                                <input
+                                    style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+                                    type="text" id="city" name="city" placeholder="City" required>
+                            </div>
+
+                            <div style="flex-basis: calc(50% - 8px);">
+                                <input
+                                    style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;"
+                                    type="text" id="state" name="state" placeholder="State" required>
+                            </div>
+                        </div>
+
+                        <button
+                            style="background-color: #4caf50; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;margin-top: 15px;"
+                            type="submit">Add Address</button>
+                    </form>
+                </div>
+            </div>
+            <br><br>
 
 
 
-<%- include('./layouts/footer') %>
+            <%- include('./layouts/footer') %>

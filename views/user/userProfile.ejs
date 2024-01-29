@@ -7,7 +7,7 @@
         <!-- Profile Settings-->
 
         <div class="col-lg-8 pb-5"
-            style=" border: 1px solid #ffffff; border-radius: 0px;background-color: rgb(255, 255, 255); padding: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            style="height: 80vh; border: 1px solid #ffffff; border-radius: 0px;background-color: rgb(255, 255, 255); padding: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         
             <div class="profile-content" id="address-container">
                 <% if (messages.length > 0) { %>
@@ -72,27 +72,21 @@
 
         <script>
             function updateProfile() {
-              // Fetch name, mobilenumber, and email values from the form
               console.log('btn clicked');
               const name = $("#account-fn").val();
               const mobilenumber = $("#account-phone").val();
-              const email = "<%= user.email %>"; // Use the actual email value from your server-side code
+              const email = "<%= user.email %>"; 
         
-              // Make an AJAX request to the server to update the profile
               $.ajax({
                 url: '/updateProfile',
                 type: 'POST',
                 data: { name, mobilenumber, email },
                 success: function (response) {
                     window.location.reload();
-                  // Handle success response
                   console.log(response);
-                  // You can show a success message or perform additional actions here
                 },
                 error: function (error) {
-                  // Handle error response
                   console.error(error);
-                  // You can show an error message or perform additional actions here
                 }
               });
             }

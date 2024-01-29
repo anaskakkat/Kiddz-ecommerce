@@ -57,6 +57,9 @@
                                     <p style="margin: 0; font-size: small ;font-weight: normal;">Details for Order ID:
                                         <%=orderLists._id%>
                                     </p>
+                                    <!-- <button id="downloadInvoiceBtn" class="btn btn-primary"
+                                        onclick="downloadInvoice()">Download Invoice</button> -->
+
                                 </div>
                             </div>
 
@@ -154,8 +157,9 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <% if (orderLists.status==='Placed' || orderLists.status==='Pending' ) { %>
 
-                                <% if (orderLists.status==='Placed' ) { %>
+ 
                                     <% if (orderLists.cancellationReason) { %>
                                         <p class="text-primary">Order Canceled</p>
                                         <% } else { %>
@@ -350,7 +354,7 @@
                     console.log(cancelReason);
                     // Validate return reason
                     if (/^\s*$/.test(cancelReason)) {
-                        displayFlashMessage("Please provide a valid r reason.", "text-danger");
+                        displayFlashMessage("Please provide a valid  reason.", "text-danger");
                         return;
                     }
 
@@ -406,4 +410,22 @@
                         flashMessage.style.display = "none";
                     }, 3000);
                 }
+
+
+
+
+                function downloadInvoice() {
+                    // Adjust the API endpoint for generating the invoice based on your backend implementation
+                    var invoiceUrl = '/downloadInvoice/<%=orderLists._id%>';
+
+                    // Use an anchor element to trigger the download
+                    var downloadLink = document.createElement('a');
+                    downloadLink.href = invoiceUrl;
+                    downloadLink.download = 'invoice.pdf'; // You can set the filename as needed
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                }
+
+
             </script>

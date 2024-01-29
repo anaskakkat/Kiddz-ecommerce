@@ -59,6 +59,16 @@ adminRouter.post("/login",adminControl.checkAdmin);
 //admin dashbord
 adminRouter.get("/dashboard",auth.isLogin,adminControl.adminDash);
 
+//admin dashbord sales report
+adminRouter.get("/salesReport",auth.isLogin,adminControl.salesReport);
+//dashboard details 
+adminRouter.get("/dashboardData",auth.isLogin,adminControl.dashboardData);
+
+
+
+
+
+
 // admin logout
 adminRouter.get("/adminLogout",auth.isLogin, adminControl.adminLogout);
 

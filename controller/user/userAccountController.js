@@ -220,7 +220,7 @@ const ordePageUser = async (req, res) => {
       .sort({ _id: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
-console.log('orderDetails',orderDetails);
+// console.log('orderDetails',orderDetails);
     res.render("orderPage", {
       user,
       orderDetails,
@@ -259,6 +259,7 @@ const returnProduct = async (req, res) => {
       { $set: { returnReason: returnReason, status: "Returned" } },
       { upsert: true }
     );
+    console.log('item returned ');
     for (const item of order.items) {
       // Find the product by ID and update its quantity
       await Product.findByIdAndUpdate(item.productId, {

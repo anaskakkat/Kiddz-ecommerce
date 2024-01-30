@@ -58,11 +58,14 @@ adminRouter.post("/login",adminControl.checkAdmin);
 
 //admin dashbord
 adminRouter.get("/dashboard",auth.isLogin,adminControl.adminDash);
+//dashboard details 
+adminRouter.get("/dashboardData",auth.isLogin,adminControl.dashboardData);
 
 //admin dashbord sales report
 adminRouter.get("/salesReport",auth.isLogin,adminControl.salesReport);
-//dashboard details 
-adminRouter.get("/dashboardData",auth.isLogin,adminControl.dashboardData);
+//admin dashbord sales report
+// adminRouter.post("/salesReport",auth.isLogin,adminControl.salesReport);
+
 
 
 

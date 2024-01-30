@@ -205,14 +205,6 @@ const unblockUser = async (req, res) => {
     console.log(error);
   }
 };
-// unblock user-------------------------------->
-const salesReport = async (req, res) => {
-  try {
-    res.render("salesReport");
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 //dashboard details
 const dashboardData = async (req, res) => {
@@ -243,7 +235,6 @@ const dashboardData = async (req, res) => {
     const orderStatusLabels = orderCount.map((item) => item._id);
     const orderStatusCounts = orderCount.map((item) => item.count);
     const productData = await Product.aggregate([
-      // Modify this part based on how you aggregate product data
       {
         $group: {
           _id: {
@@ -273,6 +264,41 @@ const dashboardData = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+// unblock user-------------------------------->
+const salesReport = async (req, res) => {
+  try {
+    const deliveredOrders = await Order.find({ status: "Deliverd" })
+      .sort({ orderDate: 1 })
+      .populate({
+        path: "items.productId",
+        model: "products",
+        select: "productName",
+      });
+    let totalQty = 0;
+    let totalAmount = 0;
+
+    console.log("deliveredOrders::", deliveredOrders);
+
+    deliveredOrders.forEach((order) => {
+      const totalProductsCount = order.items.reduce(
+        (sum, item) => sum + item.qty,
+        0
+      );
+      order.totalProductsCount = totalProductsCount;
+      totalQty += totalProductsCount;
+      totalAmount += order.total_amount;
+    });
+    res.render("salesReport", {
+      orders: deliveredOrders,
+      totalQty: totalQty,
+      totalAmount: totalAmount,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 
 module.exports = {
   adminLogin,

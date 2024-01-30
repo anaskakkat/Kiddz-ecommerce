@@ -70,9 +70,10 @@
                                     Shipping: <br />
                                     Pay method: <%= orderDetails.payment%> <br />
                                         Status: <%= orderDetails.status %>
-
+                                            <% if (orderDetails.status==='Canceled' ) { %>
+                                                <br /> Reason: <%= orderDetails.cancelationReason %>
+                                                    <% } %>
                                 </p>
-                                <!-- <a href="#">Download info</a> -->
                             </div>
                         </article>
                     </div>

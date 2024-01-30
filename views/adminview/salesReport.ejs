@@ -25,7 +25,7 @@
                     </div>
                     <div class=" col-md-4 ms-auto text-md-end">
 
-                        <a class="btn btn-primary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
+                        <!-- <a class="btn btn-primary print ms-2" href="#"><i class="icon material-icons md-print"></i></a> -->
                     </div>
                 </div>
             </header>
@@ -39,44 +39,68 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th width="ms-2">OrderId</th>
-                                        <th width="40%">Delivery Address</th>
-                                        <th width="20%">Products</th>
-                                        <th width="20%">Amount</th>
-                                        <th width="20%">Total Products</th>
-                                        <th width="20%">Order Date</th>
-                                        <th width="20%">Payment</th>
+                                        <th width="17%">OrderId</th>
+                                        <th width="30%">Delivery Address</th>
+                                        <th width="30%">Products</th>
+                                        <th width="10%">Amount</th>
+                                        <th width="10%">Total Products</th>
+                                        <th width="10%">Order Date</th>
+                                        <th width="10%">Payment</th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            #id
-                                        </td>
-                                        <td>address</td>
-                                        <td>Products</td>
-                                        <td>Amount</td>
-                                        <td>Total Products</td>
-                                        <td>order date</td>
-                                        <td>payment</td>
-                                    </tr>
+                                    <% orders.forEach(order=> { %>
 
-                                    <td colspan="8">
-                                        <article class="float-end">
-                                            <dl class="dlist">
-                                                <dt>Product Sold:</dt>
-                                                <dd>35</dd>
-                                            </dl>
-                                            <dl class="dlist">
-                                                <dt>Total Revenue:</dt>
-                                                <dd>₹ 10.00</dd>
-                                            </dl>
+                                        <tr>
+                                            <td>
+                                                #<%=order.orderId %>
+                                            </td>
+                                            <td>
+                                                <%=order.delivery_address %>
+                                            </td>
 
 
-                                        </article>
-                                    </td>
-                                    </tr>
+                                            <td>
+                                                <% order.items.forEach(item=> { %>
+                                                    <%= item.productId.productName %> <br>
+                                                        <% }); %>
+                                            </td>
+
+                                            <td>
+                                                <%=order.total_amount %>
+                                            </td>
+                                            <td>
+                                                <%= order.totalProductsCount %>
+                                            </td>
+
+                                            <td>
+                                                <%=order.date %>
+                                            </td>
+                                            <td>
+                                                <%=order.payment %>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+
+                                            <td colspan="8">
+                                                <article class="float-end">
+                                                    <dl class="dlist">
+                                                        <dt>Product Sold:</dt>
+                                                        <dd>
+                                                            <%= totalQty %>
+                                                        </dd>
+                                                    </dl>
+                                                    <dl class="dlist">
+                                                        <dt>Total Revenue:</dt>
+                                                        <dd>₹<%= totalAmount %>
+                                                        </dd>
+                                                    </dl>
+
+
+                                                </article>
+                                            </td>
+                                            </tr>
                                 </tbody>
                             </table>
                         </div>

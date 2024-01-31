@@ -56,6 +56,30 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<!---//End-rate---->
 	<link href="/css/form.css" rel="stylesheet" type="text/css" media="all" />
+	<style>
+		/* Styling for the search input box */
+		.search-container {
+			position: relative;
+			display: inline-block;
+		}
+
+		.search-input {
+			padding: 8px 20px;
+			border: 1px solid #ccc;
+			border-radius: 20px;
+			outline: none;
+			font-size: 16px;
+		}
+
+		/* .search-icon {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			right: 15px;
+			color: #555;
+			cursor: pointer;
+		} */
+	</style>
 </head>
 
 <body>
@@ -120,7 +144,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 			<div class="head-top">
 
-				<div class="col-sm-8 col-md-offset-2 h_menu4">
+				<div class="col-sm-6 col-md-offset-2 h_menu4">
 					<nav class="navbar nav_bottom" role="navigation">
 
 						<!-- Brand and toggle get grouped for better mobile display -->
@@ -275,12 +299,61 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 					</nav>
 				</div>
-				<div class="col-sm-2 search-right">
+				<div class="col-sm-4 search-right">
 					<ul class="heart">
-						<li><a class="play-icon popup-with-zoom-anim" href="#small-dialog"><i
-									class="glyphicon glyphicon-search"> </i></a></li>
+						<!-- -------------------------------------------------------------------------------------------  -->
+
+						<li class="search-container">
+							<input type="text" class="search-input" id="searchInput" placeholder="Search...">
+						</li>
+
+						<!-- <div id="liveSearchResults"></div> -->
+
+
+
+
+						<script>
+							$(document).ready(function () {
+								$('#searchInput').on('input', function () {
+									const searchTerm = $(this).val();
+
+									$.ajax({
+										url: '/live_search',
+										method: 'GET',
+										data: { q: searchTerm },
+										success: function (data) {
+											console.log('Data received:', data);
+											data.forEach(item => {
+												console.log(item);
+												// Perform actions to display each item on the user side
+											});
+											updateLiveSearchResults(data);
+										},
+										error: function (error) {
+											console.error(error);
+										}
+									});
+								});
+
+								function updateLiveSearchResults(results) {
+									// Clear previous results
+									console.log('results::', results);
+
+									$('#liveSearchResults').empty();
+
+									// Display live search results
+									results.forEach(product => {
+										$('#liveSearchResults').append('<p>' + product.productName + '</p>');
+									});
+								}
+							});
+						</script>
+
+
+						<!-- -----------------------------------------------------------------------  -->
+
 						<li>
-							<a href="/">
+							<a href="/wishlist">
 								<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
 							</a>
 						</li>
@@ -289,7 +362,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<li>
 							<a href="/cart">
 								<img class="pt-5" src="/images/cart.png" alt="Shopping Cart" />
-								<span class="badge"></span> <!-- Add your desired badge value here -->
+								<span class="badge">
+									<%= cartCount %>
+								</span>
 							</a>
 						</li>
 					</ul>
@@ -316,22 +391,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<p>Shopin</p>
 						</div>
 					</div>
-					<script>
-						$(document).ready(function () {
-							$('.popup-with-zoom-anim').magnificPopup({
-								type: 'inline',
-								fixedContentPos: false,
-								fixedBgPos: true,
-								overflowY: 'auto',
-								closeBtnInside: true,
-								preloader: false,
-								midClick: true,
-								removalDelay: 300,
-								mainClass: 'my-mfp-zoom-in'
-							});
 
-						});
-					</script>
 					<!----->
 				</div>
 				<div class="clearfix"></div>

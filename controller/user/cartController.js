@@ -22,11 +22,14 @@ const showCart = async (req, res) => {
           originalAmts += itemPrice * cartItem.quantity;
         });
       }
+      console.log("cartDetails..length::", cartDetails.items.length);
+      const cartCount = cartDetails ? cartDetails.items.length : 0;
 
       res.render("cart", {
         user,
         cartDetails,
         subTotal: originalAmts,
+        cartCount
       });
     }
   } catch (err) {

@@ -275,9 +275,19 @@ const showProducts = async (req, res) => {
   try {
     const userId = req.session.user_id;
     const user = await Userdb.findOne({ _id: userId });
+    const sortBy = req.query.sortBy || "default";
+
     const proCat = await Category.find({ status: "Unblock" });
-    const proDatas = await Products.find({ isListed: true });
-    res.render("showproducts", { proDatas, proCat, user });
+    const proDatas = await Products.find({ isListed: true }).sort(
+      sortBy === "priceLow"
+        ? { price: 1 }
+        : sortBy === "priceHigh"
+        ? { price: -1 }
+        : sortBy === "newest"
+        ? { createdAt: 1 }
+        : {}
+    );
+    res.render("showproducts", { proDatas, proCat, user, sortBy });
   } catch (err) {
     console.log("home error", err);
   }
@@ -304,17 +314,28 @@ const singleProducts = async (req, res) => {
 //category wise product show]---------------------------------->
 const catShowProducts = async (req, res) => {
   try {
-    const catShow = req.params.id;
-    console.log("catname:=>", catShow);
+    const catShow = req.params.categoryName;
+    const sortBy = req.query.sortBy || "default";
+
+    console.log("catname:=>", catShow, "sortBy", sortBy);
     const proCat = await Category.find({ status: "Unblock" });
-    const proDatas = await Products.find({ isListed: true, category: catShow });
-    console.log(proDatas);
-    proDatas.forEach((doc) => {
-      doc.images.forEach((img) => {
-        console.log(img);
-      });
-    });
-    res.render("showProducts", { proDatas, proCat });
+
+    // const proDatas = await Products.find({ isListed: true, category: catShow });
+    const proDatas = await Products.find({
+      isListed: true,
+      category: catShow,
+    }).sort(
+      sortBy === "priceLow"
+        ? { price: 1 }
+        : sortBy === "priceHigh"
+        ? { price: -1 }
+        : sortBy === "newest"
+        ? { createdAt: 1 }
+        : {}
+    );
+    console.log("proDatas::", proDatas);
+
+    res.render("showProducts", { proDatas, proCat, sortBy });
   } catch (err) {
     console.log("home error", err.message);
   }
@@ -422,8 +443,39 @@ const newPasswordVerify = async (req, res) => {
   }
 };
 
+// live_search-------------------------------->
+const live_search = async (req, res) => {
+  console.log("Live search route called");
+
+  try {
+    const searchTerm = req.query.q;
+    console.log("Search Term:", searchTerm);
+    const regex = new RegExp(searchTerm, "i"); // 'i' for case-insensitive search
+
+    const results = await Products.find({ productName: regex });
+    console.log("Query Results:", results);
+
+    res.json(results);
+  } catch (err) {
+    console.log("error", err.message);
+  }
+};
+// live_search-------------------------------->
+const wishlist = async (req, res) => {
+  try {
+    const userId = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userId });
+
+    res.render("wishlist");
+  } catch (err) {
+    console.log("error", err.message);
+  }
+};
+
 module.exports = {
   createUser,
+  wishlist,
+  live_search,
   showProducts,
   sendHome,
   loginUser,

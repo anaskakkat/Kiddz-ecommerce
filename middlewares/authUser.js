@@ -1,4 +1,3 @@
-const Cart = require("../model/cartModal");
 const Userdb =require("../model/userModel");
 
 const isLogin=async(req,res,next)=>{

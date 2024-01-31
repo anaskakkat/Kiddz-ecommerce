@@ -1,3 +1,30 @@
+<style>
+    .sort-options {
+        display: inline-block;
+        margin-right: 20px;
+        /* Adjust margin as needed */
+    }
+
+    label {
+        font-weight: bold;
+        margin-right: 8px;
+    }
+
+    select {
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    select:focus {
+        outline: none;
+        border-color: #3498db;
+        /* Change focus border color as desired */
+    }
+</style>
+
 <%- include('./layouts/header') %>
 
     <div class="banner-top">
@@ -19,7 +46,7 @@
                                 <div class="pro-img">
                                     <a href="/showProducts/singleProducts?id=<%=products._id  %>"><img
                                             src="/<%= products.images[0] %>" class="img-responsive" alt=""></a>
-                                    
+
                                 </div>
                                 <div class="mid-1">
                                     <div class="women">
@@ -55,156 +82,72 @@
                 </div>
             </div>
 
+            <div class="col-md-3 product-bottom">
+                <!--categories-->
+                <div class=" rsidebar span_1_of_left">
+                    <h4 class="cate">Categories</h4>
+                    <ul class="menu-drop">
+                        <% proCat.forEach(category=> { %>
+                            <a class="fw-5" href="/catShowProducts/<%= category.categoryName %>"
+                                style="color: black; font-weight: bold;">
+                                <%= category.categoryName %>
+                            </a>
+                            <li class="item1"></li>
+                            <% }) %>
+                    </ul>
 
 
-
-          
-                    <div class="col-md-3 product-bottom">
-                        <!--categories-->
-                        <div class=" rsidebar span_1_of_left">
-                            <h4 class="cate">Categories</h4>
-                            <ul class="menu-drop">
-                                <% proCat.forEach(category=> { %>
-
-                                    <a class="fw-5" href="/catShowProducts/<%= category.categoryName %>"
-                                        style="color: black; font-weight: bold;">
-                                        <%= category.categoryName %>
-                                    </a>
-
-
-                                    <li class="item1">
-
-
-                                        <!-- <ul class="cute">
-                                        <li class="subitem1"><a href="product.html">Cute Kittens </a></li>
-                                        <li class="subitem2"><a href="product.html">Strange Stuff </a></li>
-                                        <li class="subitem3"><a href="product.html">Automatic Fails </a></li>
-                                    </ul> -->
-                                    </li>
-
-                                    <!-- <li class="item2"><a href="#">Girls </a> 
-                             <ul class="cute">
-                                <li class="subitem1"><a href="product.html">Cute Kittens </a></li>
-                                <li class="subitem2"><a href="product.html">Strange Stuff </a></li>
-                                <li class="subitem3"><a href="product.html">Automatic Fails </a></li>
-                            </ul>
-                         </li>
-                        <li class="item3"><a href="#">Kids</a>
-                            <ul class="cute">
-                                <li class="subitem1"><a href="product.html">Cute Kittens </a></li>
-                                <li class="subitem2"><a href="product.html">Strange Stuff </a></li>
-                                <li class="subitem3"><a href="product.html">Automatic Fails</a></li>
-                            </ul>
-                        </li>
-                        <li class="item4"><a href="#">Accessories</a>
-                            <ul class="cute">
-                                <li class="subitem1"><a href="product.html">Cute Kittens </a></li>
-                                <li class="subitem2"><a href="product.html">Strange Stuff </a></li>
-                                <li class="subitem3"><a href="product.html">Automatic Fails</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="item4"><a href="#">Shoes</a>
-                            <ul class="cute">
-                                <li class="subitem1"><a href="product.html">Cute Kittens </a></li>
-                                <li class="subitem2"><a href="product.html">Strange Stuff </a></li>  
-                                <li class="subitem3"><a href="product.html">Automatic Fails </a></li>
-                            </ul>
-                        </li> -->
-
-                                    <% }) %>
-                            </ul>
-
-                        </div>
-                        <!--initiate accordion-->
-                        <script type="text/javascript">
-                            $(function () {
-                                var menu_ul = $('.menu-drop > li > ul'),
-                                    menu_a = $('.menu-drop > li > a');
-                                menu_ul.hide();
-                                menu_a.click(function (e) {
-                                    e.preventDefault();
-                                    if (!$(this).hasClass('active')) {
-                                        menu_a.removeClass('active');
-                                        menu_ul.filter(':visible').slideUp('normal');
-                                        $(this).addClass('active').next().stop(true, true).slideDown('normal');
-                                    } else {
-                                        $(this).removeClass('active');
-                                        $(this).next().stop(true, true).slideUp('normal');
-                                    }
-                                });
-
-                            });
-                        </script>
-                        <!--//menu-->
-                        <!-- <section class="sky-form">
-                    <h4 class="cate">Discounts</h4>
-                    <div class="row row1 scroll-pane mx-auto">
-                        <div class="col col-4">
-                            <label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i></i>Upto - 10%
-                                (20)</label>
-                        </div>
-                        <div class="col col-4">
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>40% - 50% (5)</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>30% - 20% (7)</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>10% - 5% (2)</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Other(50)</label>
-                        </div>
-                    </div>
-                </section>  -->
-
-
-
-                        <!-- <section class="sky-form">
-                    <h4 class="cate">Type</h4>
-                    <div class="row row1 scroll-pane">
-                        <div class="col col-4">
-                            <label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i></i>Sofa Cum
-                                Beds (30)</label>
-                        </div>
-                        <div class="col col-4">
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Bags (30)</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Caps & Hats
-                                (30)</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Jackets & Coats
-                                (30)</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Jeans (30)</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Shirts (30)</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Sunglasses
-                                (30)</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Swimwear (30)</label>
-                        </div>
-                    </div>
-                </section> -->
-
-                        <!-- <section class="sky-form">
-                    <h4 class="cate">Brand</h4>
-                    <div class="row row1 scroll-pane">
-                        <div class="col col-4">
-                            <label class="checkbox"><input type="checkbox" name="checkbox"
-                                    checked=""><i></i>Roadstar</label>
-                        </div>
-                        <div class="col col-4">
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Levis</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Persol</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Nike</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Edwin</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>New Balance</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Paul Smith</label>
-                            <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Ray-Ban</label>
-                        </div>
-                    </div>
-                </section> -->
-
-                    </div>
-                    <div class="clearfix"></div>
                 </div>
-                <!--products-->
+                <br><br>
+                <div class="sort-options">
+                    <label for="sort" style="color: #F67777;">Sort by:</label>
+                    <select id="sort" onchange="changeSort(this.value)">
+                        <option value="default" <%=sortBy==='default' ? 'selected' : '' %>>Featured</option>
+                        <option value="priceHigh" <%=sortBy==='priceHigh' ? 'selected' : '' %>>Price: High to Low
+                        </option>
+                        <option value="priceLow" <%=sortBy==='priceLow' ? 'selected' : '' %>>Price: Low to High</option>
+                        <option value="newest" <%=sortBy==='newest' ? 'selected' : '' %>>Newest Arrivals</option>
+                    </select>
+                </div>
 
-                <!--//products-->
-                <!--brand-->
+                <!--initiate accordion-->
+                <script type="text/javascript">
+                    $(function () {
+                        var menu_ul = $('.menu-drop > li > ul'),
+                            menu_a = $('.menu-drop > li > a');
+                        menu_ul.hide();
+                        menu_a.click(function (e) {
+                            e.preventDefault();
+                            if (!$(this).hasClass('active')) {
+                                menu_a.removeClass('active');
+                                menu_ul.filter(':visible').slideUp('normal');
+                                $(this).addClass('active').next().stop(true, true).slideDown('normal');
+                            } else {
+                                $(this).removeClass('active');
+                                $(this).next().stop(true, true).slideUp('normal');
+                            }
+                        });
+
+                    });
+
+                    // -------------------- 
+                    function changeSort(sortBy) {
+                        // Redirect to the same page with the updated sort parameter
+                        window.location.href = `/showProducts?sortBy=${sortBy}`;
+                    }
+                </script>
+                <!--//menu-->
 
 
             </div>
+            <div class="clearfix"></div>
+        </div>
+        <!--products-->
 
-            <%- include('./layouts/footer') %>
+        <!--//products-->
+        <!--brand-->
+
+
+    </div>
+
+    <%- include('./layouts/footer') %>

@@ -1,6 +1,7 @@
 const Userdb = require("../../model/userModel");
 const Products = require("../../model/productModal");
 const Otp = require("../../model/otpVerification");
+const WishList = require("../../model/wishlistModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const Category = require("../../model/category");
@@ -460,21 +461,11 @@ const live_search = async (req, res) => {
     console.log("error", err.message);
   }
 };
-// live_search-------------------------------->
-const wishlist = async (req, res) => {
-  try {
-    const userId = req.session.user_id;
-    const user = await Userdb.findOne({ _id: userId });
 
-    res.render("wishlist");
-  } catch (err) {
-    console.log("error", err.message);
-  }
-};
 
 module.exports = {
   createUser,
-  wishlist,
+ 
   live_search,
   showProducts,
   sendHome,
@@ -489,6 +480,5 @@ module.exports = {
   forgotPassword,
   forgetEmailCheck,
   forgetVerifyOtpPage,
-
   newPasswordVerify,
 };

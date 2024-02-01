@@ -4,6 +4,7 @@ const userController = require("../controller/user/userController");
 const cartController = require("../controller/user/cartController");
 const userAccountController = require("../controller/user/userAccountController");
 const checkoutController = require("../controller/user/checkoutController");
+const wishlistController = require("../controller/user/wishlistController");
 const auth = require("../middlewares/authUser");
 const path = require("path");
 const session = require("express-session");
@@ -140,7 +141,16 @@ route.post(
 );
 
 // load wishlist
-route.get("/wishlist",auth.isLogin, userController.wishlist);
+route.get("/wishlist",auth.isLogin, wishlistController.wishlist);
+// add to  wishlist
+route.post("/addToWishlist",auth.isLogin, wishlistController.addToWishlist);
+// add to  deleteWishlist
+route.post("/deleteWishlist",auth.isLogin, wishlistController.deleteWishlist);
+
+
+
+
+
 //livesearch  /live-search
 route.get("/live_search", userController.live_search);
 

@@ -86,8 +86,17 @@ const addToWishlist = async (req, res) => {
 //delete whishlist
 const deleteWishlist = async (req, res) => {
   try {
+    const userId = req.session.user_id;
+
     const productIdToRemove = req.body.productId;
     console.log("productIdToRemove:", productIdToRemove);
+
+    const updatedWishlist = await WishList.findOneAndUpdate(
+      { orderby: userId },
+      { $pull: { products: { product: productIdToRemove } } },
+      { new: true }
+    );
+    res.json({ success: true, message: "Product removed from wishlist" });
   } catch (err) {
     console.log("error", err.message);
   }

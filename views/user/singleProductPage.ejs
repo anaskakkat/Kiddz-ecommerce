@@ -63,8 +63,7 @@
                                 </li>
                                 <li class="compare text-muted">
                                     Stock:
-                                    <span id="stock"
-                                        class=" <%= singleproducts.stock === 0 ? 'text-danger' : '' %>">
+                                    <span id="stock" class=" <%= singleproducts.stock === 0 ? 'text-danger' : '' %>">
                                         <%= singleproducts.stock> 0 ? singleproducts.stock : 'Out of Stock' %>
                                     </span>
                                 </li>
@@ -224,12 +223,11 @@
 
 
                 <script>
-                    // Add SweetAlert to show product added to cart
+
                     $('form').submit(function (e) {
                         e.preventDefault();
 
-                        // Check if the user is logged in
-                        // If logged in, make an AJAX request or submit the form data as needed
+
                         var stock = parseInt($('#stock').text(), 10);
                         if (stock > 0) {
                             $.ajax({
@@ -244,6 +242,7 @@
                                             showConfirmButton: false,
                                             timer: 1500
                                         });
+                                        window.location.reload();
                                     } else {
                                         // Different SweetAlert message for not logged in user
                                         if (response.message === "User not logged in.") {
@@ -282,16 +281,13 @@
                         }
                     });
 
-                    // Update the cart quantity and check if plus button should be disabled
                     function updateCartQuantity(value) {
                         var stock = parseInt($('#stock').text(), 10);
                         var quantity = parseInt(value, 10);
                         $('#cartQuantity').val(quantity);
 
-                        // Update quantity display
                         $('#quantity span').text(quantity);
 
-                        // Disable plus button if quantity equals stock
                         $('.value-plus').toggleClass('disabled', quantity >= stock);
                     }
                 </script>
@@ -300,9 +296,7 @@
 
                 <script>
                     function addToWishlist() {
-                        // Prepare data to be sent to the backend
                         var data = {
-                            // Add your data properties here
                             productId: '<%= singleproducts._id %>',
                             price: '<%= singleproducts.price %>'
                         };

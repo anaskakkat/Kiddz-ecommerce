@@ -26,7 +26,7 @@
     }
 
     .table-wishlist tr td {
-        padding: 25px 0;
+        padding: 8px 0;
         vertical-align: middle;
     }
 
@@ -39,7 +39,7 @@
     }
 
     .table-wishlist tr td .img-product img {
-        width: 100%;
+        width: 60%;
     }
 
     .table-wishlist tr td .name-product {
@@ -168,7 +168,7 @@
 
     .trash-icon {
         font-size: 20px;
-        color: #212529;
+        color: #d70000;
     }
 </style>
 
@@ -197,59 +197,70 @@
                 ">
                         <div class="main-heading mb-10"></div>
                         <div class="table-wishlist">
-                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th width="45%">Product Name</th>
-                                        <th width="15%">Price</th>
-                                        <th width="15%">Stock Status</th>
-                                        <th width="15%"></th>
-                                        <th width="10%"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% wishlistList.forEach(wishlistItem=> { %>
-                                        <% wishlistItem.products.forEach(product=> { %>
+                            <% if (wishlistList[0].products.length===0) { %>
+                                <div class="noWishlist text-center text-info">
+                                    <p>No products in wishlist</p>
+                                </div>
+                                <% } else { %>
+                                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                        <thead>
                                             <tr>
-                                                <td width="45%">
-                                                    <div class="display-flex align-center">
-                                                        <div class="img-product">
-                                                            <img src="<%= product.product.images[0] %>" alt=""
-                                                                class="mCS_img_loaded">
-                                                        </div>
-                                                        <div class="name-product">
-                                                            <%= product.product.productName %>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td width="15%" class="price">₹<%= product.price %>
-                                                </td>
-                                                <td width="15%">
-                                                    <% if (product.product.stock> 0) { %>
-                                                        <span class="badge  rounded-pill"
-                                                            style="background-color: #00b74c;">In Stock</span>
-                                                        <% } else { %>
-                                                            <span class="badge rounded-pill"
-                                                                style="background-color: #eb0404;">Out of Stock</span>
-                                                            <% } %>
-
-                                                </td>
-                                                <td width="15%"><button class="round-black-btn small-btn">Add to
-                                                        Cart</button></td>
-                                                <td width="10%" class="text-center">
-                                                    <a href="#" class="trash-icon"
-                                                        data-product-id="<%= product.product._id %>">
-                                                        <i class="far fa-trash-alt"></i>
-                                                    </a>
-                                                </td>
-
+                                                <th width="45%">Product Name</th>
+                                                <th width="15%">Price</th>
+                                                <th width="15%">Stock Status</th>
+                                                <th width="15%"></th>
+                                                <th width="10%"></th>
                                             </tr>
-                                            <% }); %>
-                                                <% }); %>
-                                </tbody>
+                                        </thead>
+                                        <tbody>
+                                            <% wishlistList.forEach(wishlistItem=> { %>
+                                                <% wishlistItem.products.forEach(product=> { %>
+                                                    <tr>
+                                                        <td width="45%">
+                                                            <div class="display-flex align-center">
+                                                                <div class="img-product">
+                                                                    <img src="<%= product.product.images && product.product.images[0] %>"
+                                                                        alt="" class="mCS_img_loaded">
+                                                                </div>
+                                                                <div class="name-product">
+                                                                    <%= product.product.productName
+                                                                        || 'Product Name N/A' %>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td width="15%" class="price">₹<%= product.price || 'Price N/A'
+                                                                %>
+                                                        </td>
+                                                        <td width="15%">
+                                                            <% if (product.product.stock> 0) { %>
+                                                                <span class="badge rounded-pill"
+                                                                    style="background-color: #00b74c;">In Stock</span>
+                                                                <% } else { %>
+                                                                    <span class="badge rounded-pill"
+                                                                        style="background-color: #eb0404;">Out of
+                                                                        Stock</span>
+                                                                    <% } %>
+                                                        </td>
+                                                        <td width="15%">
+                                                            <button class="round-black-btn small-btn"
+                                                                onclick="showProductDetails('<%= product.product._id %>')">Show
+                                                                details</button>
 
-                            </table>
+                                                        </td>
+                                                        <td width="10%" class="text-center">
+                                                            <a href="#" class="trash-icon"
+                                                                data-product-id="<%= product.product._id %>">
+                                                                <i class="far fa-trash-alt"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <% }); %>
+                                                        <% }); %>
+                                        </tbody>
+                                    </table>
+                                    <% } %>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -261,16 +272,25 @@
 
 
         <script>
+
+            function showProductDetails(productId) {
+                // Redirect to the product details page
+                window.location.href = `/showProducts/singleProducts?id=${productId}`;
+            }
+
+
+
             document.addEventListener('DOMContentLoaded', function () {
                 document.querySelectorAll('.trash-icon').forEach(function (icon) {
                     icon.addEventListener('click', function (event) {
-                        event.preventDefault(); 
+                        event.preventDefault();
 
                         const productId = this.getAttribute('data-product-id');
 
                         axios.post('/deleteWishlist', { productId: productId })
                             .then(function (response) {
                                 console.log(response.data);
+                                window.location.href = '/wishlist';
                             })
                             .catch(function (error) {
                                 console.error(error);

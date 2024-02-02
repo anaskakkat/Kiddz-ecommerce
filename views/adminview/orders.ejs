@@ -26,7 +26,7 @@
                                 <th scope="col">Payment</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Date</th>
-                                <th scope="col" class="text-end">Action</th>
+                                <th scope="col" class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,19 +62,10 @@
                                     <td>
                                         <%= orders.date %>
                                     </td>
-                                    <td class="text-end">
+                                    <td class="text-center">
                                         <a href="/admin/orders/orderDetails/<%=  orders._id  %>"
                                             class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown"
-                                                class="btn btn-light rounded btn-sm font-sm"> <i
-                                                    class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div>
+                                   
                                         <!-- dropdown //end -->
                                     </td>
                                 </tr>

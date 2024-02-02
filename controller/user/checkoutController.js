@@ -6,6 +6,7 @@ const OrderId = require("order-id");
 const Razorpay = require("razorpay");
 const { response } = require("../../routers/userRoute");
 const crypto = require("crypto");
+const Coupons = require("../../model/coupenModel");
 
 //razorpay secret
 
@@ -43,10 +44,12 @@ const checkout = async (req, res) => {
           subTotal += itemTotal;
         });
       }
+      const coupons = await Coupons.find({});
       res.render("checkout", {
         user,
         cart,
         subTotal,
+        coupons,
       });
     } else {
       res.redirect("/");
@@ -237,6 +240,7 @@ const successPage = async (req, res) => {
     console.log("error", err.message);
   }
 };
+
 module.exports = {
   checkout,
   successPage,

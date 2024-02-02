@@ -1,0 +1,83 @@
+<%- include('./layouts/adminHeader') %>
+
+
+
+
+
+
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Categories</h2>
+            </div>
+            <div>
+                <input type="text" placeholder="Search Categories" class="form-control bg-white" />
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <form id="couponForm" action="/admin/coupons/<%= coupon._id %>" method="post">
+                            <div class="mb-4">
+                                <label for="couponName" class="form-label">Coupon Name</label>
+                                <input type="text" id="couponName" name="couponName" placeholder="Type here"
+                                    class="form-control" required pattern="^[A-Za-z0-9]+(?:\s+[A-Za-z0-9]+)*$"
+                                    value="<%= coupon.couponName %>" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="couponCode" class="form-label">Coupon Code</label>
+                                <input type="text" id="couponCode" name="couponCode" placeholder="Type here"
+                                    class="form-control" pattern="[A-Za-z0-9]+" required
+                                    value="<%= coupon.couponCode %>" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="discountAmount" class="form-label">Discount Amount</label>
+                                <input type="number" id="discountAmount" name="discountAmount" placeholder="Type here"
+                                    class="form-control" pattern="^\d+(\.\d{1,2})?$" min="0" required
+                                    value="<%= coupon.discountAmount %>" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Description</label>
+                                <input type="text" id="description" name="description" placeholder="Type here"
+                                    class="form-control" required pattern="^[A-Za-z0-9]+(?:\s+[A-Za-z0-9]+)*$"
+                                    value="<%= coupon.description %>" />
+                            </div>
+                            <% const formattedDate=coupon.expiryDate.toISOString().split('T')[0]; %>
+                                <div class="mb-4">
+                                    <label for="expiryDate" class="form-label">Expiry Date</label>
+                                    <input type="date" id="expiryDate" name="expiryDate" class="form-control" required
+                                        value="<%= formattedDate %>" />
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Update Coupon</button>
+                                </div>
+                        </form>
+
+
+                    </div>
+
+                    <!-- .col// -->
+                </div>
+                <!-- .row // -->
+            </div>
+            <!-- card body .// -->
+        </div>
+        <!-- card .// -->
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+    <%- include('./layouts/adminFooter') %>

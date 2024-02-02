@@ -1,0 +1,144 @@
+<%- include('./layouts/adminHeader') %>
+
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Coupons</h2>
+                <!-- <p>Add, edit or delete a Coupons</p> -->
+            </div>
+
+        </div>
+        <div class="validation-messages">
+            <!-- Validation messages will be displayed here -->
+        </div>
+        <% if (messages && messages.length> 0) { %>
+            <div class="alert alert-success">
+                <%= messages[0] %>
+            </div>
+            <% } %>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <form id="couponForm" action="/admin/coupons" method="post">
+                                    <div class="mb-4">
+                                        <label for="couponName" class="form-label">Coupon Name</label>
+                                        <input type="text" id="couponName" name="couponName" placeholder="Type here"
+                                            class="form-control" required
+                                            pattern="^[A-Za-z0-9]+(?:\s+[A-Za-z0-9]+)*$" />
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="couponCode" class="form-label">Coupon Code</label>
+                                        <input type="text" id="couponCode" name="couponCode" placeholder="Type here"
+                                            class="form-control" pattern="[A-Za-z0-9]+" required />
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="discountAmount" class="form-label">Discount Amount</label>
+                                        <input type="number" id="discountAmount" name="discountAmount"
+                                            placeholder="Type here" class="form-control" pattern="^\d+(\.\d{1,2})?$"
+                                            min="0" required />
+                                    </div>
+
+
+
+
+                                    <div class="mb-4">
+                                        <label for="description" class="form-label">Description</label>
+                                        <input type="text" id="description" name="description" placeholder="Type here"
+                                            class="form-control" required
+                                            pattern="^[A-Za-z0-9]+(?:\s+[A-Za-z0-9]+)*$" />
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="expiryDate" class="form-label">Expiry Date</label>
+                                        <input type="date" id="expiryDate" name="expiryDate" class="form-control"
+                                            required />
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Create Coupon</button>
+
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div class="col-md-9">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Name</th>
+                                                <th>Code</th>
+                                                <th>Discount</th>
+                                                <th>Expiry</th>
+                                                <th>isActive</th>
+                                                <th class="text-end">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% coupons.forEach(coupen=> { %>
+
+
+                                                <tr>
+                                                    <td><b>
+                                                            <%=coupen.couponName%>
+                                                        </b></td>
+                                                    <td class="text-info">
+                                                        <%=coupen.couponCode%>
+                                                    </td>
+                                                    <td>
+                                                        <%=coupen.discountAmount%>
+                                                    </td>
+                                                    <td>
+                                                        <%=coupen.description%>
+                                                    </td>
+                                                    <td>
+                                                        <%= coupen.expiryDate.toLocaleDateString('en-GB', {
+                                                            day: 'numeric' , month: 'numeric' , year: '2-digit' }) %>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <a href="/admin/coupons/editCoupons/<%=coupen._id%>"
+                                                            class="btn bg-primary  font-sm" style="color:white">Edit</a>
+                                                        <a href="javascript:void(0);"
+                                                            onclick="showConfirmation('<%=coupen._id%>')"
+                                                            class="btn bg-danger font-sm" style="color:white">Delete</a>
+
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- .col// -->
+                        </div>
+                        <!-- .row // -->
+                    </div>
+                    <!-- card body .// -->
+                </div>
+                <!-- card .// -->
+    </section>
+
+
+    <script>
+        function showConfirmation(couponId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/admin/coupons/deleteCoupons/${couponId}`;
+                }
+            });
+        }
+    </script>
+
+    <%- include('./layouts/adminFooter') %>

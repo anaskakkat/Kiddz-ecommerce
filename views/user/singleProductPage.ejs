@@ -240,9 +240,15 @@
                                             icon: 'success',
                                             title: 'Product added to cart!',
                                             showConfirmButton: false,
-                                            timer: 1500
+                                            timer: 1500,
+                                            // onClose: function () {
+                                             
+                                            //         location.reload();
+                                               
+                                            // }
                                         });
-                                        window.location.reload();
+
+
                                     } else {
                                         // Different SweetAlert message for not logged in user
                                         if (response.message === "User not logged in.") {
@@ -271,6 +277,8 @@
                                     });
                                 }
                             });
+
+
                         } else {
                             // Display SweetAlert if stock is zero
                             Swal.fire({
@@ -279,6 +287,7 @@
                                 showConfirmButton: true
                             });
                         }
+
                     });
 
                     function updateCartQuantity(value) {

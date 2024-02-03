@@ -141,17 +141,16 @@ route.post(
 );
 
 // load wishlist
-route.get("/wishlist",auth.isLogin, wishlistController.wishlist);
+route.get("/wishlist", auth.isLogin, wishlistController.wishlist);
 // add to  wishlist
-route.post("/addToWishlist",auth.isLogin, wishlistController.addToWishlist);
+route.post("/addToWishlist", auth.isLogin, wishlistController.addToWishlist);
 // add to  deleteWishlist
-route.post("/deleteWishlist",auth.isLogin, wishlistController.deleteWishlist);
-
-
-
-
+route.post("/deleteWishlist", auth.isLogin, wishlistController.deleteWishlist);
 
 //livesearch  /live-search
 route.get("/live_search", userController.live_search);
+
+//validateCoupon
+route.get("/validateCoupon", checkoutController.validateCoupon);
 
 module.exports = route;

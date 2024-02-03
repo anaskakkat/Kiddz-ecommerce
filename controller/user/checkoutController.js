@@ -44,7 +44,9 @@ const checkout = async (req, res) => {
           subTotal += itemTotal;
         });
       }
-      const coupons = await Coupons.find({});
+      const currentDate = new Date();
+      const coupons = await Coupons.find({ expiryDate: { $gt: currentDate } });
+
       res.render("checkout", {
         user,
         cart,
@@ -68,7 +70,7 @@ const PlaceToOrder = async (req, res) => {
     // console.log("body---------->", req.body);
     const { selectedAddress, selectedPayment, subTotal } = req.body;
 
-    console.log(selectedAddress, selectedPayment, subTotal);
+    console.log(selectedAddress, selectedPayment, "subTotal::", subTotal);
 
     const userData = await Userdb.findOne({ _id: userid });
 
@@ -120,7 +122,7 @@ const PlaceToOrder = async (req, res) => {
       // console.log("order placed");
       // return res.json({ success: true, params: orderId });
     }
-    console.log("orderId", orderId, "subTotal", subTotal);
+    // console.log("orderId", orderId, "subTotal", subTotal);
     if (selectedPayment == "cod") {
       await Order.updateOne({ _id: orderId }, { $set: { status: "Placed" } });
       console.log("order placed");
@@ -240,6 +242,55 @@ const successPage = async (req, res) => {
     console.log("error", err.message);
   }
 };
+//validateCoupon----------------------------------------------------
+
+const validateCoupon = async (req, res) => {
+  try {
+    const userid = req.session.user_id;
+    const couponCode = req.query.code;
+    console.log("couponCode::", couponCode);
+    const coupon = await Coupons.findOne({ couponCode });
+    console.log("coupon::>", coupon);
+    if (!coupon) {
+      console.log("Coupon not found.");
+      return res.json({ valid: false, error: "Coupon not found." });
+    }
+    const currentDate = new Date();
+    const expiryDate = coupon.expiryDate;
+
+    if (currentDate > expiryDate) {
+      console.log("Coupon has expired..");
+
+      return res.json({ valid: false, error: "Coupon has expired." });
+    }
+    const isCouponUsedByUser =
+      coupon.usedBy && coupon.usedBy._id.equals(userid);
+    if (isCouponUsedByUser) {
+      return res.json({
+        valid: false,
+        error: "Coupon has already been used by this user.",
+      });
+    }
+    const couponDiscount = coupon.discountAmount || 0;
+    await Coupons.findOneAndUpdate(
+      { couponCode },
+      { $set: { usedBy: userid } }
+    );
+
+    console.log("Coupon is valid..");
+
+    return res.json({
+      valid: true,
+      message: "Coupon applied.",
+      discount: couponDiscount,
+    });
+  } catch (error) {
+    console.error("Error validating coupon:", error);
+    console.log("Error validating coupon.");
+
+    return res.json({ valid: false, error: "Error validating coupon." });
+  }
+};
 
 module.exports = {
   checkout,
@@ -247,4 +298,5 @@ module.exports = {
   PlaceToOrder,
   checkoutAddAddress,
   verifyPayment,
+  validateCoupon,
 };

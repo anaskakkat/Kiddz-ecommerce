@@ -14,30 +14,38 @@ const showCart = async (req, res) => {
         path: "items.productId",
       });
 
-      let originalAmts = 0;
+      if (cartDetails && cartDetails.items) {
+        let originalAmts = 0;
 
-      if (cartDetails) {
         cartDetails.items.forEach((cartItem) => {
           let itemPrice = cartItem.price;
           originalAmts += itemPrice * cartItem.quantity;
         });
-      }
-      console.log("cartDetails..length::", cartDetails.items.length);
-      const cartCount = cartDetails ? cartDetails.items.length : 0;
 
-      res.render("cart", {
-        user,
-        cartDetails,
-        subTotal: originalAmts,
-        cartCount
-      });
+        console.log("cartDetails..length::", cartDetails.items.length);
+        const cartCount = cartDetails.items.length;
+
+        res.render("cart", {
+          user,
+          cartDetails,
+          subTotal: originalAmts,
+          cartCount,
+        });
+      } else {
+        // Handle the case where cartDetails or cartDetails.items is null or undefined
+        res.render("cart", {
+          user,
+          cartDetails: null,
+          subTotal: 0,
+          cartCount: 0,
+        });
+      }
     }
   } catch (err) {
-    // res.render('')
     console.log("cart-error>>", err.message);
+    // Handle the error accordingly
   }
 };
-
 
 const addToCart = async (req, res) => {
   try {

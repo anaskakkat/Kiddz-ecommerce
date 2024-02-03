@@ -8,7 +8,7 @@ const couponsPage = async (req, res) => {
   try {
     const coupons = await Coupons.find({});
     // console.log("coupons::", coupons);
-    res.render("couponsPage", { coupons, messages: req.flash("messages") })
+    res.render("couponsPage", { coupons, messages: req.flash("messages") });
   } catch (error) {
     console.log("error lodaing ejs", error);
   }
@@ -24,6 +24,18 @@ const addCoupons = async (req, res) => {
       expiryDate,
     } = req.body;
 
+    const existingCoupon = await Coupons.findOne({ couponCode });
+
+    if (existingCoupon) {
+      console.log("Coupon code already exists");
+      req.flash(
+        "messages",
+        "Coupon code already exists. Please choose a different code."
+      );
+      res.redirect("/admin/coupons");
+      return;
+    }
+
     const newCoupon = new Coupons({
       couponName,
       couponCode,
@@ -32,10 +44,9 @@ const addCoupons = async (req, res) => {
       expiryDate,
     });
 
-    // Save the newCoupon to the database
     await newCoupon.save();
 
-    console.log("coupon added");
+    console.log("Coupon added");
     req.flash("messages", "Coupon added successfully");
     res.redirect("/admin/coupons");
   } catch (error) {
@@ -44,6 +55,7 @@ const addCoupons = async (req, res) => {
     res.redirect("/admin/coupons");
   }
 };
+
 //delet coupons
 const deleteCoupons = async (req, res) => {
   try {

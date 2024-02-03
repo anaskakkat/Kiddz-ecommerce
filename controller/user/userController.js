@@ -23,7 +23,7 @@ const sendHome = async (req, res) => {
     const proDatas = await Products.aggregate([
       { $match: { isListed: true } },
       { $sort: { createdAt: -1 } },
-      { $limit: 8 },
+      { $limit: 4 },
     ]);
 
     res.render("userHome", { user, proCat, proDatas });
@@ -279,18 +279,40 @@ const showProducts = async (req, res) => {
     const sortBy = req.query.sortBy || "default";
 
     const proCat = await Category.find({ status: "Unblock" });
-    const proDatas = await Products.find({ isListed: true }).sort(
-      sortBy === "priceLow"
-        ? { price: 1 }
-        : sortBy === "priceHigh"
-        ? { price: -1 }
-        : sortBy === "newest"
-        ? { createdAt: 1 }
-        : {}
-    );
-    res.render("showproducts", { proDatas, proCat, user, sortBy });
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 6;
+    const skip = (page - 1) * perPage;
+
+    const totalProducts = await Products.countDocuments({ isListed: true });
+
+    const proDatas = await Products.find({ isListed: true })
+      .sort(
+        sortBy === "priceLow"
+          ? { price: 1 }
+          : sortBy === "priceHigh"
+          ? { price: -1 }
+          : sortBy === "newest"
+          ? { createdAt: 1 }
+          : {}
+      )
+      .skip(skip)
+      .limit(perPage);
+    const totalPages = Math.ceil(totalProducts / perPage);
+    console.log("Page:", page);
+    console.log("PerPage:", perPage);
+    console.log("TotalPages:", totalPages);
+    console.log("ProDatas:", proDatas);
+    res.render("showproducts", {
+      proDatas,
+      proCat,
+      user,
+      sortBy,
+      currentPage: page,
+      totalPages: totalPages,
+    });
   } catch (err) {
     console.log("home error", err);
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -315,30 +337,48 @@ const singleProducts = async (req, res) => {
 //category wise product show]---------------------------------->
 const catShowProducts = async (req, res) => {
   try {
+    const userId = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userId });
     const catShow = req.params.categoryName;
     const sortBy = req.query.sortBy || "default";
 
     console.log("catname:=>", catShow, "sortBy", sortBy);
     const proCat = await Category.find({ status: "Unblock" });
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 6;
+    const skip = (page - 1) * perPage;
+    const totalProducts = await Products.countDocuments({ isListed: true });
 
-    // const proDatas = await Products.find({ isListed: true, category: catShow });
     const proDatas = await Products.find({
       isListed: true,
       category: catShow,
-    }).sort(
-      sortBy === "priceLow"
-        ? { price: 1 }
-        : sortBy === "priceHigh"
-        ? { price: -1 }
-        : sortBy === "newest"
-        ? { createdAt: 1 }
-        : {}
-    );
-    console.log("proDatas::", proDatas);
+    })
+      .sort(
+        sortBy === "priceLow"
+          ? { price: 1 }
+          : sortBy === "priceHigh"
+          ? { price: -1 }
+          : sortBy === "newest"
+          ? { createdAt: 1 }
+          : {}
+      )
+      .skip(skip)
+      .limit(perPage);
+    const totalPages = Math.ceil(totalProducts / perPage);
 
-    res.render("showProducts", { proDatas, proCat, sortBy });
+    // console.log("proDatas::", proDatas);
+
+    res.render("showProducts", {
+      user,
+      proDatas,
+      proCat,
+      sortBy,
+      currentPage: page,
+      totalPages: totalPages,
+    });
   } catch (err) {
     console.log("home error", err.message);
+    res.status(500).send("Internal Server Error");
   }
 };
 // ------forgotPassword------------------------------------------------------------------------>
@@ -461,11 +501,22 @@ const live_search = async (req, res) => {
     console.log("error", err.message);
   }
 };
+// contact-------------------------------->
+const contact = async (req, res) => {
+  
 
+  try {
+
+
+    res.render("contact")
+  } catch (err) {
+    console.log("error", err.message);
+  }
+};
 
 module.exports = {
   createUser,
- 
+
   live_search,
   showProducts,
   sendHome,
@@ -481,4 +532,5 @@ module.exports = {
   forgetEmailCheck,
   forgetVerifyOtpPage,
   newPasswordVerify,
+  contact,
 };

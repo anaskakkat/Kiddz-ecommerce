@@ -250,7 +250,6 @@
 
 
                                     } else {
-                                        // Different SweetAlert message for not logged in user
                                         if (response.message === "User not logged in.") {
                                             Swal.fire({
                                                 icon: 'info',
@@ -258,7 +257,6 @@
                                                 showConfirmButton: true
                                             });
                                         } else {
-                                            // Default SweetAlert message for other errors
                                             Swal.fire({
                                                 icon: 'warning',
                                                 title: 'No Stock Available. , Stock Qty Already In Cart.',
@@ -269,7 +267,6 @@
                                 },
                                 error: function (error) {
                                     console.error('Error adding product to cart:', error);
-                                    // Default SweetAlert message for other errors
                                     Swal.fire({
                                         icon: 'info',
                                         title: 'An error occurred while adding the product to your cart.',
@@ -280,7 +277,6 @@
 
 
                         } else {
-                            // Display SweetAlert if stock is zero
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Product out of stock!',
@@ -310,11 +306,9 @@
                             price: '<%= singleproducts.price %>'
                         };
 
-                        // Make a POST request to the backend using axios
                         axios.post('/addToWishlist', data)
                             .then(function (response) {
                                 if (response.data.success) {
-                                    // Use SweetAlert for success message
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Item added to wishlist successfully!',
@@ -322,7 +316,6 @@
                                         timer: 1500
                                     });
                                 } else {
-                                    // Use SweetAlert for error message
                                     Swal.fire({
                                         icon: 'warning',
                                         title: 'Already item in wishlist',
@@ -332,7 +325,6 @@
                                 }
                             })
                             .catch(function (error) {
-                                // Handle errors
                                 console.error('Error:', error);
                             });
                     }

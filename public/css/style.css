@@ -231,8 +231,10 @@ a.item_add {
 }
 /*--//header--*/
 /*--banner--*/
+
+
 .banner{
-    background: url(../images/web3\ banner.webp);
+    background:  url(../images/web3\ bannerNew.jpg);
     background-size:contain;
     background-position: center;
     background-repeat: no-repeat;

@@ -1,0 +1,124 @@
+<%- include('./layouts/header') %>
+
+
+    <div class="banner-top">
+        <div class="container">
+            <h1>Contact Me</h1>
+            <em></em>
+            <h2><a href="/">Home</a><label></label></h2>
+        </div>
+    </div>
+
+
+
+    <div class="contact">
+
+        <div class="contact-form">
+            <div class="container">
+                <div class="col-md-6 contact-left">
+                    <h3>Contact Us
+
+                    </h3>
+                    <p>Thank you for reaching out! We're excited to hear from you. Please feel free to get in touch
+                        using the information below or by filling out the contact form. </p>
+
+
+                    <div class="address">
+                        <div class=" address-grid">
+                            <i class="glyphicon glyphicon-map-marker"></i>
+                            <div class="address1">
+                                <h3>Address</h3>
+                                <p>Shopin pvt ltd,kerala
+                                    pin-678439</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class=" address-grid ">
+                            <i class="glyphicon glyphicon-phone"></i>
+                            <div class="address1">
+                                <h3>Our Phone:<h3>
+                                        <p>+918606474470</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class=" address-grid ">
+                            <i class="glyphicon glyphicon-envelope"></i>
+                            <div class="address1">
+                                <h3>Email:</h3>
+                                <p><a href="mailto:info@example.com"> anasbrototype@gmail.com</a></p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class=" address-grid ">
+                            <i class="glyphicon glyphicon-bell"></i>
+                            <div class="address1">
+                                <h3>Open Hours:</h3>
+                                <p>Monday-Friday, 7AM-5PM</p>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 contact-top">
+                    <h3>Want to work with me?</h3>
+                    <form
+                        action="https://script.google.com/macros/s/AKfycbz2Iqg_IwvvIquFoKjNwNOoeLNntif8gVlfCvYVW2BPpp1JU2RQlZIXGXgQIX6ItyN5XA/exec"
+                        method="post">
+                        <div>
+                            <span>Your Name </span>
+                            <input type="text" id="name" name="name" pattern="^[A-Za-z0-9]+(?:\s+[A-Za-z0-9]+)*$"
+                                title="Please enter letters only" required>
+                        </div>
+                        <div>
+                            <span>Your Email </span>
+                            <input type="text" name="email" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                required>
+                        </div>
+                        <div>
+                            <span>Subject</span>
+                            <input type="text" id="subject" name="subject" pattern="^[A-Za-z0-9]+(?:\s+[A-Za-z0-9]+)*$"
+                                title="Please enter letters and spaces only" required>
+                        </div>
+                        <div>
+                            <span>Your Message</span>
+                            <textarea id="message" name="message" pattern="^[A-Za-z0-9]+(?:\s+[A-Za-z0-9]+)*$"
+                                title="Please enter your message" required></textarea>
+                        </div>
+                        <label class="hvr-skew-backward">
+                            <input type="submit" value="Send">
+                        </label>
+                    </form>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="map">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3914.48346984161!2d75.89079627385712!3d11.151794752160203!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba6513d6a79ea8f%3A0xca7fe369546aec60!2sBrototype%20Calicut!5e0!3m2!1sen!2sin!4v1706970770118!5m2!1sen!2sin"
+                width="800" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script>
+        function validateEmail() {
+            var emailInput = document.getElementById('email').value;
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailPattern.test(emailInput)) {
+                // alert("Please enter a valid email address.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+
+
+
+    <%- include('./layouts/footer') %>

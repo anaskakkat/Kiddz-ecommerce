@@ -52,7 +52,7 @@ const addToCart = async (req, res) => {
     const productId = req.params.id;
     const cartQuantity = req.body.cartQuantity;
     const userId = req.session.user_id;
-
+console.log('cartQuantity:',typeof cartQuantity);
     if (!userId) {
       res.json({ success: false, message: "User not logged in." });
     } else {
@@ -73,7 +73,7 @@ const addToCart = async (req, res) => {
         if (existProductIndex !== -1) {
           // Update existing product in the cart
           const existingProduct = cart.items[existProductIndex];
-          const updatedQuantity = existingProduct.qty + cartQuantity;
+          const updatedQuantity = existingProduct.qty + Number(cartQuantity);
 
           // Check if stock is sufficient
           if (updatedQuantity > product.stock) {

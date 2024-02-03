@@ -80,6 +80,7 @@
                         </div>
                         <% }) %>
                 </div>
+
             </div>
 
             <div class="col-md-3 product-bottom">
@@ -140,14 +141,55 @@
 
 
             </div>
+
             <div class="clearfix"></div>
+
+
         </div>
         <!--products-->
 
         <!--//products-->
         <!--brand-->
+        <div id="pagination-container" style="display: flex;justify-content: center;">
 
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <% for (let i=1; i <=totalPages; i++) { %>
+                        <li class="page-item <% if (currentPage === i) { %>active<% } %>">
+                            <a class="page-link" href="/showProducts?page=<%= i %>&sortBy=<%= sortBy %>">
+                                <%= i %>
+                            </a>
+                        </li>
+                        <% } %>
+                </ul>
+            </nav>
+            <!-- <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" style="color:#F67777" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item "><a class="page-link" style="color:#F67777" href="#">1</a></li>
+
+                    <li class="page-item">
+                        <a class="page-link " style="color:#F67777" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav> -->
+        </div>
 
     </div>
+
+
+
+
+
+   
+
+
+
 
     <%- include('./layouts/footer') %>

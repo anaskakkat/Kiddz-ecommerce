@@ -153,4 +153,7 @@ route.get("/live_search", userController.live_search);
 //validateCoupon
 route.get("/validateCoupon", checkoutController.validateCoupon);
 
+//contact render
+route.get("/contact", userController.contact);
+
 module.exports = route;

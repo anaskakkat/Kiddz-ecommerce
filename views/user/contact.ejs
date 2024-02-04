@@ -63,7 +63,7 @@
                     <h3>Want to work with me?</h3>
                     <form
                         action="https://script.google.com/macros/s/AKfycbz2Iqg_IwvvIquFoKjNwNOoeLNntif8gVlfCvYVW2BPpp1JU2RQlZIXGXgQIX6ItyN5XA/exec"
-                        method="post">
+                        method="post" onsubmit="handleFormSubmission(event)">
                         <div>
                             <span>Your Name </span>
                             <input type="text" id="name" name="name" pattern="^[A-Za-z0-9]+(?:\s+[A-Za-z0-9]+)*$"
@@ -71,8 +71,15 @@
                         </div>
                         <div>
                             <span>Your Email </span>
-                            <input type="text" name="email" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                                required>
+                            <input type="email" name="email" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                required style="width: 100%;
+                                padding: 0.7em;
+                                margin: 0.4em 0 0;
+                                background: none;
+                                outline: none;
+                                border: 1px solid #F3EFEF;
+                              
+                            ">
                         </div>
                         <div>
                             <span>Subject</span>
@@ -105,20 +112,38 @@
 
 
 
-    <script>
-        function validateEmail() {
-            var emailInput = document.getElementById('email').value;
-            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-            if (!emailPattern.test(emailInput)) {
-                // alert("Please enter a valid email address.");
-                return false;
-            }
-            return true;
+    <script>
+        function handleFormSubmission(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Perform any additional validation or actions here
+
+            // Submit the form data asynchronously using Fetch API
+            fetch('https://script.google.com/macros/s/AKfycbz2Iqg_IwvvIquFoKjNwNOoeLNntif8gVlfCvYVW2BPpp1JU2RQlZIXGXgQIX6ItyN5XA/exec', {
+                method: 'POST',
+                body: new FormData(event.target)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Form submitted successfully',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload(true); // Reload the page
+                        });
+                    } else {
+                        alert('Form submission failed'); // Display error message
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting form:', error);
+                    alert('Form submission failed'); // Display error message
+                });
         }
     </script>
-
-
 
 
     <%- include('./layouts/footer') %>

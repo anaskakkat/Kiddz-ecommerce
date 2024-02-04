@@ -503,12 +503,11 @@ const live_search = async (req, res) => {
 };
 // contact-------------------------------->
 const contact = async (req, res) => {
-  
-
   try {
+    const userId = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userId });
 
-
-    res.render("contact")
+    res.render("contact", { user });
   } catch (err) {
     console.log("error", err.message);
   }

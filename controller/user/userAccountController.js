@@ -3,7 +3,152 @@ const Cart = require("../../model/cartModal");
 const Userdb = require("../../model/userModel");
 const Order = require("../../model/orderModel");
 const bcrypt = require("bcrypt");
-//user profile-------------------------------------------->
+const path = require("path");
+const PDFDocument = require("pdfkit");
+
+// ---------------------------------------------------
+function generateTableRow(
+  doc,
+  y,
+  item,
+  description,
+  unitCost,
+  quantity,
+  lineTotal
+) {
+  doc
+    .fontSize(10)
+    .text(item, 50, y)
+    .text(description, 150, y)
+    .text(unitCost, 280, y, { width: 90, align: "right" })
+    .text(quantity, 370, y, { width: 90, align: "right" })
+    .text(lineTotal, 0, y, { align: "right" });
+}
+
+function generateHr(doc, y) {
+  doc.strokeColor("#aaaaaa").lineWidth(1).moveTo(50, y).lineTo(550, y).stroke();
+}
+
+// ------------------------------------------------------------------
+const generatePdf = async (req, res) => {
+  try {
+    const orderId = req.body.orderId;
+    const userid = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userid });
+
+    // Assuming there is an Order model in your application
+    const order = await Order.findById(orderId).populate("items.productId");
+    console.log("order:>", order);
+    if (!order) {
+      return res.status(404).send("Order not found");
+    }
+
+    // Create a new PDF document
+    let doc = new PDFDocument({ size: "A4", margin: 50 });
+
+    // Set response headers for PDF download
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename=${orderId}.pdf`);
+
+    // Pipe the PDF content to the response stream
+    doc.pipe(res);
+
+    // Add content to the PDF
+    doc
+      // .image("logo.png", 50, 45, { width: 50 })
+      .fillColor("#444444")
+      .fontSize(20)
+      .text("Shopin Pvt Ltd.", 110, 57)
+      .fontSize(10)
+      .text("123 Main Street", 200, 65, { align: "right" })
+      .text("India,KL,0494", 200, 80, { align: "right" })
+      .moveDown();
+    //body
+
+    doc.fillColor("#444444").fontSize(20).text("Invoice", 50, 160);
+
+    generateHr(doc, 185);
+
+    const customerInformationTop = 200;
+
+    doc
+      .fontSize(10)
+      .text("Invoice Number:", 50, customerInformationTop)
+      .font("Helvetica-Bold")
+      .text(order.orderId, 150, customerInformationTop)
+      .font("Helvetica")
+      .text("Invoice Date:", 50, customerInformationTop + 15)
+      .text(order.date, 150, customerInformationTop + 15)
+
+      .font("Helvetica")
+      .text("Shipping Address", 300, customerInformationTop)
+      .text(order.delivery_address, 300, customerInformationTop + 15)
+      .moveDown();
+
+    generateHr(doc, 252);
+    //table
+    let i;
+    const invoiceTableTop = 330;
+
+    doc.font("Helvetica-Bold");
+    generateTableRow(
+      doc,
+      invoiceTableTop,
+      "#",
+      "Product",
+      "Unit Cost",
+      "Quantity",
+      "Total"
+    );
+    generateHr(doc, invoiceTableTop + 20);
+    doc.font("Helvetica");
+
+    for (i = 0; i < order.items.length; i++) {
+      const item = order.items[i];
+      const position = invoiceTableTop + (i + 1) * 30;
+      const serialNumber = String.fromCharCode("1".charCodeAt(0) + (i % 26));
+
+      const productName = item.productId ? item.productId.productName : "N/A";
+      console.log("productName::", productName);
+      generateTableRow(
+        doc,
+        position,
+        serialNumber,
+        productName,
+        item.price,
+        item.qty,
+        item.total_price
+      );
+
+      generateHr(doc, position + 20);
+    }
+
+    const subtotalPosition = invoiceTableTop + (i + 1) * 30;
+    generateTableRow(
+      doc,
+      subtotalPosition,
+      "",
+      "",
+      "Total Amount",
+      "",
+      order.total_amount
+    );
+
+    doc.font("Helvetica");
+    //footer
+    doc.fontSize(10).text(" Thank you for your business.", 50, 780, {
+      align: "center",
+      width: 500,
+    });
+    doc.end();
+
+    console.log("PDF created and sent");
+  } catch (err) {
+    console.error("generatePdf error:", err.message);
+    // Handle the error as needed
+    res.status(500).send("Error generating PDF");
+  }
+};
 const userProfile = async (req, res) => {
   try {
     const userid = req.session.user_id;
@@ -334,4 +479,5 @@ module.exports = {
   updateProfile,
   changePassword,
   saveChangePassword,
+  generatePdf,
 };

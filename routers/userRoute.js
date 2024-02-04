@@ -156,4 +156,7 @@ route.get("/validateCoupon", checkoutController.validateCoupon);
 //contact render
 route.get("/contact", userController.contact);
 
+//generate-pdf
+route.post("/generatepdf", userAccountController.generatePdf);
+
 module.exports = route;

@@ -54,11 +54,11 @@
                                 <div style="display: inline-block; vertical-align: middle; margin-left: 10px;">
                                     <h5 class="content-title card-title" style="margin-bottom: 0; font-weight: bold;">
                                         Order Detail</h5>
-                                    <p style="margin: 0; font-size: small ;font-weight: normal;">Details for Order ID:
-                                        <%=orderLists._id%>
+                                    <p style="margin: 0; font-size: small ;font-weight: normal;">Order ID:
+                                        #<%=orderLists.orderId%>
                                     </p>
-                                    <!-- <button id="downloadInvoiceBtn" class="btn btn-primary"
-                                        onclick="downloadInvoice()">Download Invoice</button> -->
+                                    <button id="downloadInvoiceBtn" class="btn btn-primary" style="margin-top: 4px;
+                                    padding: revert;">Download Invoice</button>
 
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                     </header>
 
                     <br>
-                    <div class="card-body">
+                    <div class=" card-body">
                         <div class="row mb-50 mt-20 order-info-wrap">
                             <div class="col-md-4">
                                 <article class="icontext align-items-start">
@@ -123,9 +123,12 @@
                                     <table class="table">
                                         <thead style="background-color: #e1e1e1;">
                                             <tr>
-                                                <th width="40%" class="head-letter medium-text">Product</th>
-                                                <th width="20%" class="head-letter medium-text">Price</th>
-                                                <th width="20%" class="head-letter medium-text">Quantity</th>
+                                                <th width="40%" class="head-letter medium-text">Product
+                                                </th>
+                                                <th width="20%" class="head-letter medium-text">Price
+                                                </th>
+                                                <th width="20%" class="head-letter medium-text">Quantity
+                                                </th>
                                                 <th width="20%" class="head-letter text-end medium-text">Total</th>
                                             </tr>
                                         </thead>
@@ -159,7 +162,7 @@
                                 </div>
                                 <% if (orderLists.status==='Placed' || orderLists.status==='Pending' ) { %>
 
- 
+
                                     <% if (orderLists.cancellationReason) { %>
                                         <p class="text-primary">Order Canceled</p>
                                         <% } else { %>
@@ -195,12 +198,14 @@
                                                                                 ₹00.00</dt>
                                                                         </dl>
                                                                         <dl class="dlist">
-                                                                            <dt class="small-text">Grand total:&nbsp; ₹
+                                                                            <dt class="small-text">Grand
+                                                                                total:&nbsp; ₹
                                                                                 <%= orderLists.total_amount %>
                                                                             </dt>
                                                                         </dl>
                                                                         <dl class="dlist">
-                                                                            <dt class="text-muted small-text">Status:
+                                                                            <dt class="text-muted small-text">
+                                                                                Status:
                                                                                 <span
                                                                                     class="badge rounded-pill 
                                                                                     <%= orderLists.status == 'Canceled' ? 'alert-danger' : 
@@ -228,7 +233,8 @@
 
                                             </div>
                                             <div class="modal-body">
-                                                <label for="cancelReason">Reason for Cancellation:</label>
+                                                <label for="cancelReason">Reason for
+                                                    Cancellation:</label>
                                                 <input type="text" id="cancelReason" name="cancelReason"
                                                     class="form-control">
                                                 <div id="flashMessage" style="color: red;"></div>
@@ -252,7 +258,8 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="returnOrderModalLabel">Return Order</h5>
+                                                <h5 class="modal-title" id="returnOrderModalLabel">
+                                                    Return Order</h5>
                                             </div>
                                             <div class="modal-body">
                                                 <!-- Your return order form or input for the reason goes here -->
@@ -290,6 +297,53 @@
 
 
 
+        <!-- Include this script in your HTML file -->
+        <!-- Include this script in your HTML file -->
+        <script>
+            // Add an event listener to the Download Invoice button
+            document.getElementById('downloadInvoiceBtn').addEventListener('click', async () => {
+                try {
+                    const orderId = '<%=orderLists._id%>';
+
+                    // Make an asynchronous request to the server to generate and download the PDF
+                    const response = await fetch('/generatepdf', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            orderId: orderId,
+                        }),
+                    });
+
+                    // Check if the request was successful (status code 200)
+                    if (response.ok) {
+                        // Create a Blob from the response data
+                        const blob = await response.blob();
+
+                        // Create a link element to trigger the download
+                        const link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = `${orderId}_invoice.pdf`;
+
+                        // Append the link to the document and simulate a click to trigger the download
+                        document.body.appendChild(link);
+                        link.click();
+
+                        // Remove the link element
+                        document.body.removeChild(link);
+                    } else {
+                        // Handle errors if the request was not successful
+                        console.error('Error:', response.statusText);
+                        // Display an error message to the user if needed
+                    }
+                } catch (error) {
+                    // Handle any unexpected errors
+                    console.error('Error:', error.message);
+                    // Display an error message to the user if needed
+                }
+            });
+        </script>
 
 
 
@@ -412,20 +466,6 @@
                 }
 
 
-
-
-                function downloadInvoice() {
-                    // Adjust the API endpoint for generating the invoice based on your backend implementation
-                    var invoiceUrl = '/downloadInvoice/<%=orderLists._id%>';
-
-                    // Use an anchor element to trigger the download
-                    var downloadLink = document.createElement('a');
-                    downloadLink.href = invoiceUrl;
-                    downloadLink.download = 'invoice.pdf'; // You can set the filename as needed
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
-                }
 
 
             </script>

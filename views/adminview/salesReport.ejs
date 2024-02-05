@@ -14,11 +14,14 @@
                 <div class="row align-items-center">
                     <div class=" col-md-8 mb-lg-0 mb-15" style="display: flex;">
                         <div class="col-lg-4 col-6" style="margin-right: 10px;">
-                            <span style="display: flex;">From: &nbsp;</span> <input type="date" class="form-control"
-                                name="" />
+                            <span style="display: flex;">From: &nbsp;</span>
+                            <input type="date" min="<%= firstOrder %>" max="<%= lastOrder %>" class=" form-control"
+                                name="" id="fromDateInput" />
                         </div>
                         <div class="col-lg-4 col-6">
-                            <span>To: &nbsp;</span> <input type="date" class="form-control" name="" />
+                            <span style="display: flex;">To: &nbsp;</span>
+                            <input type="date" class="form-control" name="" id="toDateInput" pattern="\d{2}/\d{2}/\d{4}"
+                                min="<%= firstOrder %>" max="<%= lastOrder %>" />
                         </div>
 
 
@@ -87,13 +90,13 @@
                                                 <article class="float-end">
                                                     <dl class="dlist">
                                                         <dt>Product Sold:</dt>
-                                                        <dd>
+                                                        <dd id="totalQty">
                                                             <%= totalQty %>
                                                         </dd>
                                                     </dl>
                                                     <dl class="dlist">
                                                         <dt>Total Revenue:</dt>
-                                                        <dd>₹<%= totalAmount %>
+                                                        <dd id="totalAmount">>₹<%= totalAmount %>
                                                         </dd>
                                                     </dl>
 
@@ -134,7 +137,68 @@
         </div>
         <!-- card end// -->
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fromDateInput = document.querySelector('#fromDateInput');
+            const toDateInput = document.querySelector('#toDateInput');
 
+            const fetchData = async () => {
+                try {
+                    const response = await axios.get('/admin/salesReport', {
+                        params: {
+                            startDate: fromDateInput.value,
+                            endDate: toDateInput.value
+                        }, headers: {
+                            'Accept': 'application/json', // Explicitly request JSON response
+                        },
+                    });
+                    // console.log('startDate::', fromDateInput.value, 'endDate::', toDateInput.value);
+                    // console.log('data::', response.data);
+
+                    updateSalesData(response.data);
+                } catch (error) {
+                    console.error('Error fetching sales data:', error);
+                }
+            };
+
+            fromDateInput.addEventListener('change', fetchData);
+            toDateInput.addEventListener('change', fetchData);
+
+            const updateSalesData = (salesData) => {
+                console.log('Received sales data:', salesData);
+
+                const tbody = document.querySelector('tbody');
+                tbody.innerHTML = '';
+                if (!Array.isArray(salesData)) {
+                    console.error('Invalid sales data format. Expected an array.');
+                    return;
+                }
+                if (salesData.length === 0) {
+                    console.log('No sales data available for the selected date range.');
+                    return;
+                }
+                salesData.forEach(order => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+            <td>#${order.orderId}</td>
+            <td>${order.delivery_address}</td>
+            <td>${order.items.map(item => item.productId.productName).join('<br>')}</td>
+            <td>${order.total_amount}</td>
+            <td>${order.totalProductsCount}</td>
+            <td>${order.date}</td>
+            <td>${order.payment}</td>
+        `;
+                    tbody.appendChild(row);
+                });
+
+                // Update totalQty and totalAmount
+                const totalQtyElement = document.querySelector('#totalQty');
+                const totalAmountElement = document.querySelector('#totalAmount');
+                totalQtyElement.textContent = salesData.reduce((sum, order) => sum + order.totalProductsCount, 0);
+                totalAmountElement.textContent = salesData.reduce((sum, order) => sum + order.total_amount, 0);
+            };
+        });
+    </script>
 
 
 

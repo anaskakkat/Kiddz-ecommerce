@@ -144,7 +144,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 			<div class="head-top">
 
-				<div class="col-sm-6 col-md-offset-2 h_menu4">
+				<div class="col-sm-8 col-md-offset-2 h_menu4">
 					<nav class="navbar nav_bottom" role="navigation">
 
 						<!-- Brand and toggle get grouped for better mobile display -->
@@ -163,78 +163,37 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<ul class="nav navbar-nav nav_1">
 								<li><a class="color" href="/">Home</a></li>
 
-								<li><a class="color3" href="/showProducts">Shop</a></li>
-								<li><a class="color4" href="">About</a></li>
+								<li><a class="color1" href="/showProducts">Shop</a></li>
+								<li><a class="color2" href="/checkout">Checkout</a></li>
+								<li><a class="color3" href="/wishlist">Wishlist</a></li>
 								<!-- <li><a class="color5" href="typo.html">Short Codes</a></li> -->
-								<li><a class="color6" href="/contact">Contact</a></li>
+								<li><a class="color4" href="/contact">Contact</a></li>
 							</ul>
 						</div><!-- /.navbar-collapse -->
 
 					</nav>
 				</div>
-				<div class="col-sm-4 search-right">
+				<div class="col-sm-2 search-right">
 					<ul class="heart">
-						<!-- -------------------------------------------------------------------------------------------  -->
-
-						<li class="search-container">
-							<input type="text" class="search-input" id="searchInput" placeholder="Search...">
-						</li>
-
-						<!-- <div id="liveSearchResults"></div> -->
+						<li><a class="play-icon popup-with-zoom-anim" href="#small-dialog"><i
+									class="glyphicon glyphicon-search"> </i></a></li>
 
 
 
-
-						<script>
-							$(document).ready(function () {
-								$('#searchInput').on('input', function () {
-									const searchTerm = $(this).val();
-
-									$.ajax({
-										url: '/live_search',
-										method: 'GET',
-										data: { q: searchTerm },
-										success: function (data) {
-											console.log('Data received:', data);
-											data.forEach(item => {
-												console.log(item);
-												// Perform actions to display each item on the user side
-											});
-											updateLiveSearchResults(data);
-										},
-										error: function (error) {
-											console.error(error);
-										}
-									});
-								});
-
-								function updateLiveSearchResults(results) {
-									// Clear previous results
-									console.log('results::', results);
-
-									$('#liveSearchResults').empty();
-
-									// Display live search results
-									results.forEach(product => {
-										$('#liveSearchResults').append('<p>' + product.productName + '</p>');
-									});
-								}
-							});
-						</script>
 
 
 						<!-- -----------------------------------------------------------------------  -->
 
-						<li>
+						<!-- <li>
 							<a href="/wishlist">
 								<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
 							</a>
-						</li>
+						</li> -->
 
 						<!-- <li><a href="/cart"><img class="pt-5" src="/images/cart.png" alt="" /></a></li> -->
 						<li>
 							<a href="/cart">
-								<img class="pt-5" src="/images/cart.png" alt="Shopping Cart" />
+								<img class="pt-5 img-fluid" src="/images/cart.png" alt="Shopping Cart" />
 								<span class="badge">
 									<%= cartCount %>
 								</span>

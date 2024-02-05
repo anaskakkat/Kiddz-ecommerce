@@ -34,6 +34,8 @@ const productsAdding = async (req, res) => {
         req.files[i].filename
       );
 
+
+      
       await sharp(originalPath)
         .resize(400, 500, { fit: "fill" })
         .toFile(resizedPath);

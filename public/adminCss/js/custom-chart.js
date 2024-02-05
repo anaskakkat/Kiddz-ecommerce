@@ -9,6 +9,7 @@
         productData,
         orderStatusLabels,
         orderStatusCounts,
+        yearlySalesCounts,
       } = await response.json();
       createPieChart(orderStatusLabels, orderStatusCounts);
 
@@ -17,8 +18,10 @@
 
       chart.data.datasets[0].data = orderChartData;
       chart.data.datasets[1].data = productChartData;
+      myChart.data.datasets[0].data = yearlySalesCounts;
 
       chart.update();
+      myChart.update();
     } catch (error) {
       console.error("Error fetching or updating chart data:", error);
     }
@@ -66,7 +69,13 @@
           },
         ],
       },
+
       options: {
+        scales: {
+          y: {
+            beginAtZero: true, // Ensure the y-axis starts at 0
+          },
+        },
         plugins: {
           legend: {
             labels: {
@@ -80,6 +89,7 @@
     // Call the updateChart function to fetch and update the data
     updateChart();
   }
+
   // End if
 
   /*Sale statistics Chart*/
@@ -88,40 +98,20 @@
     var myChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["900", "1200", "1400", "1600"],
+        labels: ["2024", "2025", "2026", "2027", "2028"],
         datasets: [
           {
-            label: "US",
-            backgroundColor: "#5897fb",
+            label: "Sales yearly",
+            backgroundColor: ["#5897fb", "#7bcf86", "#ff9076", "#d595e5"],
             barThickness: 10,
-            data: [233, 321, 783, 900],
-          },
-          {
-            label: "Europe",
-            backgroundColor: "#7bcf86",
-            barThickness: 10,
-            data: [408, 547, 675, 734],
-          },
-          {
-            label: "Asian",
-            backgroundColor: "#ff9076",
-            barThickness: 10,
-            data: [208, 447, 575, 634],
-          },
-          {
-            label: "Africa",
-            backgroundColor: "#d595e5",
-            barThickness: 10,
-            data: [123, 345, 122, 302],
+            data: [],
           },
         ],
       },
       options: {
         plugins: {
           legend: {
-            labels: {
-              usePointStyle: true,
-            },
+            display: false,
           },
         },
         scales: {
@@ -131,7 +121,9 @@
         },
       },
     });
-  } //end if
+  }
+
+  //end if
 
   // ------------------------------------------
   const createPieChart = (orderStatusLabels, orderStatusCounts) => {

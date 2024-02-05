@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const Order = require("../../model/orderModel");
 const Product = require("../../model/productModal");
+const moment = require("moment");
 
 // admin login -------------------------------------------------->/
 const adminLogin = async (req, res) => {
@@ -211,6 +212,11 @@ const dashboardData = async (req, res) => {
   try {
     const orderData = await Order.aggregate([
       {
+        $match: {
+          status: "Deliverd",
+        },
+      },
+      {
         $group: {
           _id: {
             month: { $month: { $toDate: "$createdAt" } },
@@ -250,15 +256,39 @@ const dashboardData = async (req, res) => {
       },
     ]);
     // console.log("orderData::", orderData, "productData::", productData);
-    console.log(
-      "orderStatusLabels:",
+    // console.log(
+    //   "orderStatusLabels:",
+    //   orderStatusLabels,
+    //   "orderStatusCounts:",
+    //   orderStatusCounts
+    // );
+    // ---------------------------------------
+    const yearlySalesData = await Order.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: { $toDate: "$createdAt" } },
+          },
+          totalSales: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+        },
+      },
+    ]);
+    // console.log("yearlySalesData:::", yearlySalesData);
+
+    const yearlySalesCounts = yearlySalesData.map((item) => item.totalSales);
+    console.log("yearlySalesCounts:::", yearlySalesCounts);
+    res.status(200).json({
+      orderData,
+      productData,
       orderStatusLabels,
-      "orderStatusCounts:",
-      orderStatusCounts
-    );
-    res
-      .status(200)
-      .json({ orderData, productData, orderStatusLabels, orderStatusCounts });
+      orderStatusCounts,
+      yearlySalesCounts,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -267,38 +297,80 @@ const dashboardData = async (req, res) => {
 // unblock user-------------------------------->
 const salesReport = async (req, res) => {
   try {
-    const deliveredOrders = await Order.find({ status: "Deliverd" })
-      .sort({ orderDate: 1 })
+    const { startDate, endDate } = req.query;
+    // console.log("startDate::", startDate, "endDate:", endDate);
+
+    const startDateObj = new Date(startDate);
+    startDateObj.setHours(0, 0, 0, 0);
+    const endDateObj = new Date(endDate);
+    endDateObj.setHours(23, 59, 59, 999);
+
+    console.log("startDate::", startDate, "endDate::", endDate);
+    console.log("startDateObj::", startDateObj, "endDateObj::", endDateObj);
+
+    const dateFilter = {};
+    if (!isNaN(startDateObj.getTime()) && !isNaN(endDateObj.getTime())) {
+      dateFilter.createdAt = {
+        $gte: startDateObj,
+        $lte: endDateObj,
+      };
+    }
+    console.log("dateFilter::", dateFilter);
+
+    const deliveredOrders = await Order.find({
+      status: "Deliverd",
+      ...dateFilter,
+    })
+      .sort({ createdAt: -1 })
       .populate({
         path: "items.productId",
         model: "products",
         select: "productName",
       });
+
     let totalQty = 0;
     let totalAmount = 0;
-
     console.log("deliveredOrders::", deliveredOrders);
+    // Check if there are any delivered orders
+    if (deliveredOrders.length > 0) {
+      // Extract first and last order dates
+      const firstOrderDate = await Order.find().sort({ createdAt: 1 });
+      const lastOrderDate = await Order.find().sort({ createdAt: -1 });
 
-    deliveredOrders.forEach((order) => {
-      const totalProductsCount = order.items.reduce(
-        (sum, item) => sum + item.qty,
-        0
-      );
-      order.totalProductsCount = totalProductsCount;
-      totalQty += totalProductsCount;
-      totalAmount += order.total_amount;
-    });
-    res.render("salesReport", {
-      orders: deliveredOrders,
-      totalQty: totalQty,
-      totalAmount: totalAmount,
-    });
+      deliveredOrders.forEach((order) => {
+        const totalProductsCount = order.items.reduce(
+          (sum, item) => sum + item.qty,
+          0
+        );
+        order.totalProductsCount = totalProductsCount;
+        totalQty += totalProductsCount;
+        totalAmount += order.total_amount;
+      });
+      let firstOrder = moment(firstOrderDate[0].createdAt).format("YYYY-MM-DD");
+      let lastOrder = moment(lastOrderDate[0].createdAt).format("YYYY-MM-DD");
+      console.log('hhhhhekloo');
+
+      // console.log("firstOrderDate:", firstOrder, "lastOrderDate:", lastOrder);
+      res.render("salesReport", {
+        orders: deliveredOrders,
+        totalQty: totalQty,
+        totalAmount: totalAmount,
+        firstOrder,
+        lastOrder,
+      })
+    } else {
+      res.render("salesReport", {
+        orders: [],
+        totalQty: 0,
+        totalAmount: 0,
+        firstOrder: null,
+        lastOrder: null,
+      });
+    }
   } catch (error) {
     console.log(error);
   }
 };
-
-
 
 module.exports = {
   adminLogin,

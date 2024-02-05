@@ -32,7 +32,7 @@ Order Summary Card
     .summary_card {
         background-color: #fff;
         width: 350px;
-        height: auto;
+        height: 100%;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
         border-radius: 8px;
         padding: 10px;
@@ -121,7 +121,7 @@ Order price & total
         justify-content: space-between;
 
         padding: 1px 8px;
-        font-size: 72%;
+        font-size: 78%;
     }
 
     .order_price p,
@@ -482,13 +482,13 @@ Procced Payment button
 
 
 
-                            <div class="redeem" style="display: flex;">
+                            <div class="redeem" style="display: flex;margin-top: 5px;">
                                 <div class="inp">
                                     <input id="couponInput" type="text" class="form-control" placeholder="Promo code"
-                                        style="height: 70%;">
+                                        style="height: 85%;">
                                 </div>
                                 <button type="button" class="btn btn-primary text-center" onclick="redeemCoupon()"
-                                    style="margin-left: 5px; height: 70%; padding: 3px; height: 23px;">Redeem</button>
+                                    style="margin-left: 5px; padding: 3px; height: 26px;">Redeem</button>
 
 
 
@@ -497,10 +497,10 @@ Procced Payment button
 
                             <a href="#" class="warningg" style="text-decoration: none;" data-toggle="modal"
                                 data-target="#couponsModal">
-                                <p style="margin: 2px; font-size: smaller;">Click here! For Available Coupons..</p>
+                                <p style=" font-size: smaller;">Click here! For Available Coupons..</p>
                             </a>
-                            </a>
-                            <div class="summary" style="border: 1px solid #ddd; padding: 5px; margin-top: 0px;">
+
+                            <div class="summary" style="border: 1px solid #ddd; padding: 5px; margin-top: 10px;">
                                 <h6 class="summary-title text-center"
                                     style="font-size: 13px;color: #F67777; margin-bottom: 10px;">Payment Mode
                                 </h6>
@@ -589,7 +589,7 @@ Procced Payment button
                         }
                         else if (data.error === "Coupon has already been used by this user.") {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon has already been used by this user.</p>";
-                        }else {
+                        } else {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Error validating coupon. Please try again.</p>";
                         }
                     }
@@ -669,6 +669,23 @@ Procced Payment button
                 });
                 return;
             }
+            if (isSelectedPayment && document.getElementById('cod').checked) {
+                const totalAmountElement = document.getElementById('totalAmount');
+                const totalAmount = parseInt(totalAmountElement.innerText.replace('₹', ''));
+
+                if (totalAmount <= 2000) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Cash on Delivery is only available for orders above ₹2000. Please choose a different payment method.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            }
+
+
 
 
             if (isSelectedAddress && isSelectedPayment) {

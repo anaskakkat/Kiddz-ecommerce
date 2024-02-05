@@ -32,7 +32,6 @@ const showCart = async (req, res) => {
           cartCount,
         });
       } else {
-        // Handle the case where cartDetails or cartDetails.items is null or undefined
         res.render("cart", {
           user,
           cartDetails: null,
@@ -43,7 +42,6 @@ const showCart = async (req, res) => {
     }
   } catch (err) {
     console.log("cart-error>>", err.message);
-    // Handle the error accordingly
   }
 };
 
@@ -52,7 +50,7 @@ const addToCart = async (req, res) => {
     const productId = req.params.id;
     const cartQuantity = req.body.cartQuantity;
     const userId = req.session.user_id;
-console.log('cartQuantity:',typeof cartQuantity);
+    console.log("cartQuantity:", typeof cartQuantity);
     if (!userId) {
       res.json({ success: false, message: "User not logged in." });
     } else {

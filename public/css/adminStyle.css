@@ -2070,7 +2070,7 @@ a.btn.disabled,
 fieldset:disabled a.btn {
   pointer-events: none; }
 
-.btn-primary {
+/* .btn-primary {
   color: #fff;
   background-color: #007bff;
   border-color: #007bff; }
@@ -2093,7 +2093,7 @@ fieldset:disabled a.btn {
     .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
     .show > .btn-primary.dropdown-toggle:focus {
       -webkit-box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
-      box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5); }
+      box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5); } */
 
 .btn-secondary {
   color: #fff;
@@ -8191,7 +8191,7 @@ h1, h2, h3, h4, h5,
   .login-wrap .icon {
     width: 80px;
     height: 80px;
-    background: #f24f4f;
+    background: #29A56C;
     border-radius: 50%;
     font-size: 30px;
     margin: 0 auto;
@@ -8283,18 +8283,11 @@ textarea.form-control {
   .btn:hover, .btn:active, .btn:focus {
     outline: none; }
   .btn.btn-primary {
-    background: #f24f4f ;
+    background: #29A56C ;
     border: 1px solid black !important;
     color: #fff !important; }
     .btn.btn-primary:hover {
       border: 1px solid #1089ff;
-      background: #ed1e1e;
-      color: #1089ff; }
-    .btn.btn-primary.btn-outline-primary {
-      border: 1px solid #1089ff;
-      background: transparent;
-      color: #1089ff; }
-      .btn.btn-primary.btn-outline-primary:hover {
-        border: 1px solid transparent;
-        background: #1089ff;
-        color: #fff; }
+      background: #2b8b5f;
+      color: #fff; }
+  

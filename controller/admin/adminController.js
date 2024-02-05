@@ -297,29 +297,9 @@ const dashboardData = async (req, res) => {
 // unblock user-------------------------------->
 const salesReport = async (req, res) => {
   try {
-    const { startDate, endDate } = req.query;
-    // console.log("startDate::", startDate, "endDate:", endDate);
-
-    const startDateObj = new Date(startDate);
-    startDateObj.setHours(0, 0, 0, 0);
-    const endDateObj = new Date(endDate);
-    endDateObj.setHours(23, 59, 59, 999);
-
-    console.log("startDate::", startDate, "endDate::", endDate);
-    console.log("startDateObj::", startDateObj, "endDateObj::", endDateObj);
-
-    const dateFilter = {};
-    if (!isNaN(startDateObj.getTime()) && !isNaN(endDateObj.getTime())) {
-      dateFilter.createdAt = {
-        $gte: startDateObj,
-        $lte: endDateObj,
-      };
-    }
-    console.log("dateFilter::", dateFilter);
-
     const deliveredOrders = await Order.find({
       status: "Deliverd",
-      ...dateFilter,
+      // ...dateFilter,
     })
       .sort({ createdAt: -1 })
       .populate({
@@ -330,7 +310,7 @@ const salesReport = async (req, res) => {
 
     let totalQty = 0;
     let totalAmount = 0;
-    console.log("deliveredOrders::", deliveredOrders);
+    // console.log("deliveredOrders::", deliveredOrders);
     // Check if there are any delivered orders
     if (deliveredOrders.length > 0) {
       // Extract first and last order dates
@@ -348,8 +328,6 @@ const salesReport = async (req, res) => {
       });
       let firstOrder = moment(firstOrderDate[0].createdAt).format("YYYY-MM-DD");
       let lastOrder = moment(lastOrderDate[0].createdAt).format("YYYY-MM-DD");
-      console.log('hhhhhekloo');
-
       // console.log("firstOrderDate:", firstOrder, "lastOrderDate:", lastOrder);
       res.render("salesReport", {
         orders: deliveredOrders,
@@ -357,7 +335,7 @@ const salesReport = async (req, res) => {
         totalAmount: totalAmount,
         firstOrder,
         lastOrder,
-      })
+      });
     } else {
       res.render("salesReport", {
         orders: [],
@@ -372,8 +350,49 @@ const salesReport = async (req, res) => {
   }
 };
 
+//sales
+const sales = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    console.log("startDate::", startDate, "endDate:", endDate);
+
+    const startDateObj = new Date(startDate);
+    startDateObj.setHours(0, 0, 0, 0);
+    const endDateObj = new Date(endDate);
+    endDateObj.setHours(23, 59, 59, 999);
+
+    // console.log("startDate::", startDate, "endDate::", endDate);
+    // console.log("startDateObj::", startDateObj, "endDateObj::", endDateObj);
+
+    const dateFilter = {};
+    if (!isNaN(startDateObj.getTime()) && !isNaN(endDateObj.getTime())) {
+      dateFilter.createdAt = {
+        $gte: startDateObj,
+        $lte: endDateObj,
+      };
+    }
+    // console.log("dateFilter::", dateFilter);
+
+    const deliveredOrders = await Order.find({
+      status: "Deliverd",
+      ...dateFilter,
+    })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "items.productId",
+        model: "products",
+        select: "productName",
+      });
+    console.log("deliveredOrders--->>", deliveredOrders);
+    res.json({ success: true, orders: deliveredOrders });
+  } catch (err) {
+    console.log(err, err.message);
+  }
+};
+
 module.exports = {
   adminLogin,
+  sales,
   dashboardData,
   checkAdmin,
   adminDash,

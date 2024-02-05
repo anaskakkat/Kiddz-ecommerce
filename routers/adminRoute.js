@@ -59,7 +59,7 @@ adminRouter.get("/dashboardData", auth.isLogin, adminControl.dashboardData);
 //admin dashbord sales report
 adminRouter.get("/salesReport", auth.isLogin, adminControl.salesReport);
 //admin dashbord sales report
-// adminRouter.post("/salesReport",auth.isLogin,adminControl.salesReport);
+adminRouter.get("/sales", auth.isLogin, adminControl.sales);
 
 // admin logout
 adminRouter.get("/adminLogout", auth.isLogin, adminControl.adminLogout);
@@ -156,9 +156,6 @@ adminRouter.get(
 );
 // change status
 adminRouter.post("/changeStatus", orderController.changeStatus);
-
-
-
 
 //coupen load admin get
 adminRouter.get("/coupons", auth.isLogin, coupenController.couponsPage);

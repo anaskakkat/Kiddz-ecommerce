@@ -84,13 +84,42 @@
             </div>
 
             <div class="col-md-3 product-bottom">
+
+                <div class="input-group">
+                    <label for="sort" style="color: #F67777;"> Search</label>
+                    <br>
+                    <div class="form-outline" style="display: flex;margin-top: 5px;" data-mdb-input-init>
+                        <input type="search" id="form1" class="form-control" style="height: 30px;" />
+                        <button type="button" class="btn btn-primary" data-mdb-ripple-init
+                            style="background-color: #F67777;">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <br>
+
+
+                <div class="sort-options">
+                    <label for="sort" style="color: #F67777;">Sort by</label><br />
+                    <select id="sort" style="margin-top: 5px; font-size: smaller;height: auto;"
+                        onchange="changeSort(this.value)">
+                        <option value="default" <%=sortBy==='default' ? 'selected' : '' %>>Featured</option>
+                        <option value="priceHigh" <%=sortBy==='priceHigh' ? 'selected' : '' %>>Price: High to Low
+                        </option>
+                        <option value="priceLow" <%=sortBy==='priceLow' ? 'selected' : '' %>>Price: Low to High</option>
+                        <option value="newest" <%=sortBy==='newest' ? 'selected' : '' %>>Newest Arrivals</option>
+                    </select>
+                </div>
                 <!--categories-->
+                <br><br>
                 <div class=" rsidebar span_1_of_left">
-                    <h4 class="cate">Categories</h4>
-                    <ul class="menu-drop">
+                    <label class="cate" style="color: #F67777;font-size: 17px">Categories</label>
+                    <ul class=" menu-drop" style="margin: 0px;">
                         <% proCat.forEach(category=> { %>
                             <a class="fw-5" href="/catShowProducts/<%= category.categoryName %>"
-                                style="color: black; font-weight: bold;">
+                                style="color: black; font-weight: bold; text-decoration: none;   font-size: 90%;">
                                 <%= category.categoryName %>
                             </a>
                             <li class="item1"></li>
@@ -100,16 +129,7 @@
 
                 </div>
                 <br><br>
-                <div class="sort-options">
-                    <label for="sort" style="color: #F67777;">Sort by:</label>
-                    <select id="sort" onchange="changeSort(this.value)">
-                        <option value="default" <%=sortBy==='default' ? 'selected' : '' %>>Featured</option>
-                        <option value="priceHigh" <%=sortBy==='priceHigh' ? 'selected' : '' %>>Price: High to Low
-                        </option>
-                        <option value="priceLow" <%=sortBy==='priceLow' ? 'selected' : '' %>>Price: Low to High</option>
-                        <option value="newest" <%=sortBy==='newest' ? 'selected' : '' %>>Newest Arrivals</option>
-                    </select>
-                </div>
+
 
                 <!--initiate accordion-->
                 <script type="text/javascript">
@@ -187,7 +207,7 @@
 
 
 
-   
+
 
 
 

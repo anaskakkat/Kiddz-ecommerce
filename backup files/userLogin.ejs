@@ -1,0 +1,164 @@
+<style>
+    /* Style for Reset Password Modal */
+    #resetPasswordModal .modal-dialog {
+        max-width: 400px;
+        margin: 30px auto;
+    }
+
+    #resetPasswordModal .modal-content {
+        border-radius: 0;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #resetPasswordModal .modal-header {
+        background-color: #F67777;
+        color: #fff;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #resetPasswordModal .modal-title {
+        font-size: 18px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    #resetPasswordModal .modal-body {
+        padding: 20px;
+    }
+
+    #resetPasswordModal input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    #resetPasswordModal button {
+        background-color: #F67777;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: 'Arial', sans-serif;
+    }
+
+    #resetPasswordModal button:hover {
+        background-color: #E85C5C;
+    }
+
+    /* Style for Forgot Password Link */
+    .forgot-password-link {
+        color: #F67777;
+        font-weight: bold;
+        text-decoration: none;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .forgot-password-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<%- include('./layouts/header') %>
+
+    <!--banner-->
+    <div class="banner-top">
+        <div class="container">
+            <h1>Login</h1>
+            <em></em>
+            <h2><a href="/">Home</a><label>/</label>Login</h2>
+        </div>
+    </div>
+    <!--login-->
+
+
+    <div class="container">
+        <div class="login">
+
+
+            <form action="" method="post">
+                <div class="col-md-6 login-do">
+                    <div class="login-mail">
+                        <input type="text" placeholder="Email" required="" name="loginEmail"
+                            value="shoukathot77@gmail.com" pattern="[A-Za-z0-9]*[@](gmail)*[\.](com)$">
+                        <i class="glyphicon glyphicon-envelope"></i>
+                    </div>
+                    <div class="login-mail">
+                        <input type="password" placeholder="Password" required="" name="loginPassword" value="123"
+                            pattern="^[A-Za-z0-9][A-Za-z0-9_ ]*$">
+                        <i class="glyphicon glyphicon-lock"></i>
+                    </div>
+
+                    <% if (messages.length> 0) { %>
+                        <div style="color: red;">
+                            <%= messages[0] %>
+                        </div>
+                        <% } %>
+
+                            <label class="hvr-skew-backward" style="margin-bottom: 4px;">
+                                <input type="submit" value="login">
+                            </label>
+                            <div class="login-forgot-password">
+                                <a href="/forgotPassword"
+                                    style="text-decoration: none; font-weight: normal; color: rgb(16, 45, 71); transition: color 0.3s ease;"
+                                    onmouseover="this.style.color='#f85555';"
+                                    onmouseout="this.style.color='rgb(16, 45, 71)';" class="">
+                                    Forgot Password?
+                                </a>
+
+                            </div>
+                </div>
+                <div class="col-md-6 login-right">
+                    <h3>Completely Free Account</h3>
+
+                    <p>Pellentesque neque leo, dictum sit amet accumsan non, dignissim ac mauris. Mauris rhoncus, lectus
+                        tincidunt tempus aliquam, odio
+                        libero tincidunt metus, sed euismod elit enim ut mi. Nulla porttitor et dolor sed condimentum.
+                        Praesent porttitor lorem dui, in pulvinar enim rhoncus vitae. Curabitur tincidunt, turpis ac
+                        lobortis hendrerit, ex elit vestibulum est, at faucibus erat ligula non neque.</p>
+                    <a href="/registration" class=" hvr-skew-backward">Register</a>
+
+                </div>
+
+                <div class="clearfix"> </div>
+
+            </form>
+        </div>
+
+        <!-- Reset Password Modal -->
+        <!-- Reset Password Modal -->
+
+
+
+    </div>
+
+    <!--//login-->
+
+
+
+
+    <%- include('./layouts/footer') %>
+
+
+
+        <!-- JavaScript for handling reset password -->
+        <script>
+            // reset password
+            function sendResetPasswordEmail() {
+                var resetEmail = document.getElementById('resetEmail').value;
+                var resetMessageElement = document.getElementById('resetMessage');
+
+                // Validate email format
+                let emailPattern = /^\s*[A-Za-z0-9]*[@](gmail)*[\.](com)\s*$/;
+
+                if (!emailPattern.test(resetEmail)) {
+                    resetMessageElement.innerHTML = " Please enter a valid email address.";
+                    resetMessageElement.style.color = "red";
+                    return;
+                }
+
+
+            }
+        </script>

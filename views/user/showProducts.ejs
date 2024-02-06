@@ -23,6 +23,20 @@
         border-color: #3498db;
         /* Change focus border color as desired */
     }
+
+    .no-results-message {
+        text-align: center;
+        padding: 20px;
+        border: 2px solid #b3b3b3;
+        /* Red border */
+        border-radius: 5px;
+        background-color: #efefef;
+        /* Light red background */
+        color: #8a8a8a;
+        /* Red text color */
+        font-size: 18px;
+        font-weight: bold;
+    }
 </style>
 
 <%- include('./layouts/header') %>
@@ -39,46 +53,53 @@
         <div class="container">
             <div class="col-md-9">
                 <div class="mid-popular">
-                    <% proDatas.forEach(products=> { %>
-                        <div class="col-md-4  item-grid1 simpleCart_shelfItem">
-                            <!-- Your existing product rendering code goes here -->
-                            <div class=" mid-pop col-lg-12">
-                                <div class="pro-img">
-                                    <a href="/showProducts/singleProducts?id=<%=products._id  %>"><img
-                                            src="/<%= products.images[0] %>" class="img-responsive" alt=""></a>
+                    <% if (proDatas.length> 0) { %>
+
+                        <% proDatas.forEach(products=> { %>
+                            <div class="col-md-4  item-grid1 simpleCart_shelfItem">
+                                <!-- Your existing product rendering code goes here -->
+                                <div class=" mid-pop col-lg-12">
+                                    <div class="pro-img">
+                                        <a href="/showProducts/singleProducts?id=<%=products._id  %>"><img
+                                                src="/<%= products.images[0] %>" class="img-responsive" alt=""></a>
+
+                                    </div>
+                                    <div class="mid-1">
+                                        <div class="women">
+                                            <div class="women-top">
+                                                <span>
+                                                    <%=products.category%>
+                                                </span>
+                                                <h6><a href="/showProducts/singleProducts/<%=products._id %>">
+                                                        <%=products.productName%>
+                                                    </a></h6>
+                                            </div>
+                                            <div class="img item_add">
+                                                <a href="#"><img src="" alt=""></a>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="mid-2">
+                                            <p><label>₹</label><em class="item_price">
+                                                    <%=products.price%>
+                                                </em></p>
+                                            <div class="block">
+                                                <div class="starbox small ghosting"> </div>
+                                            </div>
+
+                                            <div class="clearfix"></div>
+                                        </div>
+
+                                    </div>
 
                                 </div>
-                                <div class="mid-1">
-                                    <div class="women">
-                                        <div class="women-top">
-                                            <span>
-                                                <%=products.category%>
-                                            </span>
-                                            <h6><a href="/showProducts/singleProducts/<%=products._id %>">
-                                                    <%=products.productName%>
-                                                </a></h6>
-                                        </div>
-                                        <div class="img item_add">
-                                            <a href="#"><img src="" alt=""></a>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    <div class="mid-2">
-                                        <p><label>₹</label><em class="item_price">
-                                                <%=products.price%>
-                                            </em></p>
-                                        <div class="block">
-                                            <div class="starbox small ghosting"> </div>
-                                        </div>
-
-                                        <div class="clearfix"></div>
-                                    </div>
-
-                                </div>
-
                             </div>
-                        </div>
-                        <% }) %>
+                            <% }) %>
+                                <% } else { %>
+                                    <div  class="no-results-message">
+                                        <p>No products found for your search query.</p>
+                                    </div>
+                                    <% } %>
                 </div>
 
             </div>
@@ -89,8 +110,8 @@
                     <label for="sort" style="color: #F67777;"> Search</label>
                     <br>
                     <div class="form-outline" style="display: flex;margin-top: 5px;" data-mdb-input-init>
-                        <input type="search" id="form1" class="form-control" style="height: 30px;" />
-                        <button type="button" class="btn btn-primary" data-mdb-ripple-init
+                        <input type="search" id="searchField" class="form-control" style="height: 30px;" />
+                        <button type="button" id="searchBtn" class="btn btn-primary" data-mdb-ripple-init
                             style="background-color: #F67777;">
                             <i class="fas fa-search"></i>
                         </button>
@@ -131,34 +152,6 @@
                 <br><br>
 
 
-                <!--initiate accordion-->
-                <script type="text/javascript">
-                    $(function () {
-                        var menu_ul = $('.menu-drop > li > ul'),
-                            menu_a = $('.menu-drop > li > a');
-                        menu_ul.hide();
-                        menu_a.click(function (e) {
-                            e.preventDefault();
-                            if (!$(this).hasClass('active')) {
-                                menu_a.removeClass('active');
-                                menu_ul.filter(':visible').slideUp('normal');
-                                $(this).addClass('active').next().stop(true, true).slideDown('normal');
-                            } else {
-                                $(this).removeClass('active');
-                                $(this).next().stop(true, true).slideUp('normal');
-                            }
-                        });
-
-                    });
-
-                    // -------------------- 
-                    function changeSort(sortBy) {
-                        // Redirect to the same page with the updated sort parameter
-                        window.location.href = `/showProducts?sortBy=${sortBy}`;
-                    }
-                </script>
-                <!--//menu-->
-
 
             </div>
 
@@ -166,10 +159,7 @@
 
 
         </div>
-        <!--products-->
 
-        <!--//products-->
-        <!--brand-->
         <div id="pagination-container" style="display: flex;justify-content: center;">
 
             <nav aria-label="Page navigation example">
@@ -183,22 +173,7 @@
                         <% } %>
                 </ul>
             </nav>
-            <!-- <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" style="color:#F67777" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item "><a class="page-link" style="color:#F67777" href="#">1</a></li>
 
-                    <li class="page-item">
-                        <a class="page-link " style="color:#F67777" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav> -->
         </div>
 
     </div>
@@ -207,6 +182,63 @@
 
 
 
+
+    <script type="text/javascript">
+        $(function () {
+            var menu_ul = $('.menu-drop > li > ul'),
+                menu_a = $('.menu-drop > li > a');
+            menu_ul.hide();
+            menu_a.click(function (e) {
+                e.preventDefault();
+                if (!$(this).hasClass('active')) {
+                    menu_a.removeClass('active');
+                    menu_ul.filter(':visible').slideUp('normal');
+                    $(this).addClass('active').next().stop(true, true).slideDown('normal');
+                } else {
+                    $(this).removeClass('active');
+                    $(this).next().stop(true, true).slideUp('normal');
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+
+
+
+
+
+        function searchProducts() {
+            const searchQuery = document.getElementById("searchField").value.trim();
+            const sortBy = document.getElementById("sort").value;
+            // console.log('searchProducts:-', 'searchQuery:', searchQuery, 'sortBy:',);
+            window.location.href = `/showProducts?sortBy=${sortBy}&search=${searchQuery}`;
+        }
+        function changeSort(sortBy) {
+            const searchQuery = document.getElementById("searchField").value.trim();
+
+            window.location.href = `/showProducts?sortBy=${sortBy}&search=${searchQuery}`;
+        }
+
+
+
+        document.getElementById("searchBtn").addEventListener("click", function (event) {
+            event.preventDefault();
+            searchProducts();
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        // console.log('urlParams:',urlParams);
+        const searchQueryFromUrl = urlParams.get('search');
+        // console.log('searchQueryFromUrl:', searchQueryFromUrl);
+
+        if (searchQueryFromUrl) {
+            document.getElementById("searchField").value = searchQueryFromUrl;
+        }
+
+
+    </script>
 
 
 

@@ -277,15 +277,24 @@ const showProducts = async (req, res) => {
     const userId = req.session.user_id;
     const user = await Userdb.findOne({ _id: userId });
     const sortBy = req.query.sortBy || "default";
+    const searchQuery = req.query.search || "";
+    console.log("sortBy:", sortBy, "searchQuery:", searchQuery);
 
     const proCat = await Category.find({ status: "Unblock" });
     const page = parseInt(req.query.page) || 1;
     const perPage = 6;
     const skip = (page - 1) * perPage;
 
-    const totalProducts = await Products.countDocuments({ isListed: true });
+    let query = { isListed: true };
+    console.log("query:", query);
+    if (searchQuery) {
+      query.productName = { $regex: searchQuery, $options: "i" };
+    }
+    console.log("query.productName:", query.productName);
 
-    const proDatas = await Products.find({ isListed: true })
+    const totalProducts = await Products.countDocuments(query);
+    console.log("totalProducts::", totalProducts);
+    const proDatas = await Products.find(query)
       .sort(
         sortBy === "priceLow"
           ? { price: 1 }
@@ -298,10 +307,10 @@ const showProducts = async (req, res) => {
       .skip(skip)
       .limit(perPage);
     const totalPages = Math.ceil(totalProducts / perPage);
-    console.log("Page:", page);
-    console.log("PerPage:", perPage);
+    // console.log("Page:", page);
+    // console.log("PerPage:", perPage);
     console.log("TotalPages:", totalPages);
-    console.log("ProDatas:", proDatas);
+    console.log("ProDatas:", proDatas.length);
     res.render("showproducts", {
       proDatas,
       proCat,

@@ -91,7 +91,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="container">
 				<div class="head">
 					<div class=" logo">
-						<a href="/"><img class="img-fluid" src="/images/logo.png" alt="logo" style="height: 64px;margin-top: 32px;"></a>
+						<a href="/"><img class="img-fluid" src="/images/logo.png" alt="logo"
+								style="height: 64px;margin-top: 32px;"></a>
 					</div>
 				</div>
 				<div class="col-sm-5 col-md-offset-2  header-login">
@@ -163,9 +164,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 								<li><a class="color1" href="/showProducts">Shop</a></li>
 								<!-- <li><a class="color2" href="/checkout">Checkout</a></li> -->
-								<li><a class="color3" href="/wishlist">Wishlist</a></li>
-								<!-- <li><a class="color5" href="typo.html">Short Codes</a></li> -->
-								<li><a class="color4" href="/contact">Contact</a></li>
+								<% if (locals.user) { %>
+									<li><a class="color3" href="/wishlist">Wishlist</a></li>
+									<% } %>
+										<!-- <li><a class="color5" href="typo.html">Short Codes</a></li> -->
+										<li><a class="color4" href="/contact">Contact</a></li>
 							</ul>
 						</div><!-- /.navbar-collapse -->
 
@@ -195,21 +198,20 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						</li> -->
 
 						<!-- <li><a href="/cart"><img class="pt-5" src="/images/cart.png" alt="" /></a></li> -->
-						<li>
-							<!-- <a href="/cart">
-								<img class="pt-5 img-fluid" src="/images/cart.png" alt="Shopping Cart" />
-								<span class="badge" style="background-color: rgb(239, 8, 8);">
-									
-								</span>
-							</a> -->
-							<a href="/cart" class="text-dark">
-								<i class="fa" style="font-size:24px">&#xf07a;</i>
-								<span class='badge badge-warning' id='lblCartCount'>
-									<%= cartCount %>
-								</span>
-							</a>
+						<% if (locals.user) { %>
 
-						</li>
+							<li>
+
+
+								<a href="/cart" class="text-dark">
+									<i class="fa" style="font-size:24px">&#xf07a;</i>
+									<span class='badge badge-warning' id='lblCartCount'>
+										<%= cartCount %>
+									</span>
+								</a>
+
+							</li>
+							<% } %>
 
 					</ul>
 					<div class="cart box_1">

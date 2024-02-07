@@ -1,0 +1,260 @@
+<style>
+    .small-header tr th {
+        font-size: 16px;
+        /* Adjust the font size as needed */
+    }
+
+    .small-header tr td {
+        font-size: 14px;
+        color: #777777;
+        /* Adjust the font size as needed */
+    }
+
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+
+
+    .cards {
+        margin: 10px;
+        padding: 30px;
+        width: 310px;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #23406f;
+        background-clip: border-box;
+        border: 1px solid #23406f;
+        border-radius: 7px;
+    }
+
+    .light {
+        color: #7d7979;
+        font-size: 11px;
+    }
+
+    .btn-add-money:hover {
+        background-color: #0b3b87;
+        color: white;
+    }
+</style>
+<%- include('./layouts/header') %>
+    <div class="head_new_name"
+        style="width: 100%; height: 110px; background-color: #f3f3f3; text-align: center; display: flex; align-items: center; justify-content: center; font-family: 'YourStylishFont', sans-serif; font-size: 24px;font-weight: bolder; color: #7f7f7f;">
+        Wallet
+    </div>
+    <%- include('./layouts/userHeader') %>
+
+
+        <section class="content-main col-md-8"
+            style="border: 1px solid #ffffff; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);">
+
+            <div class="d-flex justify-content-center container text-white mt-5">
+                <div class="cards p-2 px-3 py-3">
+                    <p class="balance" style="margin-bottom: 10px; color: #e4e4e4;"><strong style="color: #dbdb00;">
+                            <%= user.name %>
+                        </strong></p>
+                    <p class="balance" style="margin-bottom: 10px; color: #e3e3e3;">Balance:<strong
+                            style="color: lightblue;"> &nbsp; &nbsp; ₹ <%= user.walletBalance %></strong> </p>
+                    <div id="addMoneyBtnContainer">
+                        <button id="addMoneyBtn" class="btn btn-sm btn-add-money fw-5"
+                            style="color: white; background-color: #1f5eb9;" onclick="showAddMoneyInput()">Add
+                            Money</button>
+                    </div>
+                    <div id="addMoneyInputContainer" style="display: none;">
+                        <input type="number" id="moneyInput" class="form-control mb-2" placeholder="Enter amount"
+                            inputmode="numeric">
+                        <button id="confirmMoneyBtn" class="btn btn-sm "
+                            style="color: white; background-color: #1f5eb9;margin-top: 5px;"
+                            onclick="addMoney()">Confirm</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- <div class="card mb-4"
+                    style="background-color: #f8f9fa; padding: 20px; text-align: center; font-family: 'YourStylishFont', sans-serif; font-size: 18px; color: #495057; border: 1px solid #ced4da; border-radius: 8px;">
+                    No History
+                </div> -->
+
+
+            <div class="card mb-4">
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover small-header">
+                            <thead style="border-top: 1px solid rgb(212, 212, 212);">
+                                <tr>
+
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <!-- <th></th>
+                                            <th class="text-end">Action</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% user.wallet_history.forEach(item=> { %>
+
+                                    <tr>
+                                        <td>
+                                            <%= item.date %>
+                                        </td>
+                                        <td>
+                                            <%= item.type %>
+                                        </td>
+                                        <td>
+                                            <%= item.description %>
+                                        </td>
+                                        <td>₹ <%= item.amount %>
+                                        </td>
+
+
+                                    </tr>
+
+                                    <% }) %>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- table-responsive//end -->
+                </div>
+                <!-- card-body end// -->
+            </div>
+
+            <div class="pagination-area">
+
+
+
+
+
+            </div>
+
+        </section>
+
+
+
+
+        <script>
+            function showAddMoneyInput() {
+                document.getElementById('addMoneyBtnContainer').style.display = 'none';
+                document.getElementById('addMoneyInputContainer').style.display = 'block';
+            }
+
+            function addMoney() {
+                const amount = document.getElementById('moneyInput').value;
+                if (!amount || isNaN(amount) || amount <= 0) {
+                    Swal.fire({
+                        title: 'warning',
+                        icon: 'warning',
+                        text: "Please enter a valid amount",
+                        timer: 1000
+                    })
+                    return;
+                }
+
+                const Data = {
+                    amount: amount,
+                    userId: '<%= user._id %>',
+                };
+                console.log('amount:', amount, 'userId:', '<%= user._id %>');
+
+
+
+                axios.post('/wallet', Data)
+                    .then(response => {
+                        console.log('data:', response.data.razorpayOrder);
+
+                        if (response.data.success) {
+                            razorpayPayment(response.data.razorpayOrder);
+
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                icon: 'error',
+                                text: 'Failed to add money'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error adding money:', error);
+                        Swal.fire({
+                            title: 'Error',
+                            icon: 'error',
+                            text: 'An error occurred while adding money'
+                        });
+                    });
+
+            }
+
+
+        </script>
+
+        <script>
+            function razorpayPayment(order) {
+                console.log('order:>', order);
+
+                var options = {
+                    "key": "rzp_test_30bTTgzLa7YbmF",
+                    "amount": order.amount,
+                    "currency": "INR",
+                    "name": "Shopin",
+                    "description": "Test Transaction",
+                    "image": "https://example.com/your_logo",
+                    "order_id": order.id,
+                    "handler": function (response) {
+                        // alert(response.razorpay_payment_id);
+                        // alert(response.razorpay_order_id);
+                        // alert(response.razorpay_signature)
+
+                        // Payment successful
+                        verifyPayment(response, order);
+
+                    },
+                    "prefill": {
+                        "name": "Shopin PVt Ltd",
+                        "email": "anz@example.com",
+                        "contact": "9000090000"
+                    },
+                    "notes": {
+                        "address": "Shopin Corporate Office"
+                    },
+                    "theme": {
+                        "color": "#F67777"
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+
+
+            }
+            function verifyPayment(payment, order) {
+                console.log('verifyPayment called');
+                $.ajax({
+                    url: '/verifyPaymentRazorpayment',
+                    method: 'post',
+                    data: {
+                        payment, order
+                    },
+                    success: (response) => {
+                        (response.razorpaySuccess)
+                        Swal.fire({
+                            title: 'Success',
+                            icon: 'success',
+                            text: 'Money added successfully',
+                            timer: 1000
+                        })
+                        window.location.reload();
+                    }
+                })
+            }
+        </script>
+
+        <%- include('./layouts/footer') %>

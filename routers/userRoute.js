@@ -154,9 +154,17 @@ route.get("/live_search", userController.live_search);
 route.get("/validateCoupon", checkoutController.validateCoupon);
 
 //contact render
-route.get("/contact", userController.contact);
+route.get("/contact", auth.isLogin, userController.contact);
 
 //generate-pdf
 route.post("/generatepdf", userAccountController.generatePdf);
+//load wallet
+route.get("/wallet", auth.isLogin, userAccountController.wallet);
+//load wallet
+route.post("/wallet",userAccountController.addToWallet);
+//load wallet
+route.post("/retryRazorPayment",userAccountController.retryRazorPayment);
+//verifyPaymentRazorpayment
+route.post("/verifyPaymentRazorpayment",userAccountController.verifyPaymentRazorpayment);
 
 module.exports = route;

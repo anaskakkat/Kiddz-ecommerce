@@ -162,6 +162,7 @@ const createUser = async (req, res) => {
     await sendOTPEmail(email, otpValue);
     console.log(email + "email for render");
     // res.redirect(`/otp?email=${req.body.userEmail}`);
+    
     messages = req.flash("message");
     res.render("otp", { email, messages });
   } catch (err) {

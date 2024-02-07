@@ -84,11 +84,15 @@
                         <input type="text" placeholder="Email" required="" name="loginEmail"
                             value="shoukathot77@gmail.com" pattern="[A-Za-z0-9]*[@](gmail)*[\.](com)$">
                         <i class="glyphicon glyphicon-envelope"></i>
+                        <div id="email-error" class="error-msg" style="color: red;"></div>
+
                     </div>
                     <div class="login-mail">
                         <input type="password" placeholder="Password" required="" name="loginPassword" value="123"
                             pattern="^[A-Za-z0-9][A-Za-z0-9_ ]*$">
                         <i class="glyphicon glyphicon-lock"></i>
+                        <div id="password-error" class="error-msg" style="color: red;"></div>
+
                     </div>
 
                     <% if (messages.length> 0) { %>
@@ -98,8 +102,9 @@
                         <% } %>
 
                             <label class="hvr-skew-backward" style="margin-bottom: 4px;">
-                                <input type="submit" value="login">
+                                <input type="submit" value="login" onclick="validateForm()">
                             </label>
+
                             <div class="login-forgot-password">
                                 <a href="/forgotPassword"
                                     style="text-decoration: none; font-weight: normal; color: rgb(16, 45, 71); transition: color 0.3s ease;"
@@ -112,12 +117,9 @@
                 </div>
                 <div class="col-md-6 login-right">
                     <h3>Completely Free Account</h3>
+                    <p>Welcome to our Shop! Creating an account is easy and completely free. <br> Gain access to
+                        exclusive features and content by registering today.</p>
 
-                    <p>Pellentesque neque leo, dictum sit amet accumsan non, dignissim ac mauris. Mauris rhoncus, lectus
-                        tincidunt tempus aliquam, odio
-                        libero tincidunt metus, sed euismod elit enim ut mi. Nulla porttitor et dolor sed condimentum.
-                        Praesent porttitor lorem dui, in pulvinar enim rhoncus vitae. Curabitur tincidunt, turpis ac
-                        lobortis hendrerit, ex elit vestibulum est, at faucibus erat ligula non neque.</p>
                     <a href="/registration" class=" hvr-skew-backward">Register</a>
 
                 </div>
@@ -137,7 +139,31 @@
     <!--//login-->
 
 
+    <script>
 
+        function validateForm() {
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var emailError = document.getElementById("email-error");
+            var passwordError = document.getElementById("password-error");
+
+            emailError.textContent = "";
+            passwordError.textContent = "";
+
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                emailError.textContent = "Invalid email address.";
+                event.preventDefault();
+            }
+
+            var passwordPattern = /^[A-Za-z0-9_]*$/;
+            if (!passwordPattern.test(password) || password.length < 6) {
+                passwordError.textContent = "Password must be at least 6 characters long and contain only alphanumeric characters and underscores.";
+                event.preventDefault(); // Prevent form submission
+            }
+        }
+
+    </script>
 
     <%- include('./layouts/footer') %>
 

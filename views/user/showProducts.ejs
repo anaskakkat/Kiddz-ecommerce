@@ -70,7 +70,7 @@
                                                 <span>
                                                     <%=products.category%>
                                                 </span>
-                                                <h6><a href="/showProducts/singleProducts/<%=products._id %>">
+                                                <h6><a href="/showProducts/singleProducts?id=<%=products._id  %>">
                                                         <%=products.productName%>
                                                     </a></h6>
                                             </div>
@@ -84,7 +84,7 @@
                                                     <%=products.price%>
                                                 </em></p>
                                             <div class="block">
-                                                <div class="starbox small ghosting"> </div>
+                                                <!-- <div class="starbox small ghosting"> </div> -->
                                             </div>
 
                                             <div class="clearfix"></div>
@@ -96,7 +96,7 @@
                             </div>
                             <% }) %>
                                 <% } else { %>
-                                    <div  class="no-results-message">
+                                    <div class="no-results-message">
                                         <p>No products found for your search query.</p>
                                     </div>
                                     <% } %>

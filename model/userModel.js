@@ -29,42 +29,53 @@ const schema = new mongoose.Schema({
     type: String,
     default: "user",
   },
-  address:[
+  walletBalance: {
+    type: Number,
+    default: 0,
+  },
+  wallet_history: [
     {
-     name:{
-        type:String,
-
-     },
-     mobile:
-     {
-        type:String,
-
-     },
-     pincode:
-     {
-        type:String,
-
-     },
-     address:
-     {
-        type:String,
-
-     },
-     landmark:{
-      type:String
-     },
-     city:
-     {
-        type:String
-
-     },
-     state:
-     {
-        type:String
-     }
-
-    }
-],
+      date: {
+        type: Date,
+      },
+      amount: {
+        type: Number,
+      },
+      description: {
+        type: String,
+      },
+      type: {
+        type: String,
+        enum: ["Credit", "Debit"],
+        required: true,
+      },
+    },
+  ],
+  address: [
+    {
+      name: {
+        type: String,
+      },
+      mobile: {
+        type: String,
+      },
+      pincode: {
+        type: String,
+      },
+      address: {
+        type: String,
+      },
+      landmark: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      state: {
+        type: String,
+      },
+    },
+  ],
 });
 
 const Userdb = mongoose.model("userDb", schema);

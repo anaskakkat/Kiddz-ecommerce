@@ -35,10 +35,9 @@
                                 </tr>
 
 
-                                <% let totalQuantity=0; let totalProductPrice=0;
+                                <% let totalQuantity=0; let totalProductPrice=0; cartDetails.items.forEach((cartItem)=>
+                                    {
 
-                                    cartDetails.items.forEach((cartItem)=> {
-                                        
                                     const itemTotalPrice = cartItem.productId.price * cartItem.qty;
                                     totalQuantity += cartItem.qty;
                                     totalProductPrice += itemTotalPrice;
@@ -48,7 +47,8 @@
                                                     src="<%= cartItem.productId.images[0]%>" class="img-responsive"
                                                     alt=""></a>
                                             <div class="sed">
-                                                <h5><a href="">
+                                                <h5><a
+                                                        href="/showProducts/singleProducts?id=<%=cartItem.productId._id %>">
                                                         <%= cartItem.productId.productName%>
                                                     </a></h5>
                                                 <p>
@@ -162,7 +162,7 @@
             <script>
                 console.log("script loaded");
 
-                 function increaseQuantity(cartId, productId, count) {
+                function increaseQuantity(cartId, productId, count) {
                     $.ajax({
                         url: '/updateCartItem',
                         method: 'post',

@@ -5,8 +5,25 @@ const Order = require("../../model/orderModel");
 const bcrypt = require("bcrypt");
 const path = require("path");
 const PDFDocument = require("pdfkit");
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
+const moment = require("moment");
 
-// ---------------------------------------------------
+require("dotenv").config();
+
+// ----------------------------------------
+
+var instance = new Razorpay({
+  key_id: process.env.RAZORPAY_ID,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
+// Function to generate HMAC-SHA256
+function hmac_sha256(data, key) {
+  const hmac = crypto.createHmac("sha256", key);
+  hmac.update(data);
+  return hmac.digest("hex");
+}
+// ----------- pdf print fun----------------------------------------
 function generateTableRow(
   doc,
   y,
@@ -463,6 +480,115 @@ const updateProfile = async (req, res) => {
     console.log("error>>", err.message);
   }
 };
+//delete address
+const wallet = async (req, res) => {
+  try {
+    const userid = req.session.user_id;
+    const user = await Userdb.findOne({ _id: userid });
+
+    res.render("wallet", { user });
+  } catch (err) {
+    console.log("error>>", err.message);
+  }
+};
+//Add wallet from razorpay
+const addToWallet = async (req, res) => {
+  try {
+    const { userId, amount } = req.body;
+    console.log("userId", userId, "amount", amount);
+
+    const razorpayOrder = await genarateRazorpay(userId, amount);
+
+    res.status(200).json({ success: true, razorpayOrder });
+  } catch (err) {
+    console.log("error>>", err.message);
+  }
+};
+//retryRazorPayment
+const retryRazorPayment = async (req, res) => {
+  try {
+    const orderId = req.body.orderId;
+    // console.log("orderId:", orderId);
+
+    // Retrieve the order from the database
+    const order = await Order.findById(orderId);
+    // console.log("order:", order);
+    if (!order) {
+      return res.status(404).json({ error: "Order not found." });
+    }
+    const subTotal = order.total_amount;
+    console.log("subTotal:", subTotal);
+    const razorpayOrder = await genarateRazorpay(orderId, subTotal);
+
+    console.log("retry success", razorpayOrder);
+    res.status(200).json({ razorpayOrder });
+  } catch (err) {
+    // Handle errors
+    console.log("error>>", err.message);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+// -------------------------------------------------------------------
+const genarateRazorpay = async (orderId, subTotal) => {
+  try {
+    const options = {
+      amount: subTotal * 100,
+      currency: "INR",
+      receipt: orderId.toString(),
+    };
+
+    const order = await instance.orders.create(options);
+    return order;
+  } catch (err) {
+    console.error("Error creating Razorpay order:", err);
+  }
+};
+
+//verify payment from razorpay ----------------------------------------------------
+const verifyPaymentRazorpayment = async (req, res) => {
+  try {
+    console.log("body->", req.body);
+    const razorpay_payment_id = req.body.payment.razorpay_payment_id;
+    const razorpay_order_id = req.body.payment.razorpay_order_id;
+    const razorpay_signature = req.body.payment.razorpay_signature;
+    const userId = req.body.order.receipt;
+    const amount = req.body.order.amount;
+
+    const addAmount = Number(amount / 100);
+    console.log("addAmount::", addAmount);
+    generated_signature = hmac_sha256(
+      razorpay_order_id + "|" + razorpay_payment_id,
+      process.env.RAZORPAY_SECRET
+    );
+
+    if (generated_signature == razorpay_signature) {
+      console.log("payment is successful");
+
+      const date = new Date();
+      const dateNew = date.toString().replace(/GMT.*$/, "");
+      const user = await Userdb.findOneAndUpdate(
+        { _id: userId },
+        {
+          $inc: { walletBalance: addAmount },
+          $push: {
+            wallet_history: {
+              date: dateNew,
+              amount: addAmount,
+              description: "Payment received from Razorpay",
+              type: "Credit",
+            },
+          },
+        },
+        { new: true }
+      );
+      console.log(" amount added into wallet from razorpay:", user);
+    }
+    res.json({ razorpaySuccess: true });
+  } catch (err) {
+    // res.render('')
+    console.log("razorpay-error>>", err.message);
+  }
+};
 
 module.exports = {
   userProfile,
@@ -480,4 +606,8 @@ module.exports = {
   changePassword,
   saveChangePassword,
   generatePdf,
+  wallet,
+  addToWallet,
+  retryRazorPayment,
+  verifyPaymentRazorpayment,
 };

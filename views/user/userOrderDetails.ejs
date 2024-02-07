@@ -96,7 +96,14 @@
                                         <p class="mb-1" style="margin-bottom: 5px;">
 
                                             Pay method: <%= orderLists.payment %> <br />
-                                                Status: <%= orderLists.status %>
+                                                Status: <%= orderLists.status %> <br />
+                                                    <% if (orderLists.status==='Canceled' ) { %>
+                                                        Reason: <%= orderLists.cancelationReason %>
+
+                                                            <% } else if (orderLists.status==='Returned' ) { %>
+                                                                Reason: <%= orderLists.returnReason %>
+
+                                                                    <% } %>
                                         </p>
                                     </div>
                                 </article>
@@ -137,14 +144,14 @@
 
                                                 <tr>
                                                     <td>
-                                                        <a class="itemside" href="#">
-                                                            <div class="left">
-                                                                <img src="/<%= order.productId.images[0]%>" width="40"
-                                                                    height="40" class="img-xs" alt="Item" />
-                                                                <%= order.productId.productName%>
-                                                            </div>
 
-                                                        </a>
+                                                        <div class="left">
+                                                            <img src="/<%= order.productId.images[0]%>" width="40"
+                                                                height="40" class="img-xs" alt="Item" />
+                                                            <%= order.productId.productName%>
+                                                        </div>
+
+
                                                     </td>
                                                     <td>₹<%= order.price%>
                                                     </td>
@@ -160,64 +167,68 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <% if (orderLists.status==='Placed' || orderLists.status==='Pending' ) { %>
-
-
-                                    <% if (orderLists.cancellationReason) { %>
-                                        <p class="text-primary">Order Canceled</p>
-                                        <% } else { %>
-                                            <button id="cancelOrderBtn" class="btn btn-danger" data-toggle="modal"
-                                                data-target="#cancelOrderModal">
-                                                Cancel Order
+                                <% if (orderLists.status==='Pending' ) { %>
+                                    <button id="cancelOrderBtn" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#cancelOrderModal">
+                                        Cancel Order
+                                    </button>
+                                    <button id="retryPaymentBtn" class="btn btn-warning" data-toggle="modal"
+                                        data-target="#retryPaymentModal">
+                                        Retry Payment
+                                    </button>
+                                    <% } else if (orderLists.status==='Placed' ) { %>
+                                        <button id="cancelOrderBtn" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#cancelOrderModal">
+                                            Cancel Order
+                                        </button>
+                                        <% } else if (orderLists.status==='Delivered' ) { %>
+                                            <button id="returnOrderBtn" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#returnOrderModal">
+                                                Return Order
                                             </button>
                                             <% } %>
-                                                <% } else if (orderLists.status==='Deliverd' ) { %>
-                                                    <% if (orderLists.returnReason) { %>
-                                                        <p class="text-primary">Return submitted</p>
-                                                        <% } else { %>
-                                                            <button id="returnOrderBtn" class="btn btn-primary"
-                                                                data-toggle="modal" data-target="#returnOrderModal">
-                                                                Return Order
-                                                            </button>
-                                                            <% } %>
-                                                                <% } %>
 
 
 
-                                                                    <div class="subtotall float-end">
-                                                                        <dl class="dlist">
-                                                                            <dt class="small-text">
-                                                                                Subtotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                                ₹<%= orderLists.total_amount %>
-                                                                            </dt>
-                                                                            <!-- Remove the following <dd> element -->
-                                                                        </dl>
-                                                                        <dl class="dlist">
-                                                                            <dt class="small-text">
-                                                                                Shipping:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                                ₹00.00</dt>
-                                                                        </dl>
-                                                                        <dl class="dlist">
-                                                                            <dt class="small-text">Grand
-                                                                                total:&nbsp; ₹
-                                                                                <%= orderLists.total_amount %>
-                                                                            </dt>
-                                                                        </dl>
-                                                                        <dl class="dlist">
-                                                                            <dt class="text-muted small-text">
-                                                                                Status:
-                                                                                <span
-                                                                                    class="badge rounded-pill 
+
+
+
+
+
+                                                <div class="subtotall float-end">
+                                                    <dl class="dlist">
+                                                        <dt class="small-text">
+                                                            Subtotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            ₹<%= orderLists.total_amount %>
+                                                        </dt>
+
+                                                    </dl>
+                                                    <dl class="dlist">
+                                                        <dt class="small-text">
+                                                            Shipping:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            ₹00.00</dt>
+                                                    </dl>
+                                                    <dl class="dlist">
+                                                        <dt class="small-text">Grand
+                                                            total:&nbsp; ₹
+                                                            <%= orderLists.total_amount %>
+                                                        </dt>
+                                                    </dl>
+                                                    <dl class="dlist">
+                                                        <dt class="text-muted small-text">
+                                                            Status:
+                                                            <span
+                                                                class="badge rounded-pill 
                                                                                     <%= orderLists.status == 'Canceled' ? 'alert-danger' : 
                                                                                        orderLists.status == 'Deliverd' ? 'alert-success' : 
                                                                                        orderLists.status == 'Placed' ? 'alert-info' : 
                                                                                        orderLists.status == 'Returned' ? 'alert-danger' : 'alert-warning' %> text-success">
-                                                                                    <%= orderLists.status %>
-                                                                                </span>
-                                                                            </dt>
+                                                                <%= orderLists.status %>
+                                                            </span>
+                                                        </dt>
 
-                                                                        </dl>
-                                                                    </div>
+                                                    </dl>
+                                                </div>
 
 
 
@@ -298,7 +309,25 @@
 
 
         <!-- Include this script in your HTML file -->
-        <!-- Include this script in your HTML file -->
+
+
+        <script>
+            function retryPayment() {
+                axios.post('/retryRazorPayment', {
+                    orderId: '<%= orderLists._id %>'
+                })
+                    .then(response => {
+                        console.log('Response data:', response.data);
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            // Add an event listener to the "Retry Payment" button
+            document.getElementById('retryPaymentBtn').addEventListener('click', retryPayment);
+        </script>
         <script>
             // Add an event listener to the Download Invoice button
             document.getElementById('downloadInvoiceBtn').addEventListener('click', async () => {

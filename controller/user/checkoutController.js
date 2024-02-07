@@ -7,12 +7,12 @@ const Razorpay = require("razorpay");
 const { response } = require("../../routers/userRoute");
 const crypto = require("crypto");
 const Coupons = require("../../model/coupenModel");
-
+require("dotenv").config();
 //razorpay secret
 
 var instance = new Razorpay({
-  key_id: "rzp_test_30bTTgzLa7YbmF",
-  key_secret: "GcnWUhLqCmiOlWRlXG5Cm0ZS",
+  key_id: process.env.RAZORPAY_ID,
+  key_secret: process.env.RAZORPAY_SECRET,
 });
 // Function to generate HMAC-SHA256
 function hmac_sha256(data, key) {
@@ -70,7 +70,7 @@ const PlaceToOrder = async (req, res) => {
     // console.log("body---------->", req.body);
     const { selectedAddress, selectedPayment, subTotal } = req.body;
 
-    console.log(selectedAddress, selectedPayment, "subTotal::", subTotal);
+    // console.log(selectedAddress, selectedPayment, "subTotal::", subTotal);
 
     const userData = await Userdb.findOne({ _id: userid });
 
@@ -129,7 +129,7 @@ const PlaceToOrder = async (req, res) => {
       res.json({ codSuccess: true, params: orderId });
     } else {
       const razorpayOrder = await genarateRazorpay(orderId, subTotal);
-      console.log("Razorpay order generated successfully", razorpayOrder);
+      // console.log("Razorpay order generated successfully", razorpayOrder);
       res.json({ razorpayOrder });
     }
   } catch (err) {
@@ -142,7 +142,7 @@ const PlaceToOrder = async (req, res) => {
 const genarateRazorpay = async (orderId, subTotal) => {
   try {
     const options = {
-      amount: subTotal * 100,
+      amount: subTotal,
       currency: "INR",
       receipt: orderId.toString(),
     };
@@ -159,20 +159,17 @@ const genarateRazorpay = async (orderId, subTotal) => {
 //verify payment from razorpay ----------------------------------------------------
 const verifyPayment = async (req, res) => {
   try {
-    console.log("body->", req.body);
+    console.log("body:::->", req.body);
     const razorpay_payment_id = req.body.payment.razorpay_payment_id;
     const razorpay_order_id = req.body.payment.razorpay_order_id;
     const razorpay_signature = req.body.payment.razorpay_signature;
     const receiptID = req.body.order.receipt;
 
-    console.log("razorpay_payment_id:", razorpay_payment_id);
-    console.log("razorpay_order_id:", razorpay_order_id);
-    console.log("razorpay_signature:", razorpay_signature);
-    console.log("recieptID:", receiptID);
+    
 
     generated_signature = hmac_sha256(
       razorpay_order_id + "|" + razorpay_payment_id,
-      "GcnWUhLqCmiOlWRlXG5Cm0ZS"
+      process.env.RAZORPAY_SECRET
     );
 
     if (generated_signature == razorpay_signature) {

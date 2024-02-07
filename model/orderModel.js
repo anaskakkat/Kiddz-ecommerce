@@ -47,9 +47,11 @@ const orderSchema = new mongoose.Schema(
     },
     cancelationReason: {
       type: String,
+      default: "null",
     },
     returnReason: {
       type: String,
+      default: "null",
     },
     items: [
       {
@@ -73,7 +75,7 @@ const orderSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true } 
+  { timestamps: true }
 );
 
 const Order = mongoose.model("Order", orderSchema);

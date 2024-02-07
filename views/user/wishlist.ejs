@@ -197,7 +197,7 @@
                 ">
                         <div class="main-heading mb-10"></div>
                         <div class="table-wishlist">
-                            <% if (wishlistList[0].products.length===0) { %>
+                            <% if (wishlistList && wishlistList.length > 0 && wishlistList[0].products.length === 0) { %>
                                 <div class="noWishlist text-center text-info">
                                     <p>No products in wishlist</p>
                                 </div>

@@ -61,7 +61,7 @@
           },
           {
             label: "Products",
-            tension: 0.3,
+            tension: 0.5,
             fill: true,
             backgroundColor: "rgba(380, 200, 230, 0.2)",
             borderColor: "rgb(380, 200, 230)",

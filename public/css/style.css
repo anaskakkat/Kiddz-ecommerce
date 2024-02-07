@@ -1509,7 +1509,7 @@ ul.nav.nav-pills {
 
 @media screen and (min-width: 1100px) {
     .newBanner img {
-        height: 100vh;
+        height: 85vh;
     }
 }
 /* @media(width>1400px){

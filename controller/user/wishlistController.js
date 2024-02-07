@@ -12,9 +12,14 @@ const wishlist = async (req, res) => {
     const wishlistList = await WishList.find({ orderby: userId }).populate(
       "products.product"
     );
-
-    console.log(wishlistList[0].products);
-    console.log("wishlistList::", wishlistList);
+    if (wishlistList.length === 0) {
+      // If wishlist is empty, handle this scenario (e.g., show a message to the user)
+      console.log("Wishlist is empty");
+      res.render("wishlist", { user, wishlistList });
+      return;
+    }
+    // console.log(wishlistList[0].products);
+    // console.log("wishlistList::", wishlistList);
 
     res.render("wishlist", { user, wishlistList });
   } catch (err) {

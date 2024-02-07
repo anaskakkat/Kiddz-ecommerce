@@ -36,7 +36,7 @@ const isBlocked =async (req, res, next) => {
     const user= await Userdb.findOne({_id:req.session.user_id})
     if(user.status=='block'){
       req.session.destroy()
-      console.log('seession worked');
+      console.log('seession worked middlewere isBlocked');
       res.redirect('/userLogin')
 
     }else{

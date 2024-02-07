@@ -112,14 +112,14 @@ const adminDash = async (req, res) => {
     ]);
     const { totalOrders, totalOrderAmount } = orders[0];
     const product = totalProducts[0].totalProducts;
-    console.log(
-      "countProducts",
-      product,
-      "totalOrderAmount ",
-      totalOrderAmount,
-      " totalOrders",
-      totalOrders
-    );
+    // console.log(
+    //   "countProducts",
+    //   product,
+    //   "totalOrderAmount ",
+    //   totalOrderAmount,
+    //   " totalOrders",
+    //   totalOrders
+    // );
     const monthlyRevenueData = await Order.aggregate([
       {
         $match: {
@@ -150,6 +150,32 @@ const adminDash = async (req, res) => {
       },
     ]);
     console.log("monthlyRevenueData::", monthlyRevenueData);
+
+    // finding most sold product
+    const mostSoldProduct = await Order.aggregate([
+      {
+        $unwind: "$items",
+      },
+      {
+        $group: {
+          _id: "$items.productId",
+          totalQuantity: { $sum: "$items.qty" },
+        },
+      },
+      {
+        $sort: { totalQuantity: -1 },
+      },
+      { $limit: 1 },
+    ]);
+    let mostSoldProductDetails = null;
+
+    if (mostSoldProduct.length > 0) {
+      const mostSoldProductId = mostSoldProduct[0]._id;
+      mostSoldProductDetails = await Product.findById(mostSoldProductId);
+    }
+
+    console.log("mostSoldProductDetails::", mostSoldProductDetails);
+
     res.render("adminDashboard", {
       totalOrders,
       totalOrderAmount,
@@ -157,6 +183,7 @@ const adminDash = async (req, res) => {
       users,
       recentOrders,
       monthlyRevenueData,
+      mostSoldProductDetails,
     });
   } catch (err) {
     console.log(err.message);

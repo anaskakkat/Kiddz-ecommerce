@@ -161,10 +161,17 @@ route.post("/generatepdf", userAccountController.generatePdf);
 //load wallet
 route.get("/wallet", auth.isLogin, userAccountController.wallet);
 //load wallet
-route.post("/wallet",userAccountController.addToWallet);
-//load wallet
-route.post("/retryRazorPayment",userAccountController.retryRazorPayment);
+route.post("/wallet", userAccountController.addToWallet);
+// retryRazorPayment
+route.post("/retryRazorPayment", userAccountController.retryRazorPayment);
 //verifyPaymentRazorpayment
-route.post("/verifyPaymentRazorpayment",userAccountController.verifyPaymentRazorpayment);
+route.post(
+  "/verifyPaymentRazorpayment",
+  userAccountController.verifyPaymentRazorpayment
+);
+//verifyPaymentRazorpayment
+route.post("/failedRazorPayment", userAccountController.failedRazorPayment);
+//retryVerifyPayment
+route.post("/retryVerifyPayment", userAccountController.retryVerifyPayment);
 
 module.exports = route;

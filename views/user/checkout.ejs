@@ -769,11 +769,8 @@ Procced Payment button
                             }
 
                         })
-                    } else {
-                        console.log('failed payment'); const param = order.id;
-                        const url = '/successPage/' + param;
-                        window.location.href = url;
                     }
+
                 },
                 "prefill": {
                     "name": "Shopin PVt Ltd",
@@ -790,16 +787,18 @@ Procced Payment button
             var rzp1 = new Razorpay(options);
             rzp1.open();
             rzp1.on('payment.failed', function (response) {
-                alert(response.error.code);
-                alert(response.error.description);
-                alert(response.error.source);
-                alert(response.error.step);
-                alert(response.error.reason);
-                alert(response.error.metadata.order_id);
+
+                // alert(response.error.metadata.order_id);
                 alert(response.error.metadata.payment_id);
+                faildPayment(response, order);
+
             });
 
         }
+
+
+
+        
         function verifyPayment(payment, order) {
             console.log('verifyPayment called');
             $.ajax({
@@ -813,6 +812,38 @@ Procced Payment button
                     const param = response.params;
                     const url = '/successPage/' + param;
                     window.location.href = url;
+                }
+            })
+        }
+
+
+
+        function faildPayment(payment, order) {
+            console.log('faildPayment called');
+            $.ajax({
+                url: '/failedRazorPayment',
+                method: 'post',
+                data: {
+                    payment, order
+                },
+                success: (response) => {
+                    console.log('reponse from failed');
+                    (response.razorpayFailed)
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Order Accepted ',
+                        text: 'Your payment was failed ! rery payment from order page',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        willClose: () => {
+                            const param = response.params;
+                            const url = '/successPage/' + param;
+                            window.location.href = url;
+
+                        }
+
+                    })
                 }
             })
         }

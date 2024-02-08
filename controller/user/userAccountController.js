@@ -510,21 +510,23 @@ const retryRazorPayment = async (req, res) => {
     const orderId = req.body.orderId;
     // console.log("orderId:", orderId);
 
-    // Retrieve the order from the database
     const order = await Order.findById(orderId);
-    // console.log("order:", order);
     if (!order) {
       return res.status(404).json({ error: "Order not found." });
     }
-    const subTotal = order.total_amount;
-    console.log("subTotal:", subTotal);
-    const razorpayOrder = await genarateRazorpay(orderId, subTotal);
+    const razorpay_payment_id = order.paymentId;
 
-    console.log("retry success", razorpayOrder);
-    res.status(200).json({ razorpayOrder });
+    // console.log("rrr", instance.payments.fetch(razorpay_payment_id));
+    // console.log("order:---", order);
+
+    const subTotal = order.total_amount;
+    const paymentDetails = await instance.payments.fetch(razorpay_payment_id);
+console.log('retry payment get');
+    // console.log("retry:  paymentDetails:", paymentDetails);
+    res.status(200).json({ paymentDetails: paymentDetails,order:orderId });
   } catch (err) {
     // Handle errors
-    console.log("error>>", err.message);
+    console.log("error", err.message);
     res.status(500).json({ error: "Internal server error." });
   }
 };
@@ -581,9 +583,69 @@ const verifyPaymentRazorpayment = async (req, res) => {
         },
         { new: true }
       );
-      console.log(" amount added into wallet from razorpay:", user);
+      // console.log(" amount added into wallet from razorpay:", user);
     }
     res.json({ razorpaySuccess: true });
+  } catch (err) {
+    // res.render('')
+    console.log("razorpay-error>>", err.message);
+  }
+};
+//failedRazorPayment razorpay ----------------------------------------------------
+const failedRazorPayment = async (req, res) => {
+  try {
+    console.log("body::>", req.body);
+    const razorpay_payment_id = req.body.payment.error.metadata.payment_id;
+    const razorpay_order_id = req.body.payment.error.metadata.order_id;
+    const receiptID = req.body.order.receipt;
+
+    const update = await Order.updateOne(
+      { _id: receiptID },
+      {
+        $set: {
+          status: "Pending",
+          paymentId: razorpay_payment_id,
+          razorpaOrderId: razorpay_order_id,
+        },
+      }
+    );
+    console.log("reazorpay failed status changed:''pending");
+
+    res.json({ razorpayFailed: true, params: receiptID });
+  } catch (err) {
+    // res.render('')
+    console.log("razorpay-error>>", err.message);
+  }
+};
+//verify retry payment from razorpay ----------------------------------------------------
+const retryVerifyPayment = async (req, res) => {
+  try {
+    console.log("body:::->", req.body);
+    const razorpay_payment_id = req.body.payment.razorpay_payment_id;
+    const razorpay_order_id = req.body.payment.razorpay_order_id;
+    const razorpay_signature = req.body.payment.razorpay_signature;
+    const receiptID = req.body.payment.razorpay_order_id;
+
+    generated_signature = hmac_sha256(
+      razorpay_order_id + "|" + razorpay_payment_id,
+      process.env.RAZORPAY_SECRET
+    );
+    console.log("reached generated generated_signature");
+    if (generated_signature == razorpay_signature) {
+      console.log("payment is successful");
+      const update = await Order.updateOne(
+        { razorpaOrderId: receiptID },
+        {
+          $set: {
+            status: "Placed",
+            payment: "razorpay",
+            paymentId: razorpay_payment_id,
+          },
+        }
+      );
+      console.log("status changed:", update);
+    }
+    // res.json({ razorpayRetrySuccess: true, params: receiptID});
   } catch (err) {
     // res.render('')
     console.log("razorpay-error>>", err.message);
@@ -592,6 +654,7 @@ const verifyPaymentRazorpayment = async (req, res) => {
 
 module.exports = {
   userProfile,
+  retryVerifyPayment,
   addAddress,
   showAddress,
   saveAddress,
@@ -610,4 +673,5 @@ module.exports = {
   addToWallet,
   retryRazorPayment,
   verifyPaymentRazorpayment,
+  failedRazorPayment,
 };

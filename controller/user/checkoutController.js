@@ -142,7 +142,7 @@ const PlaceToOrder = async (req, res) => {
 const genarateRazorpay = async (orderId, subTotal) => {
   try {
     const options = {
-      amount: subTotal*100,
+      amount: subTotal * 100,
       currency: "INR",
       receipt: orderId.toString(),
     };
@@ -152,7 +152,6 @@ const genarateRazorpay = async (orderId, subTotal) => {
     return order;
   } catch (err) {
     console.error("Error creating Razorpay order:", err);
-    // Handle errors appropriately, e.g., render an error page
   }
 };
 
@@ -165,20 +164,24 @@ const verifyPayment = async (req, res) => {
     const razorpay_signature = req.body.payment.razorpay_signature;
     const receiptID = req.body.order.receipt;
 
-    
-
     generated_signature = hmac_sha256(
       razorpay_order_id + "|" + razorpay_payment_id,
       process.env.RAZORPAY_SECRET
     );
-
+console.log('reached generated generated_signature');
     if (generated_signature == razorpay_signature) {
       console.log("payment is successful");
       const update = await Order.updateOne(
         { _id: receiptID },
-        { $set: { status: "Placed", payment: "razorpay" } }
+        {
+          $set: {
+            status: "Placed",
+            payment: "razorpay",
+            paymentId: razorpay_payment_id,
+          },
+        }
       );
-      console.log("status changed");
+      console.log("status changed:",update);
     }
     res.json({ razorpaySuccess: true, params: receiptID });
   } catch (err) {

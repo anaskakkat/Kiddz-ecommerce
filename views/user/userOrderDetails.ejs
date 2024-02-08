@@ -312,21 +312,95 @@
 
 
         <script>
+            document.getElementById('retryPaymentBtn').addEventListener('click', retryPayment);
+
             function retryPayment() {
                 axios.post('/retryRazorPayment', {
                     orderId: '<%= orderLists._id %>'
                 })
                     .then(response => {
-                        console.log('Response data:', response.data);
-
+                        console.log('response:id:', response.data.orderId, 'Response data: ', response.data.paymentDetails);
+                        razorpayRetryPayment(response.data.paymentDetails, response.data.orderId);
                     })
                     .catch(error => {
                         console.error('Error:', error);
+
                     });
             }
+            function razorpayRetryPayment(order, ID) {
+                console.log('id::', ID, 'order:>', order,);
 
-            // Add an event listener to the "Retry Payment" button
-            document.getElementById('retryPaymentBtn').addEventListener('click', retryPayment);
+                var options = {
+                    "key": "rzp_test_30bTTgzLa7YbmF",
+                    "amount": order.amount,
+                    "currency": "INR",
+                    "name": "Shopin",
+                    "description": "Test Transaction",
+                    "image": "https://example.com/your_logo",
+                    "order_id": order.order_id,
+                    "handler": function (response) {
+                        // alert(response.razorpay_payment_id);
+                        // alert(response.razorpay_order_id);
+                        // alert(response.razorpay_signature)
+                        if (response.razorpay_payment_id) {
+                            verifyPayment(response);
+
+                        }
+                    },
+                    "prefill": {
+                        "name": "Shopin PVt Ltd",
+                        "email": "anasbrototype@gmail.com",
+                        "contact": "9000090000"
+                    },
+                    "notes": {
+                        "address": "Shopin Corporate Office"
+                    },
+                    "theme": {
+                        "color": "#F67777"
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+                rzp1.on('payment.failed', function (response) {
+
+                    // alert(response.error.metadata.order_id);
+                    alert(response.error.metadata.payment_id);
+
+
+                });
+
+            }
+
+            function verifyPayment(payment) {
+                console.log('verifyPayment called');
+                $.ajax({
+                    url: '/retryVerifyPayment',
+                    method: 'post',
+                    data: {
+                        payment
+                    },
+                    success: (response) => {
+                        console.log('response came');
+                        (response.razorpayRetrySuccess)
+                        window.location.reload();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Succeeded',
+                            text: 'Your payment was successful!',
+                            timer: 2000, // Auto close after 2 seconds
+                            showConfirmButton: false, // Hide the "OK" button
+                            // willClose: () => {
+
+
+                            // }
+
+                        })
+                    }
+                })
+            }
+
+
+
         </script>
         <script>
             // Add an event listener to the Download Invoice button

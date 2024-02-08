@@ -9,7 +9,7 @@
 
 
                 <h4 class="content-title card-title">Order detail</h4>
-                <p>Details for Order ID:<%= orderDetails._id %>
+                <p>Details for Order ID:<%= orderDetails.orderId %>
                 </p>
             </div>
         </div>
@@ -20,7 +20,7 @@
                     <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
                         <span> <i class="material-icons md-calendar_today"></i> <b></b>
                         </span> <br />
-                        <small class="text-muted">Order ID:<%= orderDetails._id %> </small>
+                        <small class="text-muted">Order ID:<%= orderDetails.orderId %> </small>
                     </div>
                     <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                         <select id="orderStatus" class="form-select d-inline-block mb-lg-0 mr-5 mw-200">
@@ -206,7 +206,42 @@
 
         <!-- card end// -->
     </section>
+    <script>
+        function updateOptions() {
+            var orderStatus = document.getElementById("orderStatus");
+            var selectedStatus = orderStatus.value;
 
+            // Reset all options to be visible
+            for (var i = 0; i < orderStatus.options.length; i++) {
+                orderStatus.options[i].style.display = "block";
+            }
+
+            // Hide options based on selected status
+            if (selectedStatus === "Placed") {
+                hideOptions(["Returned", "Canceled",]);
+            } else if (selectedStatus === "Canceled") {
+                hideOptions(["Placed", "Returned", "Deliverd"]);
+            } else if (selectedStatus === "Returned") {
+                hideOptions(["Placed", "Canceled", "Deliverd"]);
+            } else if (selectedStatus === "Deliverd") {
+                hideOptions(["Placed", "Returned", "Canceled"]);
+            } else if (selectedStatus === "Pending") {
+                hideOptions(["Deliverd", "Returned", "Canceled"]);
+
+            }
+        }
+
+        function hideOptions(optionsToHide) {
+            var orderStatus = document.getElementById("orderStatus");
+            for (var i = 0; i < orderStatus.options.length; i++) {
+                if (optionsToHide.includes(orderStatus.options[i].value)) {
+                    orderStatus.options[i].style.display = "none";
+                }
+            }
+        }
+
+        updateOptions();
+    </script>
     <%- include('./layouts/adminFooter') %>
 
         <script>

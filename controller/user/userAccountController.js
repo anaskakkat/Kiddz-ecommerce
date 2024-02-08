@@ -645,7 +645,7 @@ const retryVerifyPayment = async (req, res) => {
       );
       console.log("status changed:", update);
     }
-    // res.json({ razorpayRetrySuccess: true, params: receiptID});
+    res.json({ razorpayRetrySuccess: true, params: receiptID});
   } catch (err) {
     // res.render('')
     console.log("razorpay-error>>", err.message);

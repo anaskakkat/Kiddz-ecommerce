@@ -789,7 +789,7 @@ Procced Payment button
             rzp1.on('payment.failed', function (response) {
 
                 // alert(response.error.metadata.order_id);
-                alert(response.error.metadata.payment_id);
+                // alert(response.error.metadata.payment_id);
                 faildPayment(response, order);
 
             });
@@ -798,7 +798,7 @@ Procced Payment button
 
 
 
-        
+
         function verifyPayment(payment, order) {
             console.log('verifyPayment called');
             $.ajax({
@@ -830,6 +830,10 @@ Procced Payment button
                     console.log('reponse from failed');
                     (response.razorpayFailed)
 
+                    const param = response.params;
+                    const url = '/successPage/' + param;
+                    window.location.href = url;
+
                     Swal.fire({
                         icon: 'warning',
                         title: 'Order Accepted ',
@@ -837,10 +841,10 @@ Procced Payment button
                         timer: 2000,
                         showConfirmButton: false,
                         willClose: () => {
+
                             const param = response.params;
                             const url = '/successPage/' + param;
                             window.location.href = url;
-
                         }
 
                     })

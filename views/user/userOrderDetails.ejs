@@ -381,21 +381,20 @@
                     },
                     success: (response) => {
                         console.log('response came');
-                        (response.razorpayRetrySuccess)
-                        window.location.reload();
+                       if(response.razorpayRetrySuccess){
+                       
+
                         Swal.fire({
                             icon: 'success',
                             title: 'Payment Succeeded',
                             text: 'Your payment was successful!',
                             timer: 2000, // Auto close after 2 seconds
                             showConfirmButton: false, // Hide the "OK" button
-                            // willClose: () => {
-
-
-                            // }
-
                         })
+                        window.location.reload();
                     }
+                    }
+
                 })
             }
 

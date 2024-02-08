@@ -713,7 +713,7 @@ Procced Payment button
                 totalAmount = subTotal - couponDiscount;
             } else {
                 totalAmount = subTotal;
-            } 
+            }
             // console.log('total::', totalAmount);
 
             $.ajax({
@@ -757,18 +757,27 @@ Procced Payment button
                     // alert(response.razorpay_order_id);
                     // alert(response.razorpay_signature)
                     if (response.razorpay_payment_id) {
-                        // Payment successful
-                        verifyPayment(response, order);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Succeeded',
+                            text: 'Your payment was successful!',
+                            timer: 2000, // Auto close after 2 seconds
+                            showConfirmButton: false, // Hide the "OK" button
+                            willClose: () => {
+                                verifyPayment(response, order);
+
+                            }
+
+                        })
                     } else {
-                        // Payment failed, redirect to success page after 5 seconds
-                        const param = order.id;
+                        console.log('failed payment'); const param = order.id;
                         const url = '/successPage/' + param;
                         window.location.href = url;
                     }
                 },
                 "prefill": {
                     "name": "Shopin PVt Ltd",
-                    "email": "anz@example.com",
+                    "email": "anasbrototype@gmail.com",
                     "contact": "9000090000"
                 },
                 "notes": {
@@ -780,7 +789,15 @@ Procced Payment button
             };
             var rzp1 = new Razorpay(options);
             rzp1.open();
-
+            rzp1.on('payment.failed', function (response) {
+                alert(response.error.code);
+                alert(response.error.description);
+                alert(response.error.source);
+                alert(response.error.step);
+                alert(response.error.reason);
+                alert(response.error.metadata.order_id);
+                alert(response.error.metadata.payment_id);
+            });
 
         }
         function verifyPayment(payment, order) {

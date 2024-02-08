@@ -115,19 +115,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<li class="text-warning">
 								<a href="/userProfile">
 									<span class="glyphicon glyphicon-user"></span>
-									<%=user.name %>
+									<%=user.name.toUpperCase() %>
 								</a>
 
 							</li>
 							<li><a href="/userLogout" style="color: #e70404; text-decoration: none;"
-									onmouseover="this.style.color='#f7f30a'"
-									onmouseout="this.style.color='#ff0000'">Logout</a></li>
+									onmouseover="this.style.color='#f7f30a'" onmouseout="this.style.color='#ff0000'">
+									LOGOUT </a></li>
 
 							<% } else { %>
 
-								<li><a class="text-warning" href="/userLogin">Login</a></li>
+								<li><a class="text-warning" href="/userLogin">LOGIN</a></li>
 
-								<li><a class="text-warning" href="/registration">Register</a></li>
+								<li><a class="text-warning" href="/registration">REGISTER</a></li>
 
 								<% } %>
 									<!-- <li><a href="#"><i></i></a></li>

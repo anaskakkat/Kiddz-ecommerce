@@ -142,7 +142,7 @@ const PlaceToOrder = async (req, res) => {
 const genarateRazorpay = async (orderId, subTotal) => {
   try {
     const options = {
-      amount: subTotal,
+      amount: subTotal*100,
       currency: "INR",
       receipt: orderId.toString(),
     };

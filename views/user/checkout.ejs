@@ -510,8 +510,14 @@ Procced Payment button
                                 </div>
 
                                 <div class="radio-container">
-                                    <input type="radio" name="payment" id="online" value="razopay">
-                                    <label for="online">Razopay</label>
+                                    <input type="radio" name="payment" id="online" value="razorpay">
+                                    <label for="online">Razorpay</label>
+                                </div>
+                                <div class="radio-container" style="display: block;">
+                                    <input type="radio" name="payment" id="wallet" value="wallet">
+                                    <label for="online">Wallet</label><br />
+                                    <h5 class="text-muted"> wallet Balance:<%= user.walletBalance %>
+                                    </h5>
                                 </div>
                             </div>
 
@@ -669,6 +675,7 @@ Procced Payment button
                 });
                 return;
             }
+
             if (isSelectedPayment && document.getElementById('cod').checked) {
                 const totalAmountElement = document.getElementById('totalAmount');
                 const totalAmount = parseInt(totalAmountElement.innerText.replace('₹', ''));
@@ -685,7 +692,22 @@ Procced Payment button
                 }
             }
 
+            if (isSelectedPayment && document.getElementById('wallet').checked) {
+                const totalAmountElement = document.getElementById('totalAmount');
+                const totalAmount = parseInt(totalAmountElement.innerText.replace('₹', ''));
+                const walletBalance =" <%= user.walletBalance %>";
 
+                if (totalAmount > walletBalance) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'You do not have enough money in your wallet to place this order.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            }
 
 
             if (isSelectedAddress && isSelectedPayment) {
@@ -706,6 +728,7 @@ Procced Payment button
             const subTotal = parseInt('<%= subTotal %>');
             const couponDiscountElement = document.getElementById("couponDiscount");
             const couponDiscount = parseInt(couponDiscountElement.innerText.replace('₹', ''));
+            const walletBalance = '<%= user.walletBalance %>';
 
             console.log('couponDiscount:', couponDiscount);
 
@@ -715,6 +738,8 @@ Procced Payment button
                 totalAmount = subTotal;
             }
             // console.log('total::', totalAmount);
+
+
 
             $.ajax({
                 url: '/PlaceToOrder',

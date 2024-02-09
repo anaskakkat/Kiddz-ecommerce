@@ -162,6 +162,9 @@ route.post("/generatepdf", userAccountController.generatePdf);
 route.get("/wallet", auth.isLogin, userAccountController.wallet);
 //load wallet
 route.post("/wallet", userAccountController.addToWallet);
+
+
+
 // retryRazorPayment
 route.post("/retryRazorPayment", userAccountController.retryRazorPayment);
 //verifyPaymentRazorpayment

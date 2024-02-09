@@ -182,8 +182,8 @@
                             <p>
                             <p>
                                 Payment Method:
-                                <%= orderDetails.payment==='cod' ? 'Cash on Delivery' : orderDetails.payment==='card'
-                                    ? 'Online Payment' : 'Unknown Payment Method' ; %>
+                                <%= orderDetails.payment==='cod' ? 'Cash on Delivery' :
+                                    orderDetails.payment==='razorpay' ? 'Razorpay' : 'Payment Not Completed' ; %>
                             </p>
 
                             </p>

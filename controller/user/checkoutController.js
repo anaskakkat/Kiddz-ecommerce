@@ -46,7 +46,6 @@ const checkout = async (req, res) => {
       }
       const currentDate = new Date();
       const coupons = await Coupons.find({ expiryDate: { $gt: currentDate } });
-
       res.render("checkout", {
         user,
         cart,
@@ -127,6 +126,27 @@ const PlaceToOrder = async (req, res) => {
       await Order.updateOne({ _id: orderId }, { $set: { status: "Placed" } });
       console.log("order placed");
       res.json({ codSuccess: true, params: orderId });
+    } else if (selectedPayment == "wallet") {
+      const date = new Date();
+
+      const userData = await Userdb.findOneAndUpdate(
+        { _id: userid },
+        {
+          $inc: { walletBalance: -subTotal },
+          $push: {
+            wallet_history: {
+              date: date,
+              amount: subTotal,
+              description: `order paid ID:${order.orderId}`,
+              type: "Debit",
+            },
+          },
+        }
+      );
+      await Order.updateOne({ _id: orderId }, { $set: { status: "Placed",payment:'wallet' },
+     });
+      console.log("wallet paid");
+      res.json({ codSuccess: true, params: orderId });
     } else {
       const razorpayOrder = await genarateRazorpay(orderId, subTotal);
       // console.log("Razorpay order generated successfully", razorpayOrder);
@@ -168,7 +188,7 @@ const verifyPayment = async (req, res) => {
       razorpay_order_id + "|" + razorpay_payment_id,
       process.env.RAZORPAY_SECRET
     );
-console.log('reached generated generated_signature');
+    console.log("reached generated generated_signature");
     if (generated_signature == razorpay_signature) {
       console.log("payment is successful");
       const update = await Order.updateOne(
@@ -181,7 +201,7 @@ console.log('reached generated generated_signature');
           },
         }
       );
-      console.log("status changed:",update);
+      console.log("status changed:", update);
     }
     res.json({ razorpaySuccess: true, params: receiptID });
   } catch (err) {

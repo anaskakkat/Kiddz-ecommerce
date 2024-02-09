@@ -122,7 +122,18 @@
                 <!-- card .// -->
     </section>
 
+    <script>
+        var expiryDateInput = document.getElementById('expiryDate');
 
+        var today = new Date();
+
+        var yyyy = today.getFullYear();
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var dd = String(today.getDate()).padStart(2, '0');
+        var todayString = yyyy + '-' + mm + '-' + dd;
+
+        expiryDateInput.min = todayString;
+    </script>
     <script>
         function showConfirmation(couponId) {
             Swal.fire({

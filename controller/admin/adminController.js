@@ -149,7 +149,7 @@ const adminDash = async (req, res) => {
         $sort: { "_id.year": 1, "_id.month": 1 },
       },
     ]);
-    console.log("monthlyRevenueData::", monthlyRevenueData);
+    // console.log("monthlyRevenueData::", monthlyRevenueData);
 
     // finding most sold product
     const mostSoldProduct = await Order.aggregate([
@@ -174,7 +174,8 @@ const adminDash = async (req, res) => {
       mostSoldProductDetails = await Product.findById(mostSoldProductId);
     }
 
-    console.log("mostSoldProductDetails::", mostSoldProductDetails);
+    // console.log("mostSoldProductDetails::", mostSoldProductDetails);
+
 
     res.render("adminDashboard", {
       totalOrders,

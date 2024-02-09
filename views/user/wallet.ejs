@@ -84,7 +84,7 @@
 
             <% if (user.wallet_history && user.wallet_history.length> 0) { %>
 
-                <div class="card mb-4">
+                <div class="card mb-4 col-md-12">
 
                     <div class="card-body">
                         <div class="table-responsive">
@@ -105,7 +105,7 @@
 
                                         <tr>
                                             <td>
-                                                <%= item.date %>
+                                                <%= new Date(item.date).toDateString() %>
                                             </td>
                                             <td>
 

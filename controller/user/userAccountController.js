@@ -419,9 +419,30 @@ const returnProduct = async (req, res) => {
     const order = await Order.findOneAndUpdate(
       { _id: orderId },
       { $set: { returnReason: returnReason, status: "Returned" } },
-      { upsert: true }
+      { upsert: true },
+      { new: true }
     );
-    console.log("item returned ");
+    // console.log('order:',order);
+    const userId = order.userId;
+    const returnedAmount = order.total_amount;
+    const date = new Date();
+ 
+    const user = await Userdb.findOneAndUpdate(
+      { _id: userId },
+      {
+        $inc: { walletBalance: returnedAmount },
+        $push: {
+          wallet_history: {
+            date: date,
+            amount: returnedAmount,
+            description: `order returned ID:${order.orderId}`,
+            type: "Credit",
+          },
+        },
+      },
+      { new: true }
+    );
+    console.log("item returned ", user);
     for (const item of order.items) {
       // Find the product by ID and update its quantity
       await Product.findByIdAndUpdate(item.productId, {
@@ -444,8 +465,32 @@ const canceledProduct = async (req, res) => {
     const order = await Order.findOneAndUpdate(
       { _id: orderId },
       { $set: { cancelationReason: cancelReason, status: "Canceled" } },
-      { upsert: true }
+      { upsert: true },
+      { new: true }
     );
+    console.log("order:", order.payment);
+    if (order.payment === "razorpay") {
+      console.log("connect");
+      const returnedAmount = order.total_amount;
+      const userId = order.userId;
+      const date = new Date();
+      const user = await Userdb.findOneAndUpdate(
+        { _id: userId },
+        {
+          $inc: { walletBalance: returnedAmount },
+          $push: {
+            wallet_history: {
+              date: date,
+              amount: returnedAmount,
+              description: `order Canceled ID:${orderId}`,
+              type: "Credit",
+            },
+          },
+        },
+        { new: true }
+      );
+      console.log("item returned amount returned ");
+    }
     for (const item of order.items) {
       // Find the product by ID and update its quantity
       await Product.findByIdAndUpdate(item.productId, {
@@ -521,9 +566,9 @@ const retryRazorPayment = async (req, res) => {
 
     const subTotal = order.total_amount;
     const paymentDetails = await instance.payments.fetch(razorpay_payment_id);
-console.log('retry payment get');
+    console.log("retry payment get");
     // console.log("retry:  paymentDetails:", paymentDetails);
-    res.status(200).json({ paymentDetails: paymentDetails,order:orderId });
+    res.status(200).json({ paymentDetails: paymentDetails, order: orderId });
   } catch (err) {
     // Handle errors
     console.log("error", err.message);
@@ -549,7 +594,7 @@ const genarateRazorpay = async (orderId, subTotal) => {
 //verify payment from razorpay ----------------------------------------------------
 const verifyPaymentRazorpayment = async (req, res) => {
   try {
-    console.log("body->", req.body);
+    // console.log("body->", req.body);
     const razorpay_payment_id = req.body.payment.razorpay_payment_id;
     const razorpay_order_id = req.body.payment.razorpay_order_id;
     const razorpay_signature = req.body.payment.razorpay_signature;
@@ -567,14 +612,14 @@ const verifyPaymentRazorpayment = async (req, res) => {
       console.log("payment is successful");
 
       const date = new Date();
-      const dateNew = date.toString().replace(/GMT.*$/, "");
+
       const user = await Userdb.findOneAndUpdate(
         { _id: userId },
         {
           $inc: { walletBalance: addAmount },
           $push: {
             wallet_history: {
-              date: dateNew,
+              date: date,
               amount: addAmount,
               description: "Payment received from Razorpay",
               type: "Credit",
@@ -594,7 +639,7 @@ const verifyPaymentRazorpayment = async (req, res) => {
 //failedRazorPayment razorpay ----------------------------------------------------
 const failedRazorPayment = async (req, res) => {
   try {
-    console.log("body::>", req.body);
+    // console.log("body::>", req.body);
     const razorpay_payment_id = req.body.payment.error.metadata.payment_id;
     const razorpay_order_id = req.body.payment.error.metadata.order_id;
     const receiptID = req.body.order.receipt;
@@ -620,7 +665,7 @@ const failedRazorPayment = async (req, res) => {
 //verify retry payment from razorpay ----------------------------------------------------
 const retryVerifyPayment = async (req, res) => {
   try {
-    console.log("body:::->", req.body);
+    // console.log("body:::->", req.body);
     const razorpay_payment_id = req.body.payment.razorpay_payment_id;
     const razorpay_order_id = req.body.payment.razorpay_order_id;
     const razorpay_signature = req.body.payment.razorpay_signature;
@@ -645,7 +690,7 @@ const retryVerifyPayment = async (req, res) => {
       );
       console.log("status changed:", update);
     }
-    res.json({ razorpayRetrySuccess: true, params: receiptID});
+    res.json({ razorpayRetrySuccess: true, params: receiptID });
   } catch (err) {
     // res.render('')
     console.log("razorpay-error>>", err.message);

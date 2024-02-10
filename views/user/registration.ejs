@@ -31,7 +31,9 @@
 						<i class="glyphicon glyphicon-envelope"></i>
 					</div>
 					<div class="login-mail">
-						<input type="password" placeholder="Password" required="" name="userPassword">
+						<input type="password" placeholder="Password" required name="userPassword"
+							pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$"
+							title="Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 digit, 1 special character, and be at least 8 characters long.">
 						<i class="glyphicon glyphicon-lock"></i>
 					</div>
 
@@ -54,7 +56,7 @@
 					<p>Welcome to our Shop! Creating an account is easy and completely free. Gain access to
 						exclusive features and content by registering today.</p>
 					<p style="color: darkblue;">Already have an account?</p>
-					<a  href="userLogin" class="hvr-skew-backward">Login</a>
+					<a href="userLogin" class="hvr-skew-backward">Login</a>
 
 				</div>
 

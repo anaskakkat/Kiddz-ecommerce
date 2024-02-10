@@ -100,11 +100,11 @@ const resentOtp = async (req, res) => {
       { $set: { otp: newOtpValue } },
       { upsert: true, new: true }
     );
-    req.flash("message", "OTP resent successfully");
+    // req.flash("message", "OTP resent successfully");
     // Send the new OTP via email
     await sendOTPEmail(email, newOtpValue);
 
-    // Redirect to the resend OTP page with a success message
+    res.status(200).json({ success: true, message: "OTP resent successfully" });
   } catch (err) {
     console.error(err);
     req.flash("message", "An error occurred during OTP resend");
@@ -162,7 +162,7 @@ const createUser = async (req, res) => {
     await sendOTPEmail(email, otpValue);
     console.log(email + "email for render");
     // res.redirect(`/otp?email=${req.body.userEmail}`);
-    
+
     messages = req.flash("message");
     res.render("otp", { email, messages });
   } catch (err) {
@@ -178,7 +178,7 @@ const verifyOtpPage = async (req, res) => {
   try {
     const { email, digit1, digit2, digit3, digit4 } = req.body;
     const enteredOtp = `${digit1}${digit2}${digit3}${digit4}`;
-    console.log("otp verify email:----> " + email);
+    console.log("otp verify email:----> " + email, "enteredOtp", enteredOtp);
 
     const storedOtpData = await Otp.findOne({ email_id: email });
     const storedOtp = storedOtpData ? storedOtpData.otp : null;
@@ -401,6 +401,18 @@ const forgotPassword = async (req, res) => {
     console.log(err, err.message);
   }
 };
+//forget mail page  newPassword show
+const newPassword = async (req, res) => {
+  try {
+    const email = req.query.mail;
+    console.log("newPassword email::",email);
+    messages = req.flash("message");
+    res.render("newPassword", { email, messages });
+  } catch (err) {
+    console.log(err, err.message);
+  }
+};
+
 //forget mail page post check
 const forgetEmailCheck = async (req, res) => {
   try {
@@ -446,24 +458,26 @@ const forgetVerifyOtpPage = async (req, res) => {
 
     if (enteredOtp === storedOtp) {
       console.log("otp successfully verified");
-      console.log("email for render", email);
-      res.render("NewPassword", { email, messages });
+      console.log("forgetVerifyOtpPage email for render", email);
+      res.redirect(`/newPassword/?mail=${email}`);
     } else {
       console.log("Incorrect OTP");
       req.flash("message", "Incorrect OTP. Please submit again.");
-      return res.redirect("/forgotPassword");
+      res.redirect("/forgotPassword");
     }
   } catch (err) {
     // Handle errors
     console.error(err);
-    // res.redirect("/otp");
+    req.flash("message", "Incorrect OTP. Please submit again.");
+
+    res.redirect("/forgotPassword");
   }
 };
 
 //  user new password verifyning save----------------------------------------->
 const newPasswordVerify = async (req, res) => {
   try {
-    const email = req.body.email;
+    const email =  req.body.email;
     const newPassword = req.body.newPassword;
     const confirmPassword = req.body.confirmPassword;
     console.log(
@@ -471,13 +485,14 @@ const newPasswordVerify = async (req, res) => {
       newPassword,
       "   confirmPassword  ",
       confirmPassword,
-      "   email  ",
-      email
+      "  newPasswordVerify email:  ",
+      email,
     );
     // Example server-side validation
     if (newPassword.trim() !== confirmPassword.trim()) {
+      console.log("condition checking");
       req.flash("message", "Passwords do not match");
-      return res.redirect("/newPassword");
+      return res.redirect(`/newPassword?mail=${email}`);
     }
     const hashedpassword = await bcrypt.hash(newPassword, 10);
 
@@ -486,7 +501,7 @@ const newPasswordVerify = async (req, res) => {
       { $set: { password: hashedpassword } }
     );
     console.log("Password Changed");
-    req.flash("message", "Password Changed");
+    req.flash("message", "Password changed successfully");
     res.redirect("/userLogin");
   } catch (err) {
     console.log(err, err.message);
@@ -523,10 +538,22 @@ const contact = async (req, res) => {
   }
 };
 
+// ////////////dummyotp//////////////////////////////////////////////////
+// const dummyotp = async (req, res) => {
+//   try {
+//     const userId = req.session.user_id;
+//     const user = await Userdb.findOne({ _id: userId });
+
+//     res.render("otp", { user });
+//   } catch (err) {
+//     console.log("error", err.message);
+//   }
+// };
 module.exports = {
   createUser,
 
   live_search,
+  // dummyotp,
   showProducts,
   sendHome,
   loginUser,
@@ -542,4 +569,5 @@ module.exports = {
   forgetVerifyOtpPage,
   newPasswordVerify,
   contact,
+  newPassword,
 };

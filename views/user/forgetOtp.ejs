@@ -90,20 +90,26 @@
             <form action="/forgetVerifyOtpPage" method="post" id="otpForm">
                 <div class="input-field">
                     <input type="hidden" name="email" value="<%= enteredEmail %>" />
-                    <input type="number" name="digit1" required />
-                    <input type="number" name="digit2" required  />
-                    <input type="number" name="digit3" required  />
-                    <input type="number" name="digit4" required  />
+                    <input type="number" name="digit1" required
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1)" />
+                    <input type="number" name="digit2" required
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1)" />
+                    <input type="number" name="digit3" required
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1)" />
+                    <input type="number" name="digit4" required
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1)" />
                 </div>
 
-                <!-- <span class="text-info-emphasis" id="timer"
-                    style="margin: 8px; color: #00059d;font-size: small;"></span>  -->
-                <!-- Timer display -->
-                <a href="javascript:void(0);" onclick="resendOTP()" id="resendLink"
-                    style="display: none; margin-top: 3px;">Resend OTP</a> <!-- Resend link initially hidden -->
-                <input type="button" value="Verify OTP"
-                    style="width: 80%; color: #fff; font-size: 1rem; border: none; padding: 10px 0; cursor: pointer; border-radius: 6px; background: #F67777; text-decoration: none; margin: 10px 0;"
-                    onclick="verifyOTP()" />
+                <% if (messages.length> 0) { %>
+                    <div style="color: red;">
+                        <%= messages[0] %>
+                    </div>
+                    <% } %>
+                        <a href="javascript:void(0);" onclick="resendOTP()" id="resendLink"
+                            style="display: none; margin-top: 3px;">Resend OTP</a> <!-- Resend link initially hidden -->
+                        <input type="button" value="Verify OTP"
+                            style="width: 80%; color: #fff; font-size: 1rem; border: none; padding: 10px 0; cursor: pointer; border-radius: 6px; background: #F67777; text-decoration: none; margin: 10px 0;"
+                            onclick="verifyOTP()" />
 
 
             </form>

@@ -34,6 +34,8 @@ route.get("/", userController.sendHome);
 route.get("/userLogin", auth.isLogout, userController.loginUser);
 // login submit
 route.post("/userLogin", userController.login);
+//newpassword forget render
+route.get("/newPassword", auth.isLogout, userController.newPassword)
 
 //forgot password page render
 route.get("/forgotPassword", auth.isLogout, userController.forgotPassword);
@@ -163,8 +165,6 @@ route.get("/wallet", auth.isLogin, userAccountController.wallet);
 //load wallet
 route.post("/wallet", userAccountController.addToWallet);
 
-
-
 // retryRazorPayment
 route.post("/retryRazorPayment", userAccountController.retryRazorPayment);
 //verifyPaymentRazorpayment
@@ -176,5 +176,10 @@ route.post(
 route.post("/failedRazorPayment", userAccountController.failedRazorPayment);
 //retryVerifyPayment
 route.post("/retryVerifyPayment", userAccountController.retryVerifyPayment);
+//
+//
+//
+//
+// route.get("/dummyotp", userController.dummyotp);
 
 module.exports = route;

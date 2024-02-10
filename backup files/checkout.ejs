@@ -17,6 +17,7 @@
 Payment Information card
 */
     .details_card {
+        min-height: 487px;
         width: 700px;
         height: auto;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
@@ -31,7 +32,7 @@ Order Summary Card
     .summary_card {
         background-color: #fff;
         width: 350px;
-        height: auto;
+        height: 100%;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
         border-radius: 8px;
         padding: 10px;
@@ -53,9 +54,9 @@ Order Card Item Card
     }
 
     .card_item .product_img img {
-        height: 80px;
+        height: 50px;
         margin-right: 20px;
-        width: 70px;
+        width: 50px;
         border-radius: 5px;
     }
 
@@ -119,7 +120,8 @@ Order price & total
 
         justify-content: space-between;
 
-        padding: 7px 8px;
+        padding: 1px 8px;
+        font-size: 78%;
     }
 
     .order_price p,
@@ -173,7 +175,7 @@ Payment Information all input
     .add_savedcard {
         width: 25%;
         height: auto;
-        border: 2px solid #a1a1a1;
+        border: 2px solid #ffc3c3;
         padding: 10px;
         margin: 10px;
         border-radius: 10px;
@@ -198,26 +200,116 @@ Procced Payment button
         margin: 5px;
         /* Adjust the value as needed */
     }
+
     /* ----------------------
      */
-     .modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}
 
-.modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-}
+    #modalOverlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        /* semi-transparent black background */
+        justify-content: center;
+        align-items: center;
+
+
+
+
+    }
+
+    #modalContent {
+        width: 35%;
+        background: #fff;
+        /* white background for the modal content */
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+
+    #addAddressButton {
+        background-color: #3498db;
+        /* Blue background color */
+        color: #fff;
+        /* White text color */
+        padding: 10px 20px;
+        /* Add some padding to the button */
+        font-size: 16px;
+        /* Set the font size */
+        border: none;
+        /* Remove the border */
+        border-radius: 5px;
+        /* Add a slight border-radius */
+        cursor: pointer;
+        /* Add a pointer cursor on hover */
+        transition: background-color 0.3s;
+        /* Add a smooth transition effect */
+    }
+
+    #addAddressButton:hover {
+        background-color: #2980b9;
+        /* Darker blue color on hover */
+    }
+
+    .radio-container {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Style for the radio button */
+    .radio-container input[type="radio"] {
+        width: auto;
+        margin-right: 5px;
+        /* Add some space between the radio button and label */
+    }
+
+    /* Style for the label */
+    .radio-container label {
+        cursor: pointer;
+        color: #333;
+        font-size: small;
+        /* Default color for the label */
+    }
+
+    /* Style for the checked radio button and its label */
+    .radio-container input[type="radio"]:checked+label {
+        color: #e74c3c !important;
+        /* Change the color to your desired accent color */
+        font-weight: bold;
+        /* Optionally, make the label bold when selected */
+    }
+
+    /* Default styles for the radio button */
+    input[type="radio"] {
+        margin-right: 5px;
+    }
+
+    /* Styles for the radio button when checked */
+    input[type="radio"]:checked {
+        /* Set your accent color */
+        background-color: rose;
+
+        /* Add a border */
+        border: 2px solid rose;
+
+        /* Add any other styles you want when the radio button is checked */
+    }
+
+    .warningg p {
+        color: #0381bc;
+        text-decoration: none;
+    }
+
+    .warningg p:hover {
+        color: #f80070;
+        /* Change the color to your desired hover color */
+        text-decoration: underline;
+        /* Optional: Add underline on hover */
+    }
 </style>
 
 <%- include('./layouts/header') %>
@@ -240,22 +332,21 @@ Procced Payment button
                     <div class="headerPayment">
                         <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Shipping
                             Details</h4>
-                        <hr>
-                    </div>
-                    <input type="radio" name="selectedAddress" id="newAddressRadio" value="newAddress">New Address
+                        <br>
+                        <div class="addButton" style="
+                        display: flex;
+                        justify-content: center;">
+                            <button id="addAddressButton" class="btn-primary text-dark ">Add Address</button>
 
-                    <div class="name_address" id="newAddressFields"style="display: none;">
-                        <input type="text" name="name" placeholder="Name" class="form-control" />
-                        <input type="text" name="mobile" placeholder="Mobile" class="form-control" />
-                        <input type="text" name="address" placeholder="Address" class="form-control" />
-                        <input type="number" name="pincode" placeholder="Pincode" class="form-control" />
-                        <input type="text" name="landmark" placeholder="Landmark" class="form-control" />
-                        <input type="text" name="city" placeholder="City" class="form-control" />
-                        <input type="text" name="state" placeholder="State" class="form-control" />
+                        </div>
 
+                        <hr />
 
                     </div>
-                    <br>
+
+
+
+
 
                     <% if (!user.address || user.address.length===0) { %>
 
@@ -264,17 +355,18 @@ Procced Payment button
                             <p class="text-muted mb-1">No address found</p>
                         </div>
                         <% } else { %>
+
                             <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Addresses
                             </h4>
                             <hr>
                             <!-- Display a form for selecting an address -->
-                            <form action="/" method="post" style="display: flex;">
+                            <form action="/" method="post" style="display: flex;justify-content: center;">
                                 <% user.address.forEach((address, index)=> { %>
                                     <div class="add_savedcard">
                                         <!-- Use radio buttons to allow the user to select an address -->
                                         <input type="radio" id="address" name="selectedAddress"
                                             value=" <%= address.name %>,<%= address.mobile %>,<%= address.address %>,<%= address.pincode %>, <%= address.city %>, <%= address.state %>"
-                                            style="margin-right: 5px; accent-color: #F67777;">
+                                            style="margin-right: 5px;">
                                         <!-- Change color here -->
                                         <h4>
                                             <%= address.name %>
@@ -300,17 +392,48 @@ Procced Payment button
 
             </div>
             <!-- ... (Previous HTML code) ... -->
-      
+            <!-- ----------------------------modal-------------  -->
+            <div id="modalOverlay" class="modal-overlay">
 
+                <div id="modalContent" class="modal-content" style="width: 35%; margin: auto;">
+                    <!-- Your add address form goes here -->
+                    <form action="/checkoutAddAddress" method="post" onsubmit="return validateForm()">
+                        <div class="name_address col-md-12">
+                            <h4 class="text-center" style="margin: inherit;">Add Address</h4>
 
+                            <div class="address1">
+                                <input class="" type="text" placeholder=" Name" name="name" pattern="[A-Za-z ]+"
+                                    title="Only letters and spaces are allowed" required />
+                                <input class="" type="tel" placeholder="mobile" name="mobile" pattern="\d{10}"
+                                    title="Please enter a 10-digit phone number" required />
+                                <input class="" type="text" id="put" placeholder="Address" name="address"
+                                    pattern=".*\S+.*" title="Please enter a non-empty address" required />
+                                <input class="" type="number" placeholder="Pincode" name="pincode" pattern="\d{6}"
+                                    title="Please enter a 6-digit pincode" required />
+                                <input class="" type="text" placeholder="landmark" name="landmark" pattern=".*\S+.*"
+                                    title="Please enter a non-empty landmark" required />
+                                <input class="" type="text" placeholder="city" name="city" pattern="[A-Za-z ]+"
+                                    title="Only letters and spaces are allowed" required />
+                                <input class="" type="text" placeholder="state" name="state" pattern="[A-Za-z ]+"
+                                    title="Only letters and spaces are allowed" required />
+                            </div>
+                        </div>
+                        <input class="proced_payment hvr-skew-backward mt-3"
+                            style="background-color: #081e82ca; color: white; padding: 10px; cursor: pointer; width: 40%;     margin-top: 3px;"
+                            type="submit" value="Add Address">
+                    </form>
+                    <button id="closeModalBtn" class="btn btn-danger" onclick="closeModal()">Close</button>
+                </div>
+            </div>
+            <!-- ----------------------------modal--- end----------  -->
 
-
+            <!-- ---------------------------------------  -->
             <div class="order_summary  ">
                 <div class="summary_card">
-                    <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Order Summary
-                    </h4>
+                    <h5 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Order Summary
+                    </h5>
                     <hr>
-                    <% cart.products.forEach((pro)=> { %>
+                    <% cart.items.forEach((pro)=> { %>
                         <div class="card_item">
                             <div class="product_img">
                                 <img src="/<%= pro.productId.images[1] %>" alt="image" />
@@ -319,65 +442,87 @@ Procced Payment button
                                 <h5 style="color: #F67777;">
                                     <%= pro.productId.productName %>
                                 </h5>
-                                <p style="font-size: medium; font-weight: lighter; color: gray;">Qty: <%= pro.qty %>
-                                </p>
+                                <h5 style="font-size: small; font-weight: lighter; color: gray;">Qty: <%= pro.qty %>
+                                </h5>
                                 <div class="product_rate_info">
-                                    <h4>₹<%= pro.productId.price * pro.qty %>
-                                    </h4>
+                                    <h6>₹<%= pro.productId.price * pro.qty %>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
                         <% }) %>
-                            <hr />
+
 
                             <div class="order_price">
-                                <p>Order summary</p>
-                                <span>₹<h4 id="totalAmount">
+                                <p>Order summary </p>
+                                <span>₹<span id="OrderSummary">
                                         <%= subTotal %>
-                                    </h4>
+                                    </span>
                                 </span>
                             </div>
                             <div class="order_service">
                                 <p>Shipping</p>
-                                <h4>₹0</h4>
+                                <h6>₹0</h6>
+                            </div>
+                            <div class="order_service">
+                                <p>Coupon Discount</p>
+                                <h6 id="couponDiscount">₹0</h6>
                             </div>
                             <div class="order_total">
                                 <p>Total Amount</p>
-
-                                <span>₹<h4 id="totalAmount">
+                                <span>₹<span id="totalAmount" style="font-weight: bold;">
                                         <%= subTotal %>
-                                    </h4>
-                                </span>
+                                    </span></span>
                             </div>
 
                             <!-- ... (Previous HTML code) ... -->
 
-                            
-
-                           
-                        
 
 
 
 
 
-                            <div class="summary" style="border: 1px solid #ddd; padding: 15px; margin-top: 20px;">
-                                <h3 class="summary-title text-center"
-                                    style="font-size: 18px;color: #F67777; margin-bottom: 10px;">Payment Mode
-                                </h3>
-                                <div style="display: flex;">
-                                    <input type="radio" name="payment" id="cod" style="width: auto;"
-                                        value="cash on delivery"><label for="cod">Cash on Delivery (COD)</label>
+                            <div class="redeem" style="display: flex;margin-top: 5px;">
+                                <div class="inp">
+                                    <input id="couponInput" type="text" class="form-control" placeholder="Promo code"
+                                        style="height: 85%;">
+                                </div>
+                                <button type="button" class="btn btn-primary text-center" onclick="redeemCoupon()"
+                                    style="margin-left: 5px; padding: 3px; height: 26px;">Redeem</button>
+
+
+
+                            </div>
+                            <div id="messageContainer"></div>
+
+                            <a href="#" class="warningg" style="text-decoration: none;" data-toggle="modal"
+                                data-target="#couponsModal">
+                                <p style=" font-size: smaller;">Click here! For Available Coupons..</p>
+                            </a>
+
+                            <div class="summary" style="border: 1px solid #ddd; padding: 5px; margin-top: 10px;">
+                                <h6 class="summary-title text-center"
+                                    style="font-size: 13px;color: #F67777; margin-bottom: 10px;">Payment Mode
+                                </h6>
+                                <div class="radio-container">
+                                    <input type="radio" name="payment" id="cod" style="width: auto;" value="cod"><label
+                                        for="cod">Cash on Delivery (COD)</label>
                                 </div>
 
-                                <div style="display: flex;">
-                                    <input type="radio" name="payment" id="online" style="width: auto;"
-                                        value="online"><label for="online">Online Payment</label>
+                                <div class="radio-container">
+                                    <input type="radio" name="payment" id="online" value="razorpay">
+                                    <label for="online">Razorpay</label>
+                                </div>
+                                <div class="radio-container" style="display: block;">
+                                    <input type="radio" name="payment" id="wallet" value="wallet">
+                                    <label for="online">Wallet</label><br />
+                                    <h5 class="text-muted"> wallet Balance:<%= user.walletBalance %>
+                                    </h5>
                                 </div>
                             </div>
-                            <br>
+
                             <input class="proced_payment hvr-skew-backward mt-3" onclick="placeOrdersSelect()"
-                                style="background-color: #F67777; color: white; padding: 10px; cursor: pointer;"
+                                style="background-color: #F67777; color: white; padding: 3px; cursor: pointer; margin-top: 4px;"
                                 type="button" value="Place To Order">
 
                 </div>
@@ -386,107 +531,351 @@ Procced Payment button
 
     </div>
     </div>
+    <!-- -----------modal-------------------------------------------------------------------  -->
+    <!-- Modal -->
+    <div class="modal fade" id="couponsModal" tabindex="-1" role="dialog" aria-labelledby="couponsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="couponsModalLabel">Available Coupons</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="couponsModalBody">
+                    <% for (const coupon of coupons) { %>
+                        <!-- Display coupon information here -->
+                        <div class="coupon-box" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                            <p style="font-weight: bold; margin: 0;">Coupon Name: <%= coupon.couponName %>
+                            </p>
+                            <p style="margin: 0;">Coupon Code: <span class="text-info">
+                                    <%= coupon.couponCode %>
+                                </span>
+                            </p>
+                        </div>
 
-    <%- include('./layouts/footer') %>
-<!-- ---------------------------------------------------------------------------------------  -->
-        <script>
+                        <% } %>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ---------------------check if coupons-------------------------------------------------------------------------------------  -->
+    <script>
+        function redeemCoupon() {
+            var couponInput = document.getElementById("couponInput").value;
+            var messageContainer = document.getElementById("messageContainer");
+            var totalAmountElement = document.getElementById("totalAmount");
 
-document.getElementById('addAddressBtn').addEventListener('click', function() {
-    // Show the modal when the button is clicked
-    var modalOverlay = document.getElementById('modalOverlay');
-    modalOverlay.style.display = 'flex';
-});
+            // Make an AJAX request to the server
+            fetch(`/validateCoupon?code=${couponInput}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.valid) {
+                        const discountElement = document.getElementById("couponDiscount");
+                        discountElement.innerText = `₹${data.discount}`;
 
-document.getElementById('closeModalBtn').addEventListener('click', function() {
-    // Hide the modal when the close button is clicked
-    var modalOverlay = document.getElementById('modalOverlay');
-    modalOverlay.style.display = 'none';
-});
-// -------------------------------------------------------------------------------------
-            async function placeOrdersSelect() {
+                        const subTotal = parseInt('<%= subTotal %>');
+                        const discount = parseInt(data.discount);
+                        const totalAmount = subTotal - discount;
+
+                        // Display the updated total amount
+                        totalAmountElement.innerText = totalAmount;
 
 
-                const addressRadios = document.getElementsByName('selectedAddress')
-
-                const paymentRadios = document.getElementsByName('payment')
-                let isSelectedAddress = false;
-                let isSelectedPayment = false;
-
-                // Loop through address radio buttons to check if one is selected
-                for (const radio of addressRadios) {
-                    if (radio.checked) {
-                        isSelectedAddress = true;
-                        // console.log('address checked');
-                        break;
+                        messageContainer.innerHTML = "<p style='color: green; font-size:13px'>" + data.message + "</p>";
+                    } else {
+                        if (data.error === "Coupon not found.") {
+                            messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon not found. Please enter a valid one.</p>";
+                        } else if (data.error === "Coupon has expired.") {
+                            messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon has expired. Please enter a valid one.</p>";
+                        }
+                        else if (data.error === "Coupon has already been used by this user.") {
+                            messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon has already been used by this user.</p>";
+                        } else {
+                            messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Error validating coupon. Please try again.</p>";
+                        }
                     }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+    <!-- ---------------------------------------------------------------------------------------  -->
+    <script>
+        function validateForm() {
+            var inputs = document.querySelectorAll('#modalContent input');
+            for (var i = 0; i < inputs.length; i++) {
+                if (!inputs[i].checkValidity()) {
+                    alert(inputs[i].validationMessage);
+                    return false;
                 }
-                // Loop through payment radio buttons to check if one is selected
-                for (const radio of paymentRadios) {
-                    if (radio.checked) {
-                        // console.log("payment checked");
-                        isSelectedPayment = true;
-                        break;
-                    }
+            }
+            return true;
+        }
+
+
+        function closeModal() {
+            document.getElementById("modalOverlay").style.display = "none";
+        }
+
+        document.getElementById("addAddressButton").addEventListener("click", function () {
+            openModal();
+        });
+        function openModal() {
+            document.getElementById("modalOverlay").style.display = "block";
+        }
+
+
+        // -------------------------------------------------------------------------------------
+
+
+        // -------------------------------------------------------------------------------------
+
+        async function placeOrdersSelect() {
+
+
+            const addressRadios = document.getElementsByName('selectedAddress')
+
+            const paymentRadios = document.getElementsByName('payment')
+            let isSelectedAddress = false;
+            let isSelectedPayment = false;
+
+            for (const radio of addressRadios) {
+                if (radio.checked) {
+                    isSelectedAddress = true;
+                    // console.log('address checked');
+                    break;
                 }
-
-                // Validate address selection
-
-                if (!isSelectedAddress) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Please select an address.'
-                    });
-                    return; // Prevent further execution of the function
+            }
+            for (const radio of paymentRadios) {
+                if (radio.checked) {
+                    // console.log("payment checked");
+                    isSelectedPayment = true;
+                    break;
                 }
-                if (!isSelectedPayment) {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Please select a payment method.'
-                });
-                return; // Prevent further execution of the function
-              }
-
-                // If both address and payment are selected, proceed with placing the order
-                if (isSelectedAddress && isSelectedPayment) {
-                    // console.log('checcked success');
-                    placeOrder()
-                }
-
-
             }
 
-            async function placeOrder() {
-                // Find the selected address
-                const address = document.querySelector('input[name="selectedAddress"]:checked').value;
-                const payment = document.querySelector('input[name="payment"]:checked').value;
-                // console.log('address==',address,'payment==',payment);
-                // Get the value of totalAmount
+
+            if (!isSelectedAddress) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select an address.'
+                });
+                return;
+            }
+            if (!isSelectedPayment) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a payment method.'
+                });
+                return;
+            }
+
+            if (isSelectedPayment && document.getElementById('cod').checked) {
                 const totalAmountElement = document.getElementById('totalAmount');
-                const total = totalAmountElement ? totalAmountElement.textContent.trim() : '0';
-                // console.log('total',total);
-                // Proceed with placing the order
-                $.ajax({
-                    url: '/PlaceToOrder',
-                    method: 'post',
-                    data: {
-                        selectedAddress: address,
-                        selectedPayment: payment,
-                        subTotal: total,
-                    },
-                    success: (response) => {
-                        if (response.success === true) {
+                const totalAmount = parseInt(totalAmountElement.innerText.replace('₹', ''));
+
+                if (totalAmount <= 2000) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'Cash on Delivery is only available for orders above ₹2000. Please choose a different payment method.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            }
+
+            if (isSelectedPayment && document.getElementById('wallet').checked) {
+                const totalAmountElement = document.getElementById('totalAmount');
+                const totalAmount = parseInt(totalAmountElement.innerText.replace('₹', ''));
+                const walletBalance =" <%= user.walletBalance %>";
+
+                if (totalAmount > walletBalance) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: 'You do not have enough money in your wallet to place this order.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            }
+
+
+            if (isSelectedAddress && isSelectedPayment) {
+                console.log('isSelectedAddress', isSelectedAddress, 'isSelectedPayment', isSelectedPayment);
+                placeOrder()
+            }
+
+
+        }
+
+        async function placeOrder() {
+
+            const address = document.querySelector('input[name="selectedAddress"]:checked').value;
+            const payment = document.querySelector('input[name="payment"]:checked').value;
+            // console.log('address==',address,'payment==',payment);
+
+            const totalAmountElement = document.getElementById('totalAmount');
+            const subTotal = parseInt('<%= subTotal %>');
+            const couponDiscountElement = document.getElementById("couponDiscount");
+            const couponDiscount = parseInt(couponDiscountElement.innerText.replace('₹', ''));
+            const walletBalance = '<%= user.walletBalance %>';
+
+            console.log('couponDiscount:', couponDiscount);
+
+            let totalAmount; if (couponDiscount > 0) {
+                totalAmount = subTotal - couponDiscount;
+            } else {
+                totalAmount = subTotal;
+            }
+            // console.log('total::', totalAmount);
+
+
+
+            $.ajax({
+                url: '/PlaceToOrder',
+                method: 'post',
+                data: {
+                    selectedAddress: address,
+                    selectedPayment: payment,
+                    subTotal: totalAmount,
+                },
+                success: (response) => {
+                    if (response.codSuccess === true) {
+                        const param = response.params;
+                        const url = '/successPage/' + param;
+                        window.location.href = url;
+                    } else if (response.razorpayOrder) {
+                        razorpayPayment(response.razorpayOrder);
+                    } else {
+                        console.error("Unexpected response from the server:", response);
+                    }
+
+                },
+            });
+
+
+        }
+        // ----------------------------razorpay--------------------------------- 
+        function razorpayPayment(order) {
+            console.log('order:>', order);
+
+            var options = {
+                "key": "rzp_test_30bTTgzLa7YbmF",
+                "amount": order.amount,
+                "currency": "INR",
+                "name": "Shopin",
+                "description": "Test Transaction",
+                "image": "https://example.com/your_logo",
+                "order_id": order.id,
+                "handler": function (response) {
+                    // alert(response.razorpay_payment_id);
+                    // alert(response.razorpay_order_id);
+                    // alert(response.razorpay_signature)
+                    if (response.razorpay_payment_id) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Succeeded',
+                            text: 'Your payment was successful!',
+                            timer: 2000, // Auto close after 2 seconds
+                            showConfirmButton: false, // Hide the "OK" button
+                            willClose: () => {
+                                verifyPayment(response, order);
+
+                            }
+
+                        })
+                    }
+
+                },
+                "prefill": {
+                    "name": "Shopin PVt Ltd",
+                    "email": "anasbrototype@gmail.com",
+                    "contact": "9000090000"
+                },
+                "notes": {
+                    "address": "Shopin Corporate Office"
+                },
+                "theme": {
+                    "color": "#F67777"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+            rzp1.on('payment.failed', function (response) {
+
+                // alert(response.error.metadata.order_id);
+                // alert(response.error.metadata.payment_id);
+                faildPayment(response, order);
+
+            });
+
+        }
+
+
+
+
+        function verifyPayment(payment, order) {
+            console.log('verifyPayment called');
+            $.ajax({
+                url: '/verifyPayment',
+                method: 'post',
+                data: {
+                    payment, order
+                },
+                success: (response) => {
+                    (response.razorpaySuccess)
+                    const param = response.params;
+                    const url = '/successPage/' + param;
+                    window.location.href = url;
+                }
+            })
+        }
+
+
+
+        function faildPayment(payment, order) {
+            console.log('faildPayment called');
+            $.ajax({
+                url: '/failedRazorPayment',
+                method: 'post',
+                data: {
+                    payment, order
+                },
+                success: (response) => {
+                    console.log('reponse from failed');
+                    (response.razorpayFailed)
+
+                    const param = response.params;
+                    const url = '/successPage/' + param;
+                    window.location.href = url;
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Order Accepted ',
+                        text: 'Your payment was failed ! rery payment from order page',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        willClose: () => {
+
                             const param = response.params;
                             const url = '/successPage/' + param;
                             window.location.href = url;
                         }
 
-                    },
-                });
+                    })
+                }
+            })
+        }
 
-
-            }
-
-
-        </script>
+    </script>
+    <%- include('./layouts/footer') %>

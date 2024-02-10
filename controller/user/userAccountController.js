@@ -8,6 +8,7 @@ const PDFDocument = require("pdfkit");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const moment = require("moment");
+const { log } = require("console");
 
 require("dotenv").config();
 
@@ -426,7 +427,7 @@ const returnProduct = async (req, res) => {
     const userId = order.userId;
     const returnedAmount = order.total_amount;
     const date = new Date();
- 
+
     const user = await Userdb.findOneAndUpdate(
       { _id: userId },
       {
@@ -531,9 +532,24 @@ const wallet = async (req, res) => {
     const userid = req.session.user_id;
     const user = await Userdb.findOne({ _id: userid });
 
-    res.render("wallet", { user });
-  } catch (err) {
-    console.log("error>>", err.message);
+    // Pagination logic
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = 5;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+    console.log("page", page, "startIndex:", startIndex, "endIndex", endIndex);
+
+    const walletHistory = user.wallet_history.slice(startIndex, endIndex);
+    console.log("walletHistory:", walletHistory);
+    res.render("wallet", {
+      user,
+      walletHistory: walletHistory,
+      currentPage: page,
+      pageSize,
+    });
+  } catch (error) {
+    console.error("Error in wallet route:", error);
+    res.status(500).send("Internal Server Error");
   }
 };
 //Add wallet from razorpay

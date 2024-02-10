@@ -101,7 +101,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% user.wallet_history.forEach(item=> { %>
+                                    <% walletHistory.forEach(item=> { %>
 
                                         <tr>
                                             <td>
@@ -136,6 +136,21 @@
                     </div>
                     <!-- card-body end// -->
                 </div>
+
+
+
+
+
+
+                <div class="pagination-area">
+                    <% for (let i=0; i < Math.ceil(user.wallet_history.length / pageSize); i++) { %>
+                        <a href="/wallet?page=<%= i + 1 %>" class="btn btn-primary">
+                            <%= i + 1 %>
+                        </a>
+                        <% } %>
+                </div>
+
+
                 <% } else { %>
                     <div class="card mb-4"
                         style="background-color: #f8f9fa; padding: 10px; text-align: center; font-family: 'YourStylishFont', sans-serif; font-size: 15px; color: #495057; border: 1px solid #ced4da; border-radius: 8px;">
@@ -143,16 +158,13 @@
                     </div>
                     <% } %>
 
-                        <div class="pagination-area">
 
-
-
-
-
-                        </div>
 
         </section>
+        <script>
 
+
+        </script>
 
 
 

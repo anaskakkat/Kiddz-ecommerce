@@ -153,7 +153,7 @@ route.post("/deleteWishlist", auth.isLogin, wishlistController.deleteWishlist);
 route.get("/live_search", userController.live_search);
 
 //validateCoupon
-route.get("/validateCoupon", checkoutController.validateCoupon);
+route.post("/validateCoupon", checkoutController.validateCoupon);
 
 //contact render
 route.get("/contact", auth.isLogin, userController.contact);

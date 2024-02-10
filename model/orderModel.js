@@ -22,6 +22,10 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    discount_amount: {
+      type: Number,
+      default: 0,
+    },
     date: {
       type: String,
       required: true,

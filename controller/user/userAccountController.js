@@ -83,7 +83,9 @@ const generatePdf = async (req, res) => {
       .moveDown();
     //body
 
-    doc.fillColor("#444444").fontSize(20).text("Invoice", 50, 160);
+    doc.fillColor("#444444")
+    .fontSize(20)
+    .text("Invoice", 50, 160);
 
     generateHr(doc, 185);
 
@@ -91,15 +93,19 @@ const generatePdf = async (req, res) => {
 
     doc
       .fontSize(10)
-      .text("Invoice Number:", 50, customerInformationTop)
+      .text("Order Date:", 50, customerInformationTop)
       .font("Helvetica-Bold")
-      .text(order.orderId, 150, customerInformationTop)
+      .text(order.date, 150, customerInformationTop)
       .font("Helvetica")
-      .text("Invoice Date:", 50, customerInformationTop + 15)
-      .text(order.date, 150, customerInformationTop + 15)
+      .text("Order Date:", 50, customerInformationTop + 15)
+      .text('#'+order.orderId, 150, customerInformationTop + 15)
+      .font("Helvetica")
+      .text("Order Status:", 50, customerInformationTop + 28)
+      .text(order.status, 150, customerInformationTop + 28)
 
-      .font("Helvetica")
+      .font("Helvetica-Bold")
       .text("Shipping Address", 300, customerInformationTop)
+      .font("Helvetica")
       .text(order.delivery_address, 300, customerInformationTop + 15)
       .moveDown();
 
@@ -141,10 +147,24 @@ const generatePdf = async (req, res) => {
       generateHr(doc, position + 20);
     }
 
-    const subtotalPosition = invoiceTableTop + (i + 1) * 30;
+    const ShippingPosition = invoiceTableTop + (i + 1) * 30;
+    generateTableRow(doc, ShippingPosition, "", "", "Shipping Amount", "", 0);
+    const DiscountPosition = invoiceTableTop + (i + 1) * 40;
     generateTableRow(
       doc,
-      subtotalPosition,
+      DiscountPosition,
+      "",
+      "",
+      "Discount Amount",
+      "",
+      order.discount_amount
+    );
+
+    const duePosition = invoiceTableTop + (i + 1) * 50;
+    doc.font("Helvetica-Bold");
+    generateTableRow(
+      doc,
+      duePosition,
       "",
       "",
       "Total Amount",
@@ -152,7 +172,6 @@ const generatePdf = async (req, res) => {
       order.total_amount
     );
 
-    doc.font("Helvetica");
     //footer
     doc.fontSize(10).text(" Thank you for your business.", 50, 780, {
       align: "center",

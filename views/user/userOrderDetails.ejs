@@ -30,6 +30,10 @@
         color: rgb(135, 135, 135);
         font-weight: bold;
     }
+
+    .sub {
+        margin-bottom: 3px;
+    }
 </style>
 
 <%- include('./layouts/header') %>
@@ -196,19 +200,25 @@
 
 
                                                 <div class="subtotall float-end">
-                                                    <dl class="dlist">
+                                                    <dl class="dlist sub">
                                                         <dt class="small-text">
                                                             Subtotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             ₹<%= orderLists.total_amount %>
                                                         </dt>
 
                                                     </dl>
-                                                    <dl class="dlist">
+                                                    <dl class="dlist sub">
                                                         <dt class="small-text">
                                                             Shipping:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             ₹00.00</dt>
                                                     </dl>
-                                                    <dl class="dlist">
+                                                    <dl class="dlist sub">
+                                                        <dt class="small-text">
+                                                            Discount:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            ₹<%= orderLists.discount_amount %>
+                                                        </dt>
+                                                    </dl>
+                                                    <dl class="dlist sub">
                                                         <dt class="small-text">Grand
                                                             total:&nbsp; ₹
                                                             <%= orderLists.total_amount %>
@@ -381,18 +391,18 @@
                     },
                     success: (response) => {
                         console.log('response came');
-                       if(response.razorpayRetrySuccess){
-                       
+                        if (response.razorpayRetrySuccess) {
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Payment Succeeded',
-                            text: 'Your payment was successful!',
-                            timer: 2000, // Auto close after 2 seconds
-                            showConfirmButton: false, // Hide the "OK" button
-                        })
-                        window.location.reload();
-                    }
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Payment Succeeded',
+                                text: 'Your payment was successful!',
+                                timer: 2000, // Auto close after 2 seconds
+                                showConfirmButton: false, // Hide the "OK" button
+                            })
+                            window.location.reload();
+                        }
                     }
 
                 })

@@ -67,9 +67,21 @@ const PlaceToOrder = async (req, res) => {
     const userid = req.session.user_id;
 
     // console.log("body---------->", req.body);
-    const { selectedAddress, selectedPayment, subTotal } = req.body;
+    const {
+      selectedAddress,
+      selectedPayment,
+      subTotal,
+      couponDiscount,
+    } = req.body;
 
-    // console.log(selectedAddress, selectedPayment, "subTotal::", subTotal);
+    console.log(
+      selectedAddress,
+      selectedPayment,
+      "subTotal::",
+      subTotal,
+      "couponDiscount:",
+      couponDiscount
+    );
 
     const userData = await Userdb.findOne({ _id: userid });
 
@@ -100,6 +112,7 @@ const PlaceToOrder = async (req, res) => {
       delivery_address: selectedAddress,
       user_name: userData.name,
       total_amount: subTotal,
+      discount_amount: couponDiscount,
       date: orderDate,
       status: "Pending",
       expected_delivery: deliveryDate,
@@ -143,8 +156,10 @@ const PlaceToOrder = async (req, res) => {
           },
         }
       );
-      await Order.updateOne({ _id: orderId }, { $set: { status: "Placed",payment:'wallet' },
-     });
+      await Order.updateOne(
+        { _id: orderId },
+        { $set: { status: "Placed", payment: "wallet" } }
+      );
       console.log("wallet paid");
       res.json({ codSuccess: true, params: orderId });
     } else {
@@ -286,12 +301,25 @@ const validateCoupon = async (req, res) => {
     const isCouponUsedByUser =
       coupon.usedBy && coupon.usedBy._id.equals(userid);
     if (isCouponUsedByUser) {
+      console.log("Coupon has already been used by this user");
+
       return res.json({
         valid: false,
         error: "Coupon has already been used by this user.",
       });
     }
     const couponDiscount = coupon.discountAmount || 0;
+    const subTotal = req.body.subTotal;
+
+    if (couponDiscount > subTotal) {
+      console.log("Discount amount cannot be greater than subtotal amount");
+
+      return res.json({
+        valid: false,
+        error: "Discount amount cannot be greater than subtotal amount.",
+      });
+    }
+
     await Coupons.findOneAndUpdate(
       { couponCode },
       { $set: { usedBy: userid } }
@@ -306,7 +334,7 @@ const validateCoupon = async (req, res) => {
     });
   } catch (error) {
     console.error("Error validating coupon:", error);
-    console.log("Error validating coupon.");
+    console.log("catch Error validating coupon.");
 
     return res.json({ valid: false, error: "Error validating coupon." });
   }

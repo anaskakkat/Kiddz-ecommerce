@@ -556,16 +556,22 @@ Procced Payment button
             var couponInput = document.getElementById("couponInput").value;
             var messageContainer = document.getElementById("messageContainer");
             var totalAmountElement = document.getElementById("totalAmount");
+            var subTotal = parseInt('<%= subTotal %>'); // Get the subtotal from the server-side template
 
             // Make an AJAX request to the server
-            fetch(`/validateCoupon?code=${couponInput}`)
+            fetch(`/validateCoupon?code=${couponInput}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ subTotal: subTotal }) // Send the subtotal in the request body
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.valid) {
                         const discountElement = document.getElementById("couponDiscount");
                         discountElement.innerText = `₹${data.discount}`;
 
-                        const subTotal = parseInt('<%= subTotal %>');
                         const discount = parseInt(data.discount);
                         const totalAmount = subTotal - discount;
 
@@ -573,15 +579,16 @@ Procced Payment button
                         totalAmountElement.innerText = totalAmount;
 
 
-                        messageContainer.innerHTML = "<p style='color: green; font-size:13px'>" + data.message + "</p>";
                     } else {
                         if (data.error === "Coupon not found.") {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon not found. Please enter a valid one.</p>";
                         } else if (data.error === "Coupon has expired.") {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon has expired. Please enter a valid one.</p>";
-                        }
-                        else if (data.error === "Coupon has already been used by this user.") {
+                        } else if (data.error === "Coupon has already been used by this user.") {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon has already been used by this user.</p>";
+                        } else if (data.error === "Discount amount cannot be greater than subtotal amount.") {
+                            messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Discount amount cannot be greater than subtotal amount.</p>";
+
                         } else {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Error validating coupon. Please try again.</p>";
                         }
@@ -589,6 +596,8 @@ Procced Payment button
                 })
                 .catch(error => console.error('Error:', error));
         }
+
+
     </script>
     <!-- ---------------------------------------------------------------------------------------  -->
     <script>
@@ -735,6 +744,7 @@ Procced Payment button
                     selectedAddress: address,
                     selectedPayment: payment,
                     subTotal: totalAmount,
+                    couponDiscount:couponDiscount
                 },
                 success: (response) => {
                     if (response.codSuccess === true) {

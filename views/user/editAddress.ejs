@@ -6,6 +6,7 @@
         padding: 20px;
         width: auto;
         margin: 20px;
+        height: 100%;
     }
 
     .name_address {
@@ -51,11 +52,11 @@
     <%- include('./layouts/userHeader') %>
         <br><br>
 
-        <div class="col-md-8"
-            style="font-family: Arial, sans-serif; margin-top:-60px;padding: 0;border-radius: 10px;height: 100vh;">
+        <div class=" col-sm-12 col-md-8"
+            style="font-family: Arial, sans-serif; margin-top:-60px;padding: 0;border-radius: 10px; height: fit-content;">
 
             <% users.address.forEach(address=> { %>
-                <670ui 9ioi-p0--div class="details_card">
+                <div class="details_card">
                     <form action="/updateAddress/<%= address._id %>" method="post">
                         <div class="name_address col-md-12">
                             <div class="lt">

@@ -32,8 +32,9 @@
 					</div>
 					<div class="login-mail">
 						<input type="password" placeholder="Password" required name="userPassword"
-							pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$"
-							title="Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 digit, 1 special character, and be at least 8 characters long.">
+							pattern="(?=.*\d).{8,}"
+							title="Password must contain at least 1 digit and be at least 8 characters long.">
+
 						<i class="glyphicon glyphicon-lock"></i>
 					</div>
 

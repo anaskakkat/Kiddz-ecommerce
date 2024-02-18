@@ -486,38 +486,59 @@ Procced Payment button
 
     <!-- ... (Previous HTML code) ... -->
     <!-- ----------------------------modal-------------  -->
-    <div id="modalOverlay" class="modal-overlay">
-
-        <div id="modalContent" class="modal-content" style="width: 35%; margin: auto;">
-            <!-- Your add address form goes here -->
-            <form action="/checkoutAddAddress" method="post" onsubmit="return validateForm()">
-                <div class="name_address col-md-12">
-                    <h4 class="text-center" style="margin: inherit;">Add Address</h4>
-
-                    <div class="address1">
-                        <input class="" type="text" placeholder=" Name" name="name" pattern="[A-Za-z ]+"
-                            title="Only letters and spaces are allowed" required />
-                        <input class="" type="tel" placeholder="mobile" name="mobile" pattern="\d{10}"
-                            title="Please enter a 10-digit phone number" required />
-                        <input class="" type="text" id="put" placeholder="Address" name="address" pattern=".*\S+.*"
-                            title="Please enter a non-empty address" required />
-                        <input class="" type="number" placeholder="Pincode" name="pincode" pattern="\d{6}"
-                            title="Please enter a 6-digit pincode" required />
-                        <input class="" type="text" placeholder="landmark" name="landmark" pattern=".*\S+.*"
-                            title="Please enter a non-empty landmark" required />
-                        <input class="" type="text" placeholder="city" name="city" pattern="[A-Za-z ]+"
-                            title="Only letters and spaces are allowed" required />
-                        <input class="" type="text" placeholder="state" name="state" pattern="[A-Za-z ]+"
-                            title="Only letters and spaces are allowed" required />
-                    </div>
+    <div id="exampleModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title text-center text-info">Add Address</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <input class="proced_payment hvr-skew-backward mt-3"
-                    style="background-color: #081e82ca; color: white; padding: 10px; cursor: pointer; width: 40%;     margin-top: 3px;"
-                    type="submit" value="Add Address">
-            </form>
-            <button id="closeModalBtn" class="btn btn-danger" onclick="closeModal()">Close</button>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form action="/checkoutAddAddress" method="post" onsubmit="return validateForm()">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Name" name="name" pattern="[A-Za-z ]+"
+                                title="Only letters and spaces are allowed" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" class="form-control" placeholder="Mobile" name="mobile" pattern="\d{10}"
+                                title="Please enter a 10-digit phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Address" name="address"
+                                pattern=".*\S+.*" title="Please enter a non-empty address" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" placeholder="Pincode" name="pincode"
+                                pattern="\d{6}" title="Please enter a 6-digit pincode" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Landmark" name="landmark"
+                                pattern=".*\S+.*" title="Please enter a non-empty landmark" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="City" name="city" pattern="[A-Za-z ]+"
+                                title="Only letters and spaces are allowed" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="State" name="state"
+                                pattern="[A-Za-z ]+" title="Only letters and spaces are allowed" required>
+                        </div>
+                        <div style="display: flex;justify-content: center;"> <button type="submit" class="btn btn-primary">Add Address</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
+
     <!-- -----------modal-------------------------------------------------------------------  -->
     <!-- Modal -->
     <div class="modal fade" id="couponsModal" tabindex="-1" role="dialog" aria-labelledby="couponsModalLabel"
@@ -551,6 +572,16 @@ Procced Payment button
         </div>
     </div>
     <!-- ---------------------check if coupons-------------------------------------------------------------------------------------  -->
+    <script>
+        $(document).ready(function () {
+            $("#addAddressButton").click(function () {
+                $("#exampleModal").modal('show');
+            });
+        });
+    </script>
+
+
+
     <script>
         function redeemCoupon() {
             var couponInput = document.getElementById("couponInput").value;
@@ -613,16 +644,16 @@ Procced Payment button
         }
 
 
-        function closeModal() {
-            document.getElementById("modalOverlay").style.display = "none";
-        }
+        // function closeModal() {
+        //     document.getElementById("modalOverlay").style.display = "none";
+        // }
 
-        document.getElementById("addAddressButton").addEventListener("click", function () {
-            openModal();
-        });
-        function openModal() {
-            document.getElementById("modalOverlay").style.display = "block";
-        }
+        // document.getElementById("addAddressButton").addEventListener("click", function () {
+        //     openModal();
+        // });
+        // function openModal() {
+        //     document.getElementById("modalOverlay").style.display = "block";
+        // }
 
 
         // -------------------------------------------------------------------------------------
@@ -744,7 +775,7 @@ Procced Payment button
                     selectedAddress: address,
                     selectedPayment: payment,
                     subTotal: totalAmount,
-                    couponDiscount:couponDiscount
+                    couponDiscount: couponDiscount
                 },
                 success: (response) => {
                     if (response.codSuccess === true) {

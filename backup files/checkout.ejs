@@ -5,25 +5,22 @@
     }
 
     .containerM {
-        width: 100%;
-        height: auto;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        background-color: #f9fafc;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+
     }
 
     /*
 Payment Information card
 */
     .details_card {
-        min-height: 487px;
-        width: 700px;
         height: auto;
-        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
+        /* border: 1px solid gray; */
+        /* Set border to 1px solid gray */
+        /* box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2); */
+        /* Set box shadow */
         padding: 14px 70px;
         background-color: #fff;
+        border-bottom: none;
     }
 
     /*
@@ -32,9 +29,9 @@ Order Summary Card
     .summary_card {
         background-color: #fff;
         width: 350px;
-        height: 100%;
+        height: auto;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
+
         padding: 10px;
     }
 
@@ -233,21 +230,13 @@ Procced Payment button
 
     #addAddressButton {
         background-color: #3498db;
-        /* Blue background color */
         color: #fff;
-        /* White text color */
-        padding: 10px 20px;
-        /* Add some padding to the button */
+        padding: 5px 7px;
         font-size: 16px;
-        /* Set the font size */
         border: none;
-        /* Remove the border */
         border-radius: 5px;
-        /* Add a slight border-radius */
         cursor: pointer;
-        /* Add a pointer cursor on hover */
         transition: background-color 0.3s;
-        /* Add a smooth transition effect */
     }
 
     #addAddressButton:hover {
@@ -322,137 +311,99 @@ Procced Payment button
 
     </div>
     <br>
-    <div class="main" style="display: flex;">
-        <div class="containerM">
-            <div class="" style="width: auto;">
 
-                <!-- <h4 class="text-center" style="color: #F67777;" >Payment Information</h4> -->
-
-                <div class="details_card">
-                    <div class="headerPayment">
-                        <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Shipping
-                            Details</h4>
-                        <br>
-                        <div class="addButton" style="
-                        display: flex;
-                        justify-content: center;">
-                            <button id="addAddressButton" class="btn-primary text-dark ">Add Address</button>
-
-                        </div>
-
-                        <hr />
+    <div class="container containerM ">
+        <div class="row">
+            <div class="details_card col-xs-12  col-md-8">
+                <div class="headerPayment">
+                    <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Shipping
+                        Details</h4>
+                    <br>
+                    <div class="addButton" style="
+                            display: flex;
+                            justify-content: center;">
+                        <button id="addAddressButton" class="btn-primary text-info ">Add Address</button>
 
                     </div>
 
-
-
-
-
-                    <% if (!user.address || user.address.length===0) { %>
-
-
-                        <div style=" text-align: center;">
-                            <p class="text-muted mb-1">No address found</p>
-                        </div>
-                        <% } else { %>
-
-                            <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Addresses
-                            </h4>
-                            <hr>
-                            <!-- Display a form for selecting an address -->
-                            <form action="/" method="post" style="display: flex;justify-content: center;">
-                                <% user.address.forEach((address, index)=> { %>
-                                    <div class="add_savedcard">
-                                        <!-- Use radio buttons to allow the user to select an address -->
-                                        <input type="radio" id="address" name="selectedAddress"
-                                            value=" <%= address.name %>,<%= address.mobile %>,<%= address.address %>,<%= address.pincode %>, <%= address.city %>, <%= address.state %>"
-                                            style="margin-right: 5px;">
-                                        <!-- Change color here -->
-                                        <h4>
-                                            <%= address.name %>
-                                        </h4>
-                                        <p class="text-muted mb-1">
-                                            <%= address.mobile %>
-                                        </p>
-                                        <p class="text-muted mb-1">
-                                            <%= address.address %>
-                                        </p>
-                                        <p class="text-muted mb-1">
-                                            <%= address.pincode %>, <%= address.city %>, <%= address.state %>
-                                        </p>
-                                    </div>
-
-                                    <% }) %>
-                                        <!-- Add a submit button to submit the selected address -->
-                                        <!-- <button type="submit">Select Address</button> -->
-                            </form>
-                            <% } %>
+                    <hr />
 
                 </div>
 
-            </div>
-            <!-- ... (Previous HTML code) ... -->
-            <!-- ----------------------------modal-------------  -->
-            <div id="modalOverlay" class="modal-overlay">
 
-                <div id="modalContent" class="modal-content" style="width: 35%; margin: auto;">
-                    <!-- Your add address form goes here -->
-                    <form action="/checkoutAddAddress" method="post" onsubmit="return validateForm()">
-                        <div class="name_address col-md-12">
-                            <h4 class="text-center" style="margin: inherit;">Add Address</h4>
+                <% if (!user.address || user.address.length===0) { %>
 
-                            <div class="address1">
-                                <input class="" type="text" placeholder=" Name" name="name" pattern="[A-Za-z ]+"
-                                    title="Only letters and spaces are allowed" required />
-                                <input class="" type="tel" placeholder="mobile" name="mobile" pattern="\d{10}"
-                                    title="Please enter a 10-digit phone number" required />
-                                <input class="" type="text" id="put" placeholder="Address" name="address"
-                                    pattern=".*\S+.*" title="Please enter a non-empty address" required />
-                                <input class="" type="number" placeholder="Pincode" name="pincode" pattern="\d{6}"
-                                    title="Please enter a 6-digit pincode" required />
-                                <input class="" type="text" placeholder="landmark" name="landmark" pattern=".*\S+.*"
-                                    title="Please enter a non-empty landmark" required />
-                                <input class="" type="text" placeholder="city" name="city" pattern="[A-Za-z ]+"
-                                    title="Only letters and spaces are allowed" required />
-                                <input class="" type="text" placeholder="state" name="state" pattern="[A-Za-z ]+"
-                                    title="Only letters and spaces are allowed" required />
-                            </div>
-                        </div>
-                        <input class="proced_payment hvr-skew-backward mt-3"
-                            style="background-color: #081e82ca; color: white; padding: 10px; cursor: pointer; width: 40%;     margin-top: 3px;"
-                            type="submit" value="Add Address">
-                    </form>
-                    <button id="closeModalBtn" class="btn btn-danger" onclick="closeModal()">Close</button>
-                </div>
+
+                    <div style=" text-align: center;">
+                        <p class="text-muted mb-1">No address found</p>
+                    </div>
+                    <% } else { %>
+
+                        <h4 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Addresses
+                        </h4>
+                        <hr>
+                        <!-- Display a form for selecting an address -->
+                        <form action="/" method="post" style="display: flex;justify-content: center;">
+                            <% user.address.forEach((address, index)=> { %>
+                                <div class="add_savedcard">
+                                    <!-- Use radio buttons to allow the user to select an address -->
+                                    <input type="radio" id="address" name="selectedAddress"
+                                        value=" <%= address.name %>,<%= address.mobile %>,<%= address.address %>,<%= address.pincode %>, <%= address.city %>, <%= address.state %>"
+                                        style="margin-right: 5px;">
+                                    <!-- Change color here -->
+                                    <h4>
+                                        <%= address.name %>
+                                    </h4>
+                                    <p class="text-muted mb-1">
+                                        <%= address.mobile %>
+                                    </p>
+                                    <p class="text-muted mb-1">
+                                        <%= address.address %>
+                                    </p>
+                                    <p class="text-muted mb-1">
+                                        <%= address.pincode %>, <%= address.city %>, <%= address.state %>
+                                    </p>
+                                </div>
+
+                                <% }) %>
+                                    <!-- Add a submit button to submit the selected address -->
+                                    <!-- <button type="submit">Select Address</button> -->
+                        </form>
+                        <% } %>
+
+
+
             </div>
+
             <!-- ----------------------------modal--- end----------  -->
 
             <!-- ---------------------------------------  -->
-            <div class="order_summary  ">
-                <div class="summary_card">
-                    <h5 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Order Summary
-                    </h5>
-                    <hr>
-                    <% cart.items.forEach((pro)=> { %>
-                        <div class="card_item">
-                            <div class="product_img">
-                                <img src="/<%= pro.productId.images[1] %>" alt="image" />
-                            </div>
-                            <div class="product_info">
-                                <h5 style="color: #F67777;">
-                                    <%= pro.productId.productName %>
-                                </h5>
-                                <h5 style="font-size: small; font-weight: lighter; color: gray;">Qty: <%= pro.qty %>
-                                </h5>
-                                <div class="product_rate_info">
-                                    <h6>₹<%= pro.productId.price * pro.qty %>
-                                    </h6>
-                                </div>
+
+            <div class="summary_card col-xs-12  col-md-4 m-5" style="float: inline-end; overflow: auto;">
+                <h5 class="text-center reducedfrom" style="color: #F67777; font-weight: bold;">Order Summary
+                </h5>
+                <hr>
+                <% cart.items.forEach((pro)=> { %>
+                    <div class="card_item">
+                        <div class="product_img">
+                            <img src="/<%= pro.productId.images[1] %>" alt="image" />
+                        </div>
+                        <div class="product_info">
+                            <h5 style="color: #F67777;">
+                                <%= pro.productId.productName %>
+                            </h5>
+                            <h5 style="font-size: small; font-weight: lighter; color: gray;">Qty: <%= pro.qty %>
+                            </h5>
+                            <div class="product_rate_info">
+                                <h6>₹<%= pro.productId.price * pro.qty %>
+                                </h6>
                             </div>
                         </div>
-                        <% }) %>
+                    </div>
+                    <% }) %>
 
 
+                        <div class="summey_total">
                             <div class="order_price">
                                 <p>Order summary </p>
                                 <span>₹<span id="OrderSummary">
@@ -475,61 +426,97 @@ Procced Payment button
                                     </span></span>
                             </div>
 
-                            <!-- ... (Previous HTML code) ... -->
-
-
-
-
-
-
-                            <div class="redeem" style="display: flex;margin-top: 5px;">
-                                <div class="inp">
-                                    <input id="couponInput" type="text" class="form-control" placeholder="Promo code"
-                                        style="height: 85%;">
-                                </div>
-                                <button type="button" class="btn btn-primary text-center" onclick="redeemCoupon()"
-                                    style="margin-left: 5px; padding: 3px; height: 26px;">Redeem</button>
-
-
-
+                        </div>
+                        <!-- ... (Previous HTML code) ... -->
+                        <div class="redeem" style="display: flex;margin-top: 5px;">
+                            <div class="inp">
+                                <input id="couponInput" type="text" class="form-control" placeholder="Promo code"
+                                    style="height: 85%;">
                             </div>
-                            <div id="messageContainer"></div>
+                            <button type="button" class="btn btn-primary text-center" onclick="redeemCoupon()"
+                                style="margin-left: 5px; padding: 3px; height: 26px;">Redeem</button>
+
+
+
+                        </div>
+                        <div id="messageContainer"></div>
+                        <div class="redeem_coupon">
 
                             <a href="#" class="warningg" style="text-decoration: none;" data-toggle="modal"
                                 data-target="#couponsModal">
                                 <p style=" font-size: smaller;">Click here! For Available Coupons..</p>
                             </a>
 
-                            <div class="summary" style="border: 1px solid #ddd; padding: 5px; margin-top: 10px;">
-                                <h6 class="summary-title text-center"
-                                    style="font-size: 13px;color: #F67777; margin-bottom: 10px;">Payment Mode
-                                </h6>
-                                <div class="radio-container">
-                                    <input type="radio" name="payment" id="cod" style="width: auto;" value="cod"><label
-                                        for="cod">Cash on Delivery (COD)</label>
-                                </div>
-
-                                <div class="radio-container">
-                                    <input type="radio" name="payment" id="online" value="razorpay">
-                                    <label for="online">Razorpay</label>
-                                </div>
-                                <div class="radio-container" style="display: block;">
-                                    <input type="radio" name="payment" id="wallet" value="wallet">
-                                    <label for="online">Wallet</label><br />
-                                    <h5 class="text-muted"> wallet Balance:<%= user.walletBalance %>
-                                    </h5>
-                                </div>
+                        </div>
+                        <div class="summary" style="border: 1px solid #ddd; padding: 5px; margin-top: 10px;">
+                            <h6 class="summary-title text-center"
+                                style="font-size: 13px;color: #F67777; margin-bottom: 10px;">Payment Mode
+                            </h6>
+                            <div class="radio-container">
+                                <input type="radio" name="payment" id="cod" style="width: auto;" value="cod"><label
+                                    for="cod">Cash on Delivery (COD)</label>
                             </div>
 
-                            <input class="proced_payment hvr-skew-backward mt-3" onclick="placeOrdersSelect()"
-                                style="background-color: #F67777; color: white; padding: 3px; cursor: pointer; margin-top: 4px;"
-                                type="button" value="Place To Order">
+                            <div class="radio-container">
+                                <input type="radio" name="payment" id="online" value="razorpay">
+                                <label for="online">Razorpay</label>
+                            </div>
+                            <div class="radio-container" style="display: block;">
+                                <input type="radio" name="payment" id="wallet" value="wallet">
+                                <label for="online">Wallet</label><br />
+                                <h5 class="text-muted"> wallet Balance:<%= user.walletBalance %>
+                                </h5>
+                            </div>
+                            <div class="placeO">
 
-                </div>
+                                <input class="proced_payment hvr-skew-backward mt-3" onclick="placeOrdersSelect()"
+                                    style="background-color: #F67777; color: white; padding: 3px; cursor: pointer; margin-top: 4px;"
+                                    type="button" value="Place To Order">
+                            </div>
+                        </div>
+
+
             </div>
+
         </div>
 
     </div>
+
+
+
+    <!-- ... (Previous HTML code) ... -->
+    <!-- ----------------------------modal-------------  -->
+    <div id="modalOverlay" class="modal-overlay">
+
+        <div id="modalContent" class="modal-content" style="width: 35%; margin: auto;">
+            <!-- Your add address form goes here -->
+            <form action="/checkoutAddAddress" method="post" onsubmit="return validateForm()">
+                <div class="name_address col-md-12">
+                    <h4 class="text-center" style="margin: inherit;">Add Address</h4>
+
+                    <div class="address1">
+                        <input class="" type="text" placeholder=" Name" name="name" pattern="[A-Za-z ]+"
+                            title="Only letters and spaces are allowed" required />
+                        <input class="" type="tel" placeholder="mobile" name="mobile" pattern="\d{10}"
+                            title="Please enter a 10-digit phone number" required />
+                        <input class="" type="text" id="put" placeholder="Address" name="address" pattern=".*\S+.*"
+                            title="Please enter a non-empty address" required />
+                        <input class="" type="number" placeholder="Pincode" name="pincode" pattern="\d{6}"
+                            title="Please enter a 6-digit pincode" required />
+                        <input class="" type="text" placeholder="landmark" name="landmark" pattern=".*\S+.*"
+                            title="Please enter a non-empty landmark" required />
+                        <input class="" type="text" placeholder="city" name="city" pattern="[A-Za-z ]+"
+                            title="Only letters and spaces are allowed" required />
+                        <input class="" type="text" placeholder="state" name="state" pattern="[A-Za-z ]+"
+                            title="Only letters and spaces are allowed" required />
+                    </div>
+                </div>
+                <input class="proced_payment hvr-skew-backward mt-3"
+                    style="background-color: #081e82ca; color: white; padding: 10px; cursor: pointer; width: 40%;     margin-top: 3px;"
+                    type="submit" value="Add Address">
+            </form>
+            <button id="closeModalBtn" class="btn btn-danger" onclick="closeModal()">Close</button>
+        </div>
     </div>
     <!-- -----------modal-------------------------------------------------------------------  -->
     <!-- Modal -->
@@ -569,16 +556,22 @@ Procced Payment button
             var couponInput = document.getElementById("couponInput").value;
             var messageContainer = document.getElementById("messageContainer");
             var totalAmountElement = document.getElementById("totalAmount");
+            var subTotal = parseInt('<%= subTotal %>'); // Get the subtotal from the server-side template
 
             // Make an AJAX request to the server
-            fetch(`/validateCoupon?code=${couponInput}`)
+            fetch(`/validateCoupon?code=${couponInput}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ subTotal: subTotal }) // Send the subtotal in the request body
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.valid) {
                         const discountElement = document.getElementById("couponDiscount");
                         discountElement.innerText = `₹${data.discount}`;
 
-                        const subTotal = parseInt('<%= subTotal %>');
                         const discount = parseInt(data.discount);
                         const totalAmount = subTotal - discount;
 
@@ -586,15 +579,16 @@ Procced Payment button
                         totalAmountElement.innerText = totalAmount;
 
 
-                        messageContainer.innerHTML = "<p style='color: green; font-size:13px'>" + data.message + "</p>";
                     } else {
                         if (data.error === "Coupon not found.") {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon not found. Please enter a valid one.</p>";
                         } else if (data.error === "Coupon has expired.") {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon has expired. Please enter a valid one.</p>";
-                        }
-                        else if (data.error === "Coupon has already been used by this user.") {
+                        } else if (data.error === "Coupon has already been used by this user.") {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Coupon has already been used by this user.</p>";
+                        } else if (data.error === "Discount amount cannot be greater than subtotal amount.") {
+                            messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Discount amount cannot be greater than subtotal amount.</p>";
+
                         } else {
                             messageContainer.innerHTML = "<p style='color: red; font-size:13px'>Error validating coupon. Please try again.</p>";
                         }
@@ -602,6 +596,8 @@ Procced Payment button
                 })
                 .catch(error => console.error('Error:', error));
         }
+
+
     </script>
     <!-- ---------------------------------------------------------------------------------------  -->
     <script>
@@ -695,7 +691,7 @@ Procced Payment button
             if (isSelectedPayment && document.getElementById('wallet').checked) {
                 const totalAmountElement = document.getElementById('totalAmount');
                 const totalAmount = parseInt(totalAmountElement.innerText.replace('₹', ''));
-                const walletBalance =" <%= user.walletBalance %>";
+                const walletBalance = " <%= user.walletBalance %>";
 
                 if (totalAmount > walletBalance) {
                     Swal.fire({
@@ -748,6 +744,7 @@ Procced Payment button
                     selectedAddress: address,
                     selectedPayment: payment,
                     subTotal: totalAmount,
+                    couponDiscount:couponDiscount
                 },
                 success: (response) => {
                     if (response.codSuccess === true) {

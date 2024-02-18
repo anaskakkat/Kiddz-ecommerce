@@ -1,14 +1,21 @@
+require("dotenv").config();
 
-const mongoose= require('mongoose');
+const mongoose = require("mongoose");
 
-function connectDB(){
-    mongoose.connect    ('mongodb+srv://anasbrototype:anas4470@cluster0.fmaqiqe.mongodb.net/?retryWrites=true&w=majority')
-        .then(()=>{
-            console.log('Connected to MongoDB');
-        })
-        .catch((error)=>{
-            console.error('Error connecting to MongoDB:', error.message);
-        });
-} 
+function connectDB() {
+  const CONNECTION_STRING = process.env.CONNECTION_STRING;
+  mongoose
+    .connect(CONNECTION_STRING, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
 
-module.exports= (connectDB); 
+    .then(() => {
+      console.log("Connected to MongoDB");
+    })
+    .catch((error) => {
+      console.error("Error connecting to MongoDB:", error.message);
+    });
+}
+
+module.exports = connectDB;

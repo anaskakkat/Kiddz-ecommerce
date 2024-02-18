@@ -76,7 +76,7 @@ const generatePdf = async (req, res) => {
       // .image("logo.png", 50, 45, { width: 50 })
       .fillColor("#444444")
       .fontSize(20)
-      .text("Shopin Pvt Ltd.", 110, 57)
+      .text("KIDDZ Pvt Ltd.", 110, 57)
       .fontSize(10)
       .text("123 Main Street", 200, 65, { align: "right" })
       .text("India,KL,0494", 200, 80, { align: "right" })

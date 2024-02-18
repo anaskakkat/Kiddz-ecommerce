@@ -156,7 +156,7 @@ route.get("/live_search", userController.live_search);
 route.post("/validateCoupon", checkoutController.validateCoupon);
 
 //contact render
-route.get("/contact", auth.isLogin, userController.contact);
+route.get("/contact", userController.contact);
 
 //generate-pdf
 route.post("/generatepdf", userAccountController.generatePdf);

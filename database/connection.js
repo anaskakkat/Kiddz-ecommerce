@@ -2,7 +2,7 @@
 const mongoose= require('mongoose');
 
 function connectDB(){
-    mongoose.connect    ('mongodb://127.0.0.1:27017/EcomFashion')
+    mongoose.connect    ('mongodb+srv://anasbrototype:anas4470@cluster0.fmaqiqe.mongodb.net/?retryWrites=true&w=majority')
         .then(()=>{
             console.log('Connected to MongoDB');
         })

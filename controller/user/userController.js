@@ -312,7 +312,7 @@ const showProducts = async (req, res) => {
     // console.log("PerPage:", perPage);
     console.log("TotalPages:", totalPages);
     console.log("ProDatas:", proDatas.length);
-    res.render("showproducts", {
+    res.render("showProducts", {
       proDatas,
       proCat,
       user,

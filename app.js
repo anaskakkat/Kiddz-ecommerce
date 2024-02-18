@@ -13,7 +13,7 @@ const session = require("express-session");
 
 require("dotenv").config();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 app.use(
   session({
     secret: process.env.SESSION_SECRET,

@@ -112,7 +112,7 @@ const generatePdf = async (req, res) => {
     generateHr(doc, 252);
     //table
     let i;
-    const invoiceTableTop = 330;
+    const invoiceTableTop = 280;
 
     doc.font("Helvetica-Bold");
     generateTableRow(
@@ -173,7 +173,7 @@ const generatePdf = async (req, res) => {
     );
 
     //footer
-    doc.fontSize(10).text(" Thank you for your business.", 50, 780, {
+    doc.fontSize(10).text(" Thank you for your business.", 50, 770, {
       align: "center",
       width: 500,
     });

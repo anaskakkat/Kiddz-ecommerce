@@ -24,7 +24,10 @@ const schema = new mongoose.Schema({
     required: true,
     default: "unBlock",
   },
-  verified: { type: Boolean },
+  verified: { 
+    type: Boolean,
+    default:false
+  },
   role: {
     type: String,
     default: "user",

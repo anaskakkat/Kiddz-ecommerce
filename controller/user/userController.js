@@ -51,6 +51,7 @@ const createOTP = () => {
 // ------send mail----------------------------------------------------
 const sendOTPEmail = async (email, otp) => {
   // Configure nodemailer
+  console.log('loaded send otp mail');
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -58,7 +59,7 @@ const sendOTPEmail = async (email, otp) => {
       pass: process.env.AUTH_MAIL_PASSWORD,
     },
   });
-
+console.log('node mailer worked');
   const mailOptions = {
     from: process.env.AUTH_MAIL,
     to: email,
@@ -122,9 +123,32 @@ const createUser = async (req, res) => {
     const existingEmail = await Userdb.findOne({ email: email });
     // console.log(email);
     if (existingEmail) {
+      if (existingEmail && existingEmail.verified === false) {
+        console.log("Email already exists but not verified. Re-registering...");
+
+        const hashedpassword = await bcrypt.hash(req.body.userPassword, 10);
+        const otpValue = createOTP();
+console.log('otp created');
+        const otp = new Otp({
+          email_id: email,
+          otp: otpValue,
+        });
+        await Otp.deleteMany({});
+        await otp.save();
+
+        // Send OTP via email
+        await sendOTPEmail(email, otpValue);
+        console.log(email + ":: email for render");
+        // res.redirect(`/otp?email=${req.body.userEmail}`);
+
+        messages = req.flash("message");
+        return res.render("otp", { email, messages });
+      }
+      console.log("Email already in use");
       req.flash("message", "Email already in use");
       return res.redirect("/registration");
     }
+
     // Check if the mobile number is already in use
     const existingMobile = await Userdb.findOne({
       mobilenumber: req.body.userMobilenumber,
@@ -141,7 +165,6 @@ const createUser = async (req, res) => {
       mobilenumber: req.body.userMobilenumber,
       email: req.body.userEmail,
       password: hashedpassword,
-      verified: false,
     });
 
     // save user in the database
@@ -405,7 +428,7 @@ const forgotPassword = async (req, res) => {
 const newPassword = async (req, res) => {
   try {
     const email = req.query.mail;
-    console.log("newPassword email::",email);
+    console.log("newPassword email::", email);
     messages = req.flash("message");
     res.render("newPassword", { email, messages });
   } catch (err) {
@@ -477,7 +500,7 @@ const forgetVerifyOtpPage = async (req, res) => {
 //  user new password verifyning save----------------------------------------->
 const newPasswordVerify = async (req, res) => {
   try {
-    const email =  req.body.email;
+    const email = req.body.email;
     const newPassword = req.body.newPassword;
     const confirmPassword = req.body.confirmPassword;
     console.log(
@@ -486,7 +509,7 @@ const newPasswordVerify = async (req, res) => {
       "   confirmPassword  ",
       confirmPassword,
       "  newPasswordVerify email:  ",
-      email,
+      email
     );
     // Example server-side validation
     if (newPassword.trim() !== confirmPassword.trim()) {

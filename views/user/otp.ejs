@@ -96,6 +96,7 @@
       <form action="/otp" method="post" id="">
         <div class="input-field">
           <input type="hidden" name="email" value="<%= email %>" />
+       
           <input type="number" name="digit1" required
             oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1)" />
           <input type="number" name="digit2" required

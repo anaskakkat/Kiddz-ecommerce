@@ -31,22 +31,31 @@ const isLogout = async (req, res, next) => {
 
 
 // is Blocked in 
-const isBlocked =async (req, res, next) => {
-  if(req.session.user_id){
-    const user= await Userdb.findOne({_id:req.session.user_id})
-    if(user.status=='block'){
-      req.session.destroy()
-      console.log('seession worked middlewere isBlocked');
-      res.redirect('/userLogin')
-
-    }else{
+const isBlocked = async (req, res, next) => {
+  try {
+    if (req.session.user_id) {
+      const user = await Userdb.findOne({ _id: req.session.user_id });
+      if (user) {
+        if (user.status === 'block') {
+          req.session.destroy();
+          console.log('Session destroyed in isBlocked middleware');
+          return res.redirect('/userLogin');
+        } else {
+          next();
+        }
+      } else {
+        // User not found in the database
+        console.log('User not found in the database in isBlocked middleware');
+        next();
+      }
+    } else {
+      // No user session
       next();
     }
-  }else{
-    next();
+  } catch (error) {
+    console.log('Error in isBlocked middleware:', error.message);
+    next(error); // Pass the error to the error handler middleware
   }
-    
- 
 };
 
 module.exports={

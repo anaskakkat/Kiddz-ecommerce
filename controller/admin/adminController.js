@@ -87,6 +87,11 @@ const adminDash = async (req, res) => {
 
     const orders = await Order.aggregate([
       {
+        $match: {
+          status: "Deliverd",
+        },
+      },
+      {
         $group: {
           _id: null,
           totalOrders: { $sum: 1 },
@@ -175,7 +180,6 @@ const adminDash = async (req, res) => {
     }
 
     // console.log("mostSoldProductDetails::", mostSoldProductDetails);
-
 
     res.render("adminDashboard", {
       totalOrders,
@@ -292,6 +296,11 @@ const dashboardData = async (req, res) => {
     // );
     // ---------------------------------------
     const yearlySalesData = await Order.aggregate([
+      {
+        $match: {
+          status: "Deliverd",
+        },
+      },
       {
         $group: {
           _id: {
